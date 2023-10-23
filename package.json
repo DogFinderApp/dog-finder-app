@@ -2,11 +2,7 @@
   "name": "dog-finder",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://galzo.github.io/dog-finder",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/galzo/dog-finder.git"
-  },
+
   "dependencies": {
     "@auth0/auth0-react": "^2.2.1",
     "@emotion/react": "^11.11.1",

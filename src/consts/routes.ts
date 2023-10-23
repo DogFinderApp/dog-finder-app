@@ -1,11 +1,11 @@
 export const AppRoutes = {
-  root: "/dog-finder",
+  root: "/",
   dogs: {
-    report: "/dog-finder/dogs/report",
-    reportFound: "/dog-finder/dogs/report-found",
-    reportLost: "/dog-finder/dogs/report-missing",
-    searchLostDog: "/dog-finder/dogs/search-lost",
-    searchFoundDog: "/dog-finder/dogs/search-found",
-    results: "/dog-finder/dogs/results/:dogType",
+    report: "/dogs/report",
+    reportFound: "/dogs/report-found",
+    reportLost: "/dogs/report-missing",
+    searchLostDog: "/dogs/search-lost",
+    searchFoundDog: "/dogs/search-found",
+    results: "/dogs/results/:dogType",
   },
 };
