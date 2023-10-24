@@ -58,7 +58,6 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
   const [isMissingImage, setIsMissingImage] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
   const [requestStatus, setRequestStatus] = useState<string>("");
   const { dogType } = props;
 
@@ -70,15 +69,11 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
     dogBreed: useTextInput({ isMandatoryInput: false }),
     dogSize: useTextInput({ isMandatoryInput: false }),
     dogColor: useTextInput({ isMandatoryInput: false }),
-    dogType: useSelectInput({
-      isMandatoryInput: true,
-      possibleValues: Object.values(DogType),
-    }),
-    // chipNumber: useTextInput({ isMandatoryInput: false }), TODO: don't think we need that one. Don't we?
+    chipNumber: useTextInput({ isMandatoryInput: false }),
     location: useTextInput({ isMandatoryInput: true }),
     contactName: useTextInput({ isMandatoryInput: true }),
     contactPhone: usePhoneNumberInput({ isMandatoryInput: true }),
-    contactEmail: useEmailInput({ isMandatoryInput: false }),
+    contactEmail: useEmailInput({ isMandatoryInput: true }),
     contactAddress: useTextInput({ isMandatoryInput: false }),
     extraDetails: useTextInput({ isMandatoryInput: false }),
   };
@@ -125,8 +120,9 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
       breed: inputs.dogBreed.value, 
       color: inputs.dogColor.value, 
       size: inputs.dogSize.value,
+      chipNumber: inputs.chipNumber.value,
       extraDetails: inputs.extraDetails.value,
-      img: imageBlob,
+      imgs: [imageBlob],
     };
     setIsLoading(true);
     const response = await serverApi.report_dog(payload);
@@ -153,6 +149,14 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
     }
     return AppTexts.reportPage.request.success.reportedFound;
   };
+
+  const getLocationText = () => {
+    if (dogType === DogType.LOST) {
+        return AppTexts.reportPage.locationDetails.locationDescriptionLost;
+    }
+
+    return AppTexts.reportPage.locationDetails.locationDescriptionFound;
+  }
 
   return (
     <PageContainer>
@@ -210,17 +214,17 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
               onChange={inputs.dogColor.onTextChange}
               error={!inputs.dogColor.isTextValid}
             />
-            {/* <RTLTextField
+            <RTLTextField
               label={AppTexts.reportPage.dogDetails.chipNumber}
-              type="number"
+              type="text"
               fullWidth
               margin="normal"
               value={inputs.chipNumber.value}
               onChange={inputs.chipNumber.onTextChange}
               error={!inputs.chipNumber.isTextValid}
-            /> */}
+            />
             <RTLTextField
-              label={AppTexts.reportPage.locationDetails.locationDescription}
+              label={getLocationText()}
               fullWidth
               type="text"
               margin="normal"
