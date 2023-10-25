@@ -38,10 +38,22 @@ class ServerApi {
     return response;
   }
 
-  async sendData(url: RequestInfo, data: { [key: string]: any }, method: string, headers?: HeadersInit) {
+  async sendData(url: RequestInfo, data: { [key: string]: any }, method: string, headers?: HeadersInit, listAttributes?: Array<string> | undefined) {
     const formData  = new FormData();
     const token = this.token;
-        
+
+    if (listAttributes) {
+      listAttributes.forEach((listAttributeName) => {
+        const values = data[listAttributeName];
+        values.forEach((value: any) => {
+          formData.append(listAttributeName, value)
+        });
+
+        delete data[listAttributeName];
+      });
+
+    }
+
     for(const value in data) {
       formData.append(value, data[value]);
     }
@@ -83,7 +95,7 @@ class ServerApi {
   async report_dog(payload: ReportDogPayload) {
     let url = build_endpoint("/dogfinder/add_document");
 
-    return this.sendData(url, payload, "POST");
+    return this.sendData(url, payload, "POST", undefined, ["imgs"]);
   }
 }
 

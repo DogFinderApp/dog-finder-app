@@ -28,7 +28,8 @@ export const AppTexts = {
       found: "נמצא"
     },
     locationDetails: {
-      locationDescription: "המיקום בו נמצא",
+      locationDescriptionFound: "המיקום בו נמצא",
+      locationDescriptionLost: "המיקום בו נאבד",
     },
     dogDetails: {
       dogRace: "גזע הכלב",

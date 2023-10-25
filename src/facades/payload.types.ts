@@ -12,7 +12,7 @@ export interface QueryPayload {
 
 export interface ReportDogPayload {
     type: DogType;
-    img: Blob;
+    imgs: Array<Blob>;
     contactName: string;
     contactPhone: string;
     contactEmail?: string;
@@ -21,5 +21,6 @@ export interface ReportDogPayload {
     breed?: string;
     color?: string;
     size?: string;    
+    chipNumber: string;
     extraDetails?: string;
 }
