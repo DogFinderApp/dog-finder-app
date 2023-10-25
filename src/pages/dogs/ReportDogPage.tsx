@@ -109,13 +109,21 @@ export const ReportDogPage = withAuthenticationRequired(
                 input.validateInput()
             );
             const hasInvalidInputs = inputValidation.some((res) => !res);
-
             const showError = hasInvalidInputs || isMissingImage;
             setShowErrorMessage(showError);
 
             if (showError) {
                 return;
             }
+
+            const withZero = (number: number) =>
+                `${number}`.length === 2 ? number : `0${number}`;
+
+            const { dateInput } = inputs.date;
+            // @ts-expect-error
+            const { $D, $M, $y } = dateInput;
+            // format the selected date to match dd/mm/yyyy
+            const formattedDate = `${withZero($D)}/${withZero($M)}/${$y}`;
 
             const imageBlob = await getImageBlob(selectedImageUrl);
             const payload: ReportDogPayload = {
@@ -125,7 +133,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 contactPhone: inputs.contactPhone.value,
                 contactEmail: inputs.contactEmail.value,
                 foundAtLocation: inputs.location.value,
-                date: inputs.date.dateInput,
+                date: formattedDate,
                 breed: inputs.dogBreed.value,
                 color: inputs.dogColor.value,
                 size: inputs.dogSize.value,

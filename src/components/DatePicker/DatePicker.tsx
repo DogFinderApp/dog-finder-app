@@ -39,8 +39,8 @@ const DatePicker = ({
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <RTLWrapper>
+    <RTLWrapper>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MaterialDatePicker
           label={labels[reportType]}
           format="DD/MM/YYYY"
@@ -50,8 +50,8 @@ const DatePicker = ({
           disableFuture
           closeOnSelect
         />
-      </RTLWrapper>
-    </LocalizationProvider>
+      </LocalizationProvider>
+    </RTLWrapper>
   );
 };
 
