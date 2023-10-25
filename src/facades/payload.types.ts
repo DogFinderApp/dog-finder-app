@@ -16,7 +16,7 @@ export interface ReportDogPayload {
   contactName: string;
   contactPhone: string;
   contactEmail?: string;
-  contactAdress?: string;
+  contactAddress?: string;
   foundAtLocation: string;
   date: string | Dayjs | null;
   breed?: string;

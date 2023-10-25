@@ -60,7 +60,6 @@ export const ReportDogPage = withAuthenticationRequired(
         const [isMissingImage, setIsMissingImage] = useState(false);
         const [showErrorMessage, setShowErrorMessage] = useState(false);
         const [isLoading, setIsLoading] = useState(false);
-        const [isError, setIsError] = useState(false);
         const [requestStatus, setRequestStatus] = useState<string>("");
         const { dogType } = props;
 
@@ -116,24 +115,26 @@ export const ReportDogPage = withAuthenticationRequired(
                 return;
             }
 
-            const withZero = (number: number) =>
-                `${number}`.length === 2 ? number : `0${number}`;
+            const getFormattedDate = () => {
+                const withZero = (number: number) =>
+                    `${number}`.length === 2 ? number : `0${number}`;
 
-            const { dateInput } = inputs.date;
-            // @ts-expect-error
-            const { $D, $M, $y } = dateInput;
-            // format the selected date to match dd/mm/yyyy
-            const formattedDate = `${withZero($D)}/${withZero($M)}/${$y}`;
+                const { dateInput } = inputs.date;
+                // @ts-expect-error
+                const { $D, $M, $y } = dateInput;
+                // format the selected date to match dd/mm/yyyy
+                return `${withZero($D)}/${withZero($M)}/${$y}`;
+            };
 
             const imageBlob = await getImageBlob(selectedImageUrl);
             const payload: ReportDogPayload = {
                 type: dogType,
                 contactName: inputs.contactName.value,
-                contactAdress: inputs.contactAddress.value,
+                contactAddress: inputs.contactAddress.value,
                 contactPhone: inputs.contactPhone.value,
                 contactEmail: inputs.contactEmail.value,
                 foundAtLocation: inputs.location.value,
-                date: formattedDate,
+                date: getFormattedDate(),
                 breed: inputs.dogBreed.value,
                 color: inputs.dogColor.value,
                 size: inputs.dogSize.value,
@@ -142,12 +143,7 @@ export const ReportDogPage = withAuthenticationRequired(
             };
             setIsLoading(true);
             const response = await serverApi.report_dog(payload);
-            if (response.status === 200) {
-                setRequestStatus("success");
-            } else {
-                setRequestStatus("error");
-            }
-
+            setRequestStatus(response.status === 200 ? "success" : "error");
             clearInputs();
             setIsLoading(false);
         };
