@@ -69,7 +69,7 @@ export const HomePage = () => {
             <IconSearch {...commonIconProps} />
             {AppTexts.homePage.cta.lostDog}
           </Button>
-          <Button {...commonButtonProps} onClick={() => navigate(AppRoutes.dogs.searchFoundDog)}>
+          <Button {...commonButtonProps} onClick={() => navigate(AppRoutes.dogs.reportFound)}>
             <IconPaw {...commonIconProps} />
             {AppTexts.homePage.cta.foundDog}
           </Button>
