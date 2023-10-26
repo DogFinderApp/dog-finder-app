@@ -84,5 +84,11 @@ export const AppTexts = {
     reportFound: "דיווח על כלב שנמצא",
     searchLostDog: homePageButtons.lostDog,
     searchFoundDog: homePageButtons.foundDog
+  },
+  dogDetails: {
+    title: "פרטי הכלב",
+    hamalButton: "המשך ליצירת קשר",
+    backButton: "חזרה לרשימה המלאה",
+    markAsReturndButton: "סמן כהושב לבעליו",
   }
 };
