@@ -1,14 +1,12 @@
 export enum DogType {
-    LOST = "lost", 
-    FOUND = "found"
+    LOST = "lost",
+    FOUND = "found",
 }
-
 
 export interface QueryPayload {
     type: DogType;
     img: Blob;
 }
-
 
 export interface ReportDogPayload {
     type: DogType;
@@ -16,10 +14,10 @@ export interface ReportDogPayload {
     contactName: string;
     contactPhone: string;
     contactEmail?: string;
-    contactAdress?: string
+    contactAdress?: string;
     foundAtLocation: string;
     breed?: string;
     color?: string;
-    size?: string;    
+    size?: string;
     extraDetails?: string;
 }
