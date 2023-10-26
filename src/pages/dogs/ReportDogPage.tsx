@@ -22,7 +22,7 @@ import { useCallback, useMemo, useState } from "react";
 import { usePhoneNumberInput } from "../../hooks/usePhoneNumberInput";
 import { useEmailInput } from "../../hooks/useEmailInput";
 import { useSelectInput } from "../../hooks/useSelectInput";
-import { DogType, ReportDogPayload } from "../../facades/payload.types";
+import { DogSex, DogType, ReportDogPayload } from "../../facades/payload.types";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { getImageBlob } from "../../utils/imageUtils";
@@ -65,10 +65,16 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
   const styles = useReportDogPageStyles({ isError: showErrorMessage });
   const getServerApi = useGetServerApi();
 
+  const dogSexOptions = {
+      [DogSex.FEMALE]: AppTexts.reportPage.dogSex.female,
+      [DogSex.MALE]: AppTexts.reportPage.dogSex.male
+  };
+
   const inputs = {
     dogBreed: useTextInput({ isMandatoryInput: false }),
     dogSize: useTextInput({ isMandatoryInput: false }),
     dogColor: useTextInput({ isMandatoryInput: false }),
+    dogSex: useSelectInput({ isMandatoryInput: false, possibleValues: Object.keys(dogSexOptions) }),
     chipNumber: useTextInput({ isMandatoryInput: false }),
     location: useTextInput({ isMandatoryInput: true }),
     contactName: useTextInput({ isMandatoryInput: true }),
@@ -122,6 +128,7 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
       size: inputs.dogSize.value,
       chipNumber: inputs.chipNumber.value,
       extraDetails: inputs.extraDetails.value,
+      sex: inputs.dogSex.value,
       imgs: [imageBlob],
     };
     setIsLoading(true);
@@ -131,6 +138,8 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
     } else {
       setRequestStatus("error");
     }
+
+    
 
     clearInputs();
     setIsLoading(false);
@@ -156,7 +165,9 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
     }
 
     return AppTexts.reportPage.locationDetails.locationDescriptionFound;
-  }
+  };
+
+
 
   return (
     <PageContainer>
@@ -204,7 +215,11 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
               value={inputs.dogSize.value}
               onChange={inputs.dogSize.onTextChange}
               error={!inputs.dogSize.isTextValid}
-            />
+            /> 
+            <SelectInputField 
+              options={dogSexOptions} label={AppTexts.reportPage.dogDetails.dogSex}
+              onChange={inputs.dogSex.onSelectChange}
+              />
             <RTLTextField
               label={AppTexts.reportPage.dogDetails.dogColor}
               type="text"

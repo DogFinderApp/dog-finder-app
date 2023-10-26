@@ -1,19 +1,10 @@
 import { Box, Button, Grid } from "@mui/material";
 import { DogCard } from "./DogCard";
-import { DogType } from "../../facades/payload.types";
+import { DogResult, DogType } from "../../facades/payload.types";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
 import { useNavigate } from "react-router-dom";
 import { createStyleHook } from "../../hooks/styleHooks";
-
-export type Dog = {
-  dogId: string;
-  contactPhone: string;
-  contactName: string;
-  contactEmail: string;
-  image: string;
-  imageContentType: string;
-};
 
 const useResultsStyles = createStyleHook(() => {
   return {
@@ -29,7 +20,7 @@ export const ResultsGrid = ({
   results,
   dogType,
 }: {
-  results: Dog[] | undefined;
+  results: DogResult[] | undefined;
   dogType: DogType;
 }) => {
   const navigate = useNavigate();
