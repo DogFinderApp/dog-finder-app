@@ -23,10 +23,11 @@ import { usePhoneNumberInput } from "../../hooks/usePhoneNumberInput";
 import { useEmailInput } from "../../hooks/useEmailInput";
 import { useSelectInput } from "../../hooks/useSelectInput";
 import { useDateInput } from "../../hooks/useDateInput";
-import { DogType, ReportDogPayload } from "../../facades/payload.types";
+import { DogSex, DogType, ReportDogPayload } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { getImageBlob } from "../../utils/imageUtils";
 import DatePicker from "../../components/DatePicker/DatePicker";
+import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 
 const useReportDogPageStyles = createStyleHook(
     (theme, props: { isError: boolean }) => {
@@ -67,20 +68,25 @@ export const ReportDogPage = withAuthenticationRequired(
         const styles = useReportDogPageStyles({ isError: showErrorMessage });
         const getServerApi = useGetServerApi();
 
+        const dogSexOptions = {
+            [DogSex.FEMALE]: AppTexts.reportPage.dogSex.female,
+            [DogSex.MALE]: AppTexts.reportPage.dogSex.male,
+        };
+
         const inputs = {
             dogBreed: useTextInput({ isMandatoryInput: false }),
             dogSize: useTextInput({ isMandatoryInput: false }),
             dogColor: useTextInput({ isMandatoryInput: false }),
-            dogType: useSelectInput({
-                isMandatoryInput: true,
-                possibleValues: Object.values(DogType),
+            dogSex: useSelectInput({
+                isMandatoryInput: false,
+                possibleValues: Object.keys(dogSexOptions),
             }),
-            // chipNumber: useTextInput({ isMandatoryInput: false }), TODO: don't think we need that one. Don't we?
+            chipNumber: useTextInput({ isMandatoryInput: false }),
             location: useTextInput({ isMandatoryInput: true }),
             date: useDateInput({ isMandatoryInput: true }),
             contactName: useTextInput({ isMandatoryInput: true }),
             contactPhone: usePhoneNumberInput({ isMandatoryInput: true }),
-            contactEmail: useEmailInput({ isMandatoryInput: false }),
+            contactEmail: useEmailInput({ isMandatoryInput: true }),
             contactAddress: useTextInput({ isMandatoryInput: false }),
             extraDetails: useTextInput({ isMandatoryInput: false }),
         };
@@ -138,29 +144,37 @@ export const ReportDogPage = withAuthenticationRequired(
                 breed: inputs.dogBreed.value,
                 color: inputs.dogColor.value,
                 size: inputs.dogSize.value,
+                chipNumber: inputs.chipNumber.value,
                 extraDetails: inputs.extraDetails.value,
-                img: imageBlob,
+                sex: inputs.dogSex.value,
+                imgs: [imageBlob],
             };
             setIsLoading(true);
             const response = await serverApi.report_dog(payload);
-            setRequestStatus(response.status === 200 ? "success" : "error");
+            if (response.status === 200) {
+                setRequestStatus("success");
+            } else {
+                setRequestStatus("error");
+            }
+
             clearInputs();
             setIsLoading(false);
         };
 
-        const getTitle = () => {
-            if (dogType === DogType.LOST) {
-                return AppTexts.reportPage.title.lost;
-            }
-            return AppTexts.reportPage.title.found;
-        };
+        const getTitle = () =>
+            dogType === DogType.LOST
+                ? AppTexts.reportPage.title.lost
+                : AppTexts.reportPage.title.found;
 
-        const getSuccessMessage = () => {
-            if (dogType === DogType.LOST) {
-                return AppTexts.reportPage.request.success.reportedLost;
-            }
-            return AppTexts.reportPage.request.success.reportedFound;
-        };
+        const getSuccessMessage = () =>
+            dogType === DogType.LOST
+                ? AppTexts.reportPage.request.success.reportedLost
+                : AppTexts.reportPage.request.success.reportedFound;
+
+        const getLocationText = () =>
+            dogType === DogType.LOST
+                ? AppTexts.reportPage.locationDetails.locationDescriptionLost
+                : AppTexts.reportPage.locationDetails.locationDescriptionFound;
 
         return (
             <PageContainer>
@@ -209,6 +223,11 @@ export const ReportDogPage = withAuthenticationRequired(
                                 onChange={inputs.dogSize.onTextChange}
                                 error={!inputs.dogSize.isTextValid}
                             />
+                            <SelectInputField
+                                options={dogSexOptions}
+                                label={AppTexts.reportPage.dogDetails.dogSex}
+                                onChange={inputs.dogSex.onSelectChange}
+                            />
                             <RTLTextField
                                 label={AppTexts.reportPage.dogDetails.dogColor}
                                 type="text"
@@ -218,20 +237,19 @@ export const ReportDogPage = withAuthenticationRequired(
                                 onChange={inputs.dogColor.onTextChange}
                                 error={!inputs.dogColor.isTextValid}
                             />
-                            {/* <RTLTextField
-              label={AppTexts.reportPage.dogDetails.chipNumber}
-              type="number"
-              fullWidth
-              margin="normal"
-              value={inputs.chipNumber.value}
-              onChange={inputs.chipNumber.onTextChange}
-              error={!inputs.chipNumber.isTextValid}
-            /> */}
                             <RTLTextField
                                 label={
-                                    AppTexts.reportPage.locationDetails
-                                        .locationDescription
+                                    AppTexts.reportPage.dogDetails.chipNumber
                                 }
+                                type="text"
+                                fullWidth
+                                margin="normal"
+                                value={inputs.chipNumber.value}
+                                onChange={inputs.chipNumber.onTextChange}
+                                error={!inputs.chipNumber.isTextValid}
+                            />
+                            <RTLTextField
+                                label={getLocationText()}
                                 fullWidth
                                 type="text"
                                 margin="normal"

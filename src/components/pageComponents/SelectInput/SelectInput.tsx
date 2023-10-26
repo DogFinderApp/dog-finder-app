@@ -1,8 +1,6 @@
 import { SelectProps, alpha, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import { FC, ReactNode } from "react";
+import { FC, ReactElement, ReactNode } from "react";
 import { createStyleHook } from "../../../hooks/styleHooks";
-import { AppTexts } from "../../../consts/texts";
-import { DogType } from "../../../facades/payload.types";
 
 const RTLWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   return <div dir="rtl">{children}</div>;
@@ -51,15 +49,28 @@ const useSelectInputStyles = createStyleHook((theme) => {
   };
 });
 
-export const SelectInputField: FC<SelectProps> = (props) => {
+interface SelectInputProps extends SelectProps{
+  options: { [key: string]: string }
+  label: string;
+}
+
+
+export const SelectInputField: FC<SelectInputProps> = (props) => {
   const styles = useSelectInputStyles();
+
+  const { options, label, ...selectProps } = props;
+
+  const menuItems: Array<ReactElement> = Object.keys(options).map((itemValue, index) => 
+      <MenuItem key={`menu_${itemValue}-${index}`} value={itemValue} dir="rtl">{options[itemValue]}</MenuItem>
+  )
+  
+
   return (
     <RTLWrapper>
       <FormControl sx={styles.root}>
-        <InputLabel>{AppTexts.reportPage.dogType.label}</InputLabel>
-        <Select {...props} sx={styles.select}>
-            <MenuItem value={DogType.LOST} dir="rtl">{AppTexts.reportPage.dogType.lost}</MenuItem>
-            <MenuItem value={DogType.FOUND} dir="rtl">{AppTexts.reportPage.dogType.found}</MenuItem>
+        <InputLabel>{label}</InputLabel>
+        <Select {...selectProps} sx={styles.select}>
+            { menuItems }
         </Select>
       </FormControl>
       </RTLWrapper>

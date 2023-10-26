@@ -11,7 +11,7 @@ export const AppTexts = {
   searchPage: {
     title: "חיפוש אחר כלב",
     beforeReportingLost:
-      "שנייה לפני שמדווחים, בואו נבדוק אם מישהו כבר דיווח על הכלב כנעדר",
+      "העלו תמונה של כלב שמצאתם ונראה אם מישהו דיווח עליו כנמצא",
     submit: "חיפוש",
   },
   reportPage: {
@@ -28,17 +28,23 @@ export const AppTexts = {
       lost: "אבוד",
       found: "נמצא",
     },
+    dogSex: {
+      female: "נקבה",
+      male: "זכר",
+    },
     locationDetails: {
-      locationDescription: "המיקום בו נמצא",
+      locationDescriptionFound: "המיקום בו נמצא",
+      locationDescriptionLost: "המיקום בו נאבד",
     },
     dateDetails: {
       foundDate: "תאריך בו נמצא",
       lostDate: "תאריך בו אבד",
     },
     dogDetails: {
-      dogRace: "גזע הכלב",
-      dogSize: "גודל הכלב",
+      dogRace: "גזע הכלב/ה",
+      dogSize: "גודל הכלב/ה",
       dogColor: "צבע הפרווה",
+      dogSex: "מין הכלב/ה",
       chipNumber: "מספר שבב",
     },
     extraDetails: {
@@ -86,8 +92,8 @@ export const AppTexts = {
   navigation: {
     home: "בית",
     report: "דיווח על כלב",
-    reportFound: "דיווח על כלב שנמצא",
+    reportFound: homePageButtons.foundDog,
     searchLostDog: homePageButtons.lostDog,
-    searchFoundDog: homePageButtons.foundDog,
+    searchFoundDog: "חיפוש כלב במאגר הנעדרים",
   },
 };
