@@ -89,7 +89,7 @@ export const AppTexts = {
     dogDetails: {
         title: "פרטי הכלב",
         hamalButton: "המשך ליצירת קשר",
-        backButton: "חזרה לרשימה המלאה",
+        backButton: "חזרה אחורה",
         markAsReturndButton: "סמן כהושב לבעליו",
         loading: "...דף בטעינה",
     },
