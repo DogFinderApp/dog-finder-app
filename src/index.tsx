@@ -9,16 +9,22 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { Auth0Provider } from "@auth0/auth0-react";
 
+
+const authDomain = process.env.REACT_APP_AUTH0_DOMAIN || "unknown";
+const authClient = process.env.REACT_APP_AUTH0_CLIENT_ID || "unknonw";
+const auth0Audience = process.env.REACT_APP_AUTH0_AUDIENCE || "";
+
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
 );
+
 root.render(
     <Auth0Provider
-        domain="dog-finder.eu.auth0.com"
-        clientId="8AQ2bGZCSUHQ41Et9f139z6aabFNanxG"
+        domain={authDomain}
+        clientId={authClient}
         authorizationParams={{
             redirect_uri: window.location.origin,
-            audience: "https://galzo.github.io/dog-finder/",
+            audience: auth0Audience,
             scope: "read:dogs",
         }}
     >

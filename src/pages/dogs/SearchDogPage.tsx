@@ -11,10 +11,10 @@ import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
 import { useImageSelection } from "../../hooks/useImageSelection";
 import { IconSearch } from "@tabler/icons-react";
-import { DogType } from "../../facades/payload.types";
+import { DogType, QueryPayload } from "../../facades/payload.types";
 import { useState } from "react";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import { getImageBlob } from "../../utils/imageUtils";
+import { cleanImage } from "../../utils/imageUtils";
 import { useNavigate } from "react-router-dom";
 import { RTLWrapper } from "../../components/common/RTLWrapper";
 import { AppRoutes } from "../../consts/routes";
@@ -42,10 +42,10 @@ export const SearchDogPage = withAuthenticationRequired((props: SearchProps) => 
     if (!selectedImageUrl) {
       return;
     }
-    const imageBlob = await getImageBlob(selectedImageUrl);
-    const payload = {
-      type: dogType,
-      img: imageBlob,
+    const imageInput = await cleanImage(selectedImageUrl);
+    const payload: QueryPayload = {
+      dogType: dogType,
+      base64Image: imageInput,
     };
 
     navigate(AppRoutes.dogs.results.replace(":dogType", dogType), { state: payload });
