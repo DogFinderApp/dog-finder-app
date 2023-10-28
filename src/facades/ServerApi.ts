@@ -38,30 +38,37 @@ class ServerApi {
         return response;
     }
 
-    async sendData(
-        url: RequestInfo,
-        data: { [key: string]: any },
-        method: string,
-        headers?: HeadersInit
-    ) {
-        const formData = new FormData();
-        const token = this.token;
+  async sendData(url: RequestInfo, data: { [key: string]: any }, method: string, headers?: HeadersInit, listAttributes?: Array<string> | undefined) {
+    const formData  = new FormData();
+    const token = this.token;
 
-        for (const value in data) {
-            formData.append(value, data[value]);
-        }
-
-        const response = await fetch(url, {
-            method: method,
-            body: formData,
-            headers: {
-                ...headers,
-                Authorization: `Bearer ${token}`,
-            },
+    if (listAttributes) {
+      listAttributes.forEach((listAttributeName) => {
+        const values = data[listAttributeName];
+        values.forEach((value: any) => {
+          formData.append(listAttributeName, value)
         });
 
-        return response;
+        delete data[listAttributeName];
+      });
+
     }
+
+    for(const value in data) {
+      formData.append(value, data[value]);
+    }
+  
+    const response = await fetch(url, {
+      method: method,
+      body: formData,
+      headers: {
+        ...headers,
+        Authorization: `Bearer ${token}`,
+      }
+    });
+  
+    return response
+  }
 
     // enter endpoint
     async query(payload: QueryPayload) {
@@ -86,7 +93,7 @@ class ServerApi {
     async report_dog(payload: ReportDogPayload) {
         let url = build_endpoint("/dogfinder/add_document");
 
-        return this.sendData(url, payload, "POST");
+        return this.sendData(url, payload, "POST", undefined, ["imgs"]);
     }
     async getDogDetails(dogId: number) {
         let url = build_endpoint(`/dogfinder/query_by_dog_id/?dogId=${dogId}`);

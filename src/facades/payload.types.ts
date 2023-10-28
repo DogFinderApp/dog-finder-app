@@ -3,6 +3,12 @@ export enum DogType {
     FOUND = "found",
 }
 
+export enum DogSex {
+    FEMALE = "female",
+    MALE = "male"
+};
+
+
 export interface QueryPayload {
     type: DogType;
     img: Blob;
@@ -10,7 +16,7 @@ export interface QueryPayload {
 
 export interface ReportDogPayload {
     type: DogType;
-    img: Blob;
+    imgs: Array<Blob>;
     contactName: string;
     contactPhone: string;
     contactEmail?: string;
@@ -18,6 +24,26 @@ export interface ReportDogPayload {
     foundAtLocation: string;
     breed?: string;
     color?: string;
-    size?: string;
+    size?: string;    
+    sex?: string;
+    location?: string;
+    chipNumber: string;
     extraDetails?: string;
-}
+};
+
+export interface DogResult {
+    dogId: string;
+    contactName: string;
+    contactPhone: string;
+    contactEmail?: string;
+    contactAdress?: string
+    breed?: string;
+    color?: string;
+    size?: string;    
+    sex?: string;
+    location?: string;
+    chipNumber: string;
+    extraDetails?: string;
+    imageBase64: string;
+    imageContentType: string;
+};

@@ -2,12 +2,12 @@ import React from "react";
 import { Alert, Button, Typography } from "@mui/material";
 import { AppTexts } from "../../consts/texts";
 import { KeyedMutator } from "swr";
-import { Dog } from "./ResultsGrid";
+import { DogResult } from "../../facades/payload.types";
 
 export const ErrorLoadingDogs = ({
   refresh,
 }: {
-  refresh: KeyedMutator<Dog[]>;
+  refresh: KeyedMutator<DogResult[]>;
 }) => {
   return (
     <Alert
