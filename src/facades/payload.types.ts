@@ -10,13 +10,13 @@ export enum DogSex {
 
 
 export interface QueryPayload {
-    type: DogType;
-    img: Blob;
+    dogType: DogType;
+    base64Image: string;
 }
 
 export interface ReportDogPayload {
     type: DogType;
-    imgs: Array<Blob>;
+    base64Images: Array<string>;
     contactName: string;
     contactPhone: string;
     contactEmail?: string;
