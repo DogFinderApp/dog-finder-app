@@ -2,7 +2,6 @@
   "name": "dog-finder",
   "version": "0.1.0",
   "private": true,
-
   "dependencies": {
     "@auth0/auth0-react": "^2.2.1",
     "@emotion/react": "^11.11.1",
@@ -11,14 +10,8 @@
     "@lottiefiles/react-lottie-player": "^3.5.3",
     "@mui/material": "^5.14.13",
     "@tabler/icons-react": "^2.39.0",
-    "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.58",
-    "@types/react": "^18.2.28",
-    "@types/react-dom": "^18.2.13",
-    "@types/validator": "^13.11.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
@@ -54,7 +47,11 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^20.8.9",
+    "@types/react": "^18.2.33",
+    "@types/react-dom": "^18.2.14",
     "@types/react-router-dom": "^5.3.3",
+    "@types/validator": "^13.11.5",
     "gh-pages": "^6.0.0"
   }
 }
