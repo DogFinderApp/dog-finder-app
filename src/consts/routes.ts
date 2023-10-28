@@ -7,57 +7,57 @@ import { ResultsDogPage } from "../pages/dogs/ResultsDogPage";
 import { DogDetailsPage } from "../pages/dogs/DogDetailsPage";
 
 export const AppRoutes = {
-    root: "/",
-    dogs: {
-        dogPage: "/dogs/:dog_id",
-        report: "/dogs/report",
-        reportFound: "/dogs/report-found",
-        reportLost: "/dogs/report-missing",
-        searchLostDog: "/dogs/search-lost",
-        searchFoundDog: "/dogs/search-found",
-        results: "/dogs/results/:dogType",
-    },
+  root: "/",
+  dogs: {
+    dogPage: "/dogs/:dog_id",
+    report: "/dogs/report",
+    reportFound: "/dogs/report-found",
+    reportLost: "/dogs/report-missing",
+    searchLostDog: "/dogs/search-lost",
+    searchFoundDog: "/dogs/search-found",
+    results: "/dogs/results/:dogType",
+  },
 };
 
 type RouteElement = () => JSX.Element;
 
 interface Route {
-    path: string;
-    element: RouteElement | FC<any>;
-    props?: Record<any, any>;
+  path: string;
+  element: RouteElement | FC<any>;
+  props?: Record<any, any>;
 }
 
 export const routesWithElements: Route[] = [
-    {
-        path: AppRoutes.root,
-        element: HomePage,
-    },
-    {
-        path: AppRoutes.dogs.reportLost,
-        element: ReportDogPage as RouteElement,
-        props: { dogType: DogType.LOST },
-    },
-    {
-        path: AppRoutes.dogs.reportFound,
-        element: ReportDogPage as RouteElement,
-        props: { dogType: DogType.FOUND },
-    },
-    {
-        path: AppRoutes.dogs.searchLostDog,
-        element: SearchDogPage as RouteElement,
-        props: { dogType: DogType.LOST },
-    },
-    {
-        path: AppRoutes.dogs.searchFoundDog,
-        element: SearchDogPage as RouteElement,
-        props: { dogType: DogType.FOUND },
-    },
-    {
-        path: AppRoutes.dogs.results,
-        element: ResultsDogPage,
-    },
-    {
-        path: AppRoutes.dogs.dogPage,
-        element: DogDetailsPage,
-    },
+  {
+    path: AppRoutes.root,
+    element: HomePage,
+  },
+  {
+    path: AppRoutes.dogs.reportLost,
+    element: ReportDogPage as RouteElement,
+    props: { dogType: DogType.LOST },
+  },
+  {
+    path: AppRoutes.dogs.reportFound,
+    element: ReportDogPage as RouteElement,
+    props: { dogType: DogType.FOUND },
+  },
+  {
+    path: AppRoutes.dogs.searchLostDog,
+    element: SearchDogPage as RouteElement,
+    props: { dogType: DogType.LOST },
+  },
+  {
+    path: AppRoutes.dogs.searchFoundDog,
+    element: SearchDogPage as RouteElement,
+    props: { dogType: DogType.FOUND },
+  },
+  {
+    path: AppRoutes.dogs.results,
+    element: ResultsDogPage,
+  },
+  {
+    path: AppRoutes.dogs.dogPage,
+    element: DogDetailsPage,
+  },
 ];
