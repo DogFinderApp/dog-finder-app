@@ -96,4 +96,11 @@ export const AppTexts = {
         searchLostDog: homePageButtons.lostDog,
         searchFoundDog: "חיפוש כלב במאגר הנעדרים",
     },
+    dogDetails: {
+        title: "פרטי הכלב",
+        hamalButton: "המשך ליצירת קשר",
+        backButton: "חזרה אחורה",
+        markAsReturndButton: "סמן כהושב לבעליו",
+        loading: "...דף בטעינה",
+    },
 };
