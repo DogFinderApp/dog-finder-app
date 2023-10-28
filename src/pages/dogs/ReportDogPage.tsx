@@ -25,7 +25,7 @@ import { useSelectInput } from "../../hooks/useSelectInput";
 import { DogSex, DogType, ReportDogPayload } from "../../facades/payload.types";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 import { useGetServerApi } from "../../facades/ServerApi";
-import { getImageBlob } from "../../utils/imageUtils";
+import { cleanImage } from "../../utils/imageUtils";
 
 const useReportDogPageStyles = createStyleHook(
   (theme, props: { isError: boolean }) => {
@@ -74,7 +74,7 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
     dogBreed: useTextInput({ isMandatoryInput: false }),
     dogSize: useTextInput({ isMandatoryInput: false }),
     dogColor: useTextInput({ isMandatoryInput: false }),
-    dogSex: useSelectInput({ isMandatoryInput: false, possibleValues: Object.keys(dogSexOptions) }),
+    dogSex: useSelectInput({ isMandatoryInput: true, possibleValues: Object.keys(dogSexOptions) }),
     chipNumber: useTextInput({ isMandatoryInput: false }),
     location: useTextInput({ isMandatoryInput: true }),
     contactName: useTextInput({ isMandatoryInput: true }),
@@ -115,7 +115,7 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
       return;
     }
 
-    const imageBlob = await getImageBlob(selectedImageUrl);
+    const imageInput = cleanImage(selectedImageUrl);
     const payload: ReportDogPayload = {
       type: dogType,
       contactName: inputs.contactName.value,
@@ -129,7 +129,7 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
       chipNumber: inputs.chipNumber.value,
       extraDetails: inputs.extraDetails.value,
       sex: inputs.dogSex.value,
-      imgs: [imageBlob],
+      base64Images: [imageInput],
     };
     setIsLoading(true);
     const response = await serverApi.report_dog(payload);
@@ -219,6 +219,7 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
             <SelectInputField 
               options={dogSexOptions} label={AppTexts.reportPage.dogDetails.dogSex}
               onChange={inputs.dogSex.onSelectChange}
+              error={!inputs.dogSex.isValueValid}
               />
             <RTLTextField
               label={AppTexts.reportPage.dogDetails.dogColor}
