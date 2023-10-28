@@ -128,8 +128,8 @@ export const ReportDogPage = withAuthenticationRequired(
                 const { dateInput } = inputs.date;
                 // @ts-expect-error
                 const { $D, $M, $y } = dateInput;
-                // format the selected date to match dd/mm/yyyy
-                return `${withZero($D)}/${withZero($M)}/${$y}`;
+                // format the selected date to match yyyy-mm-dd
+                return `${$y}-${withZero($M)}-${withZero($D)}`;
             };
 
             const imageBlob = await getImageBlob(selectedImageUrl);
