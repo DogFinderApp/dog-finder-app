@@ -15,6 +15,7 @@ import { useImageSelection } from "../../hooks/useImageSelection";
 import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
 import { RTLTextField } from "../../components/pageComponents/RTLTextInput/RTLTextField";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
+import usePageTitle from "../../hooks/usePageTitle";
 import { useTextInput } from "../../hooks/useTextInput";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { IconSend } from "@tabler/icons-react";
@@ -52,14 +53,19 @@ interface ReportDogPageProps {
   dogType: DogType
 }
 
-export const ReportDogPage = withAuthenticationRequired((props: ReportDogPageProps) => {
-  const { onSelectImage, selectedImageUrl, clearSelection } =
-    useImageSelection();
-  const [isMissingImage, setIsMissingImage] = useState(false);
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [requestStatus, setRequestStatus] = useState<string>("");
-  const { dogType } = props;
+export const ReportDogPage = withAuthenticationRequired(
+  ({ dogType }: ReportDogPageProps) => {
+    usePageTitle(
+      dogType === DogType.FOUND
+        ? AppTexts.reportPage.title.found
+        : AppTexts.reportPage.title.lost
+    );
+    const { onSelectImage, selectedImageUrl, clearSelection } =
+      useImageSelection();
+    const [isMissingImage, setIsMissingImage] = useState(false);
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [requestStatus, setRequestStatus] = useState<string>("");
 
   const theme = useTheme();
   const styles = useReportDogPageStyles({ isError: showErrorMessage });
