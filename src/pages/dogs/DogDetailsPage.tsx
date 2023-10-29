@@ -71,7 +71,7 @@ export const DogDetailsPage = () => {
         }
     );
 
-    const image = `data:${data?.images[0].imageContentType};base64,${data?.images[0].base64Image}`;
+    const image = `data:${data?.images[0].imageContentType};base64${data?.images[0].base64Image}`;
 
     const BackdropComp: FC<{ children: ReactNode }> = ({ children }) => {
         return (
