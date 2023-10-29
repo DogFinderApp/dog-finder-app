@@ -115,34 +115,42 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
 
       if (showError) return;
 
-    const imageInput = cleanImage(selectedImageUrl);
-    const payload: ReportDogPayload = {
-      type: dogType,
-      contactName: inputs.contactName.value,
-      contactAdress: inputs.contactAddress.value,
-      contactPhone: inputs.contactPhone.value,
-      contactEmail: inputs.contactEmail.value,
-      foundAtLocation: inputs.location.value,
-      breed: inputs.dogBreed.value, 
-      color: inputs.dogColor.value, 
-      size: inputs.dogSize.value,
-      chipNumber: inputs.chipNumber.value,
-      extraDetails: inputs.extraDetails.value,
-      sex: inputs.dogSex.value,
-      base64Images: [imageInput],
-    };
-    setIsLoading(true);
-    const response = await serverApi.report_dog(payload);
-    if (response.status === 200) {
-      setRequestStatus("success");
-      if (dogType === DogType.FOUND) {
-        navigate(AppRoutes.dogs.results.replace(":dogType", dogType), {
-          state: { type: dogType, img: imageBlob },
-        });
+      const imageInput = cleanImage(selectedImageUrl);
+      const payload: ReportDogPayload = {
+        type: dogType,
+        contactName: inputs.contactName.value,
+        contactAdress: inputs.contactAddress.value,
+        contactPhone: inputs.contactPhone.value,
+        contactEmail: inputs.contactEmail.value,
+        foundAtLocation: inputs.location.value,
+        breed: inputs.dogBreed.value,
+        color: inputs.dogColor.value,
+        size: inputs.dogSize.value,
+        chipNumber: inputs.chipNumber.value,
+        extraDetails: inputs.extraDetails.value,
+        sex: inputs.dogSex.value,
+        base64Images: [imageInput],
+      };
+      setIsLoading(true);
+      const response = await serverApi.report_dog(payload);
+
+      if (response.status !== 200) {
+        setRequestStatus("error");
+        setIsLoading(false);
+        return;
       }
 
-      clearInputs();
+      setRequestStatus("success");
       setIsLoading(false);
+      clearInputs();
+      setTimeout(() => {
+        // wait before navigating to results page in order to show the success/error toast
+        if (dogType === DogType.FOUND) {
+          navigate(AppRoutes.dogs.results.replace(":dogType", dogType), {
+            state: { type: dogType, img: imageInput },
+          });
+        }
+      }, 2000);
     };
 
   const getTitle = () => {
