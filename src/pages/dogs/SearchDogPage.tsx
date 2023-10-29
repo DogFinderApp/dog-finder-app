@@ -10,6 +10,7 @@ import { PageContainer } from "../../components/pageComponents/PageContainer/Pag
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
 import { useImageSelection } from "../../hooks/useImageSelection";
+import usePageTitle from "../../hooks/usePageTitle";
 import { IconSearch } from "@tabler/icons-react";
 import { DogType, QueryPayload } from "../../facades/payload.types";
 import { useState } from "react";
@@ -24,13 +25,13 @@ interface SearchProps {
   dogType: DogType
 };
 
-export const SearchDogPage = withAuthenticationRequired((props: SearchProps) => {
+export const SearchDogPage = withAuthenticationRequired(
+  ({ dogType }: SearchProps) => {
+    usePageTitle(AppTexts.searchPage.title);
   const navigate = useNavigate();
   const theme = useTheme();
   const { onSelectImage, selectedImageFile, selectedImageUrl, clearSelection } =
     useImageSelection();
-  const { dogType } = props;
-  
   const [isMissingPhoto, setIsMissingPhoto] = useState(false);
 
   const onClickSearch = async () => {

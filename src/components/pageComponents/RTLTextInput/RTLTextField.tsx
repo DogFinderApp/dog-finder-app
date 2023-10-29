@@ -2,11 +2,11 @@ import { TextField, TextFieldProps, alpha } from "@mui/material";
 import React, { FC, ReactNode } from "react";
 import { createStyleHook } from "../../../hooks/styleHooks";
 
-const RTLWrapper: FC<{ children: ReactNode }> = ({ children }) => {
+export const RTLWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   return <div dir="rtl">{children}</div>;
 };
 
-const useRTLTextFieldStyles = createStyleHook((theme) => {
+export const useRTLTextFieldStyles = createStyleHook((theme) => {
   return {
     root: {
       width: "500px",
