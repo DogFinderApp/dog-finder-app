@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Alert,
   AlertColor,
@@ -9,12 +10,19 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { IconSend } from "@tabler/icons-react";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
+import { IconSend } from "@tabler/icons-react";
 import { AppTexts } from "../../consts/texts";
+import { AppRoutes } from "../../consts/routes";
 import { DogSex, DogType, ReportDogPayload } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { cleanImage } from "../../utils/imageUtils";
+import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
+import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
+import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
+import { RTLTextField } from "../../components/pageComponents/RTLTextInput/RTLTextField";
+import DatePicker from "../../components/DatePicker/DatePicker";
+import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 import { useImageSelection } from "../../hooks/useImageSelection";
 import usePageTitle from "../../hooks/usePageTitle";
 import { useTextInput } from "../../hooks/useTextInput";
@@ -23,12 +31,6 @@ import { usePhoneNumberInput } from "../../hooks/usePhoneNumberInput";
 import { useEmailInput } from "../../hooks/useEmailInput";
 import { useSelectInput } from "../../hooks/useSelectInput";
 import { useDateInput } from "../../hooks/useDateInput";
-import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
-import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
-import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
-import { RTLTextField } from "../../components/pageComponents/RTLTextInput/RTLTextField";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 
 const useReportDogPageStyles = createStyleHook(
   (theme, props: { isError: boolean }) => {
@@ -37,7 +39,7 @@ const useReportDogPageStyles = createStyleHook(
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        heigt: "100%",
+        height: "100%",
         width: "100%",
       },
       button: {
@@ -71,6 +73,7 @@ export const ReportDogPage = withAuthenticationRequired(
     const [requestStatus, setRequestStatus] = useState<string>("");
 
     const theme = useTheme();
+    const navigate = useNavigate();
     const styles = useReportDogPageStyles({ isError: showErrorMessage });
     const getServerApi = useGetServerApi();
 
@@ -156,11 +159,23 @@ export const ReportDogPage = withAuthenticationRequired(
       };
       setIsLoading(true);
       const response = await serverApi.report_dog(payload);
-      if (response.status === 200) {
-        setRequestStatus("success");
-      } else {
+      if (response.status !== 200) {
         setRequestStatus("error");
+        setIsLoading(false);
+        return;
       }
+
+      setRequestStatus("success");
+      setIsLoading(false);
+      clearInputs();
+      setTimeout(() => {
+        // wait before navigating to results page in order to show the success/error toast
+        if (dogType === DogType.FOUND) {
+          navigate(AppRoutes.dogs.results.replace(":dogType", dogType), {
+            state: { type: dogType, img: imageInput },
+          });
+        }
+      }, 2000);
 
       clearInputs();
       setIsLoading(false);
