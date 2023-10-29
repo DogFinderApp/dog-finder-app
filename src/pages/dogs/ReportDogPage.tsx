@@ -16,6 +16,7 @@ import { DogSex, DogType, ReportDogPayload } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { cleanImage } from "../../utils/imageUtils";
 import { useImageSelection } from "../../hooks/useImageSelection";
+import usePageTitle from "../../hooks/usePageTitle";
 import { useTextInput } from "../../hooks/useTextInput";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { usePhoneNumberInput } from "../../hooks/usePhoneNumberInput";
@@ -55,14 +56,19 @@ interface ReportDogPageProps {
 }
 
 export const ReportDogPage = withAuthenticationRequired(
-  (props: ReportDogPageProps) => {
+  ({ dogType }: ReportDogPageProps) => {
+    usePageTitle(
+      dogType === DogType.FOUND
+        ? AppTexts.reportPage.title.found
+        : AppTexts.reportPage.title.lost
+    );
+
     const { onSelectImage, selectedImageUrl, clearSelection } =
       useImageSelection();
     const [isMissingImage, setIsMissingImage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [requestStatus, setRequestStatus] = useState<string>("");
-    const { dogType } = props;
 
     const theme = useTheme();
     const styles = useReportDogPageStyles({ isError: showErrorMessage });

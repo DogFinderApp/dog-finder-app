@@ -8,6 +8,7 @@ import { AppRoutes } from "../../consts/routes";
 import { Player } from "@lottiefiles/react-lottie-player";
 import dogAnim from "../../assets/animations/dogAnim.json";
 import { useWindowSize } from "../../hooks/useWindowSize";
+import usePageTitle from "../../hooks/usePageTitle";
 
 const useHomePageStyles = createStyleHook((theme) => {
   return {
@@ -38,6 +39,7 @@ const useHomePageStyles = createStyleHook((theme) => {
 });
 
 export const HomePage = () => {
+  usePageTitle("Dog Finder");
   const styles = useHomePageStyles();
   const windowSize = useWindowSize();
   const navigate = useNavigate();
@@ -65,11 +67,17 @@ export const HomePage = () => {
           }}
         />
         <Box sx={styles.content}>
-          <Button {...commonButtonProps} onClick={() => navigate(AppRoutes.dogs.searchLostDog)}>
+          <Button
+            {...commonButtonProps}
+            onClick={() => navigate(AppRoutes.dogs.searchLostDog)}
+          >
             <IconSearch {...commonIconProps} />
             {AppTexts.homePage.cta.lostDog}
           </Button>
-          <Button {...commonButtonProps} onClick={() => navigate(AppRoutes.dogs.reportFound)}>
+          <Button
+            {...commonButtonProps}
+            onClick={() => navigate(AppRoutes.dogs.reportFound)}
+          >
             <IconPaw {...commonIconProps} />
             {AppTexts.homePage.cta.foundDog}
           </Button>
