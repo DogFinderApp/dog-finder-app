@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   Alert,
   AlertColor,
@@ -10,6 +11,7 @@ import {
 } from "@mui/material";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { AppTexts } from "../../consts/texts";
+import { AppRoutes } from "../../consts/routes";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { useImageSelection } from "../../hooks/useImageSelection";
 import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
@@ -34,7 +36,7 @@ const useReportDogPageStyles = createStyleHook(
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        heigt: "100%",
+        height: "100%",
         width: "100%",
       },
       button: {
@@ -61,9 +63,10 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
   const [requestStatus, setRequestStatus] = useState<string>("");
   const { dogType } = props;
 
-  const theme = useTheme();
-  const styles = useReportDogPageStyles({ isError: showErrorMessage });
-  const getServerApi = useGetServerApi();
+    const theme = useTheme();
+    const navigate = useNavigate();
+    const styles = useReportDogPageStyles({ isError: showErrorMessage });
+    const getServerApi = useGetServerApi();
 
   const dogSexOptions = {
       [DogSex.FEMALE]: AppTexts.reportPage.dogSex.female,
@@ -90,61 +93,62 @@ export const ReportDogPage = withAuthenticationRequired((props: ReportDogPagePro
     });
     clearSelection();
   };
-
-  const handleCloseError = () => {
-    setRequestStatus("");
-  };
-
-  const handleSubmitForm = async () => {
-    // get server api
-    const serverApi = await getServerApi();
-    // Validate image upload
-    const isMissingImage = !selectedImageUrl;
-    setIsMissingImage(isMissingImage);
-
-    // Validate all mandatory fields were filled
-    const inputValidation = Object.values(inputs).map((input) =>
-      input.validateInput()
-    );
-    const hasInvalidInputs = inputValidation.some((res) => !res);
-
-    const showError = hasInvalidInputs || isMissingImage;
-    setShowErrorMessage(showError);
-
-    if (showError) {
-      return;
-    }
-
-    const imageBlob = await getImageBlob(selectedImageUrl);
-    const payload: ReportDogPayload = {
-      type: dogType,
-      contactName: inputs.contactName.value,
-      contactAdress: inputs.contactAddress.value,
-      contactPhone: inputs.contactPhone.value,
-      contactEmail: inputs.contactEmail.value,
-      foundAtLocation: inputs.location.value,
-      breed: inputs.dogBreed.value, 
-      color: inputs.dogColor.value, 
-      size: inputs.dogSize.value,
-      chipNumber: inputs.chipNumber.value,
-      extraDetails: inputs.extraDetails.value,
-      sex: inputs.dogSex.value,
-      imgs: [imageBlob],
+    const handleCloseError = () => {
+      setRequestStatus("");
     };
-    setIsLoading(true);
-    const response = await serverApi.report_dog(payload);
-    if (response.status === 200) {
+
+    const handleSubmitForm = async () => {
+      // get server api
+      const serverApi = await getServerApi();
+      // Validate image upload
+      const isMissingImage = !selectedImageUrl;
+      setIsMissingImage(isMissingImage);
+
+      // Validate all mandatory fields were filled
+      const inputValidation = Object.values(inputs).map((input) =>
+        input.validateInput()
+      );
+      const hasInvalidInputs = inputValidation.some((res) => !res);
+
+      const showError = hasInvalidInputs || isMissingImage;
+      setShowErrorMessage(showError);
+
+      if (showError) return;
+
+      const imageBlob = await getImageBlob(selectedImageUrl);
+
+      const payload: ReportDogPayload = {
+        type: dogType,
+        contactName: inputs.contactName.value,
+        contactAdress: inputs.contactAddress.value,
+        contactPhone: inputs.contactPhone.value,
+        contactEmail: inputs.contactEmail.value,
+        foundAtLocation: inputs.location.value,
+        breed: inputs.dogBreed.value,
+        color: inputs.dogColor.value,
+        size: inputs.dogSize.value,
+        chipNumber: inputs.chipNumber.value,
+        extraDetails: inputs.extraDetails.value,
+        sex: inputs.dogSex.value,
+        imgs: [imageBlob],
+      };
+      setIsLoading(true);
+      const response = await serverApi.report_dog(payload);
+      if (response.status !== 200) {
+        setRequestStatus("error");
+        return;
+      }
       setRequestStatus("success");
-    } else {
-      setRequestStatus("error");
-    }
+      if (dogType === DogType.FOUND) {
+        navigate(AppRoutes.dogs.results.replace(":dogType", dogType), {
+          state: { type: dogType, img: imageBlob },
+        });
+      }
 
-    
+      clearInputs();
+      setIsLoading(false);
+    };
 
-    clearInputs();
-    setIsLoading(false);
-  };
-  
   const getTitle = () => {
     if (dogType === DogType.LOST) {
       return AppTexts.reportPage.title.lost;
