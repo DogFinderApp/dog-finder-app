@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { Box } from "@mui/material";
+import usePageTitle from "../../hooks/usePageTitle";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { AppTexts } from "../../consts/texts";
@@ -26,6 +27,7 @@ const fetcher = async (
 };
 
 export const ResultsDogPage = () => {
+  usePageTitle(AppTexts.resultsPage.title);
   const { state: payload } = useLocation();
   const getServerApi = useGetServerApi();
   const { dogType } = useParams();

@@ -70,34 +70,44 @@ class ServerApi {
     return response
   }
 
-    // enter endpoint
-    async query(payload: QueryPayload) {
-        let url = build_endpoint("/dogfinder/query/");
-
-        return this.sendData(url, payload, "POST");
-    }
-
     async searchDog(payload: QueryPayload) {
-        const dogType = payload.type;
-        const newPayload = {
-            img: payload.img,
-        };
-        let url = build_endpoint("/dogfinder/search_found_dogs/");
+        const { dogType, ...newPayload } = payload;
+        let url = build_endpoint("/dogfinder/search_in_found_dogs");
         if (dogType === DogType.FOUND) {
-            url = build_endpoint("/dogfinder/search_lost_dogs/");
+            url = build_endpoint("/dogfinder/search_in_lost_dogs");
         }
 
-        return this.sendData(url, newPayload, "POST");
+        return this.fetch(url, {
+          method: "POST",
+          body: JSON.stringify(newPayload),
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
     }
 
     async report_dog(payload: ReportDogPayload) {
         let url = build_endpoint("/dogfinder/add_document");
 
-        return this.sendData(url, payload, "POST", undefined, ["imgs"]);
+        return this.fetch(url, {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
     }
+
     async getDogDetails(dogId: number) {
-        let url = build_endpoint(`/dogfinder/query_by_dog_id/?dogId=${dogId}`);
+        let url = build_endpoint(`/dogfinder/get_dog_by_id?dogId=${dogId}`);
         return this.fetch(url);
+    }
+
+    async getFullDogDetails(dogId: number) {
+      const url = build_endpoint(`/dogfinder/get_dog_by_id?dogId=${dogId}`);
+      return this.fetch(url);
     }
 }
 
