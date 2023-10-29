@@ -1,8 +1,6 @@
 import { SelectProps, alpha, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { FC, ReactElement, ReactNode } from "react";
 import { createStyleHook } from "../../../hooks/styleHooks";
-import { AppTexts } from "../../../consts/texts";
-import { DogType } from "../../../facades/payload.types";
 
 const RTLWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   return <div dir="rtl">{children}</div>;
