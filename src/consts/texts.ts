@@ -28,20 +28,24 @@ export const AppTexts = {
             lost: "אבוד",
             found: "נמצא",
         },
-    dogSex: {
-      female: "נקבה",
-      male: "זכר"
-    },
+        dogSex: {
+            female: "נקבה",
+            male: "זכר",
+        },
         locationDetails: {
             locationDescriptionFound: "המיקום בו נמצא",
-      locationDescriptionLost: "המיקום בו נאבד",
+            locationDescriptionLost: "המיקום בו נאבד",
+        },
+        dateDetails: {
+            foundDate: "תאריך בו נמצא",
+            lostDate: "תאריך בו אבד",
         },
         dogDetails: {
             dogRace: "גזע הכלב/ה",
             dogSize: "גודל הכלב/ה",
             dogColor: "צבע הפרווה",
-      dogSex: "מין הכלב/ה",
-            chipNumber: "מספר שבב"
+            dogSex: "מין הכלב/ה",
+            chipNumber: "מספר שבב",
         },
         extraDetails: {
             extraDetails: "מידע נוסף שיעזור לזיהוי הכלב",
