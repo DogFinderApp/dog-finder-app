@@ -12,12 +12,14 @@ interface DatePickerProps {
   reportType: DogType;
   date: Dayjs | null;
   handleDateChange: (newValue: Dayjs | null) => void;
+  error: boolean;
 }
 
 const DatePicker = ({
   reportType,
   date,
   handleDateChange,
+  error,
 }: DatePickerProps) => {
   const basicInputStyles = useRTLTextFieldStyles();
 
@@ -49,6 +51,7 @@ const DatePicker = ({
           onChange={handleDateChange}
           disableFuture
           closeOnSelect
+          slotProps={{ textField: { error } }}
         />
       </LocalizationProvider>
     </RTLWrapper>

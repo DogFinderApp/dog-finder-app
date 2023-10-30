@@ -12,7 +12,8 @@ const RTLWrapper: FC<{ children: ReactNode }> = ({ children }) => {
 const useSelectInputStyles = createStyleHook((theme) => {
   return {
     root: {
-      '& .MuiFormLabel-root': {
+      margin: "1rem 0 0.5rem",
+      "& .MuiFormLabel-root": {
         left: "unset",
         right: "1.75rem",
         transformOrigin: "right",

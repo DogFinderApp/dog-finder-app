@@ -322,6 +322,7 @@ export const ReportDogPage = withAuthenticationRequired(
                         reportType={dogType}
                         date={inputs.date.dateInput}
                         handleDateChange={inputs.date.handleDateChange}
+                        error={!inputs.date.isInputValid}
                       />
                     )}
                   </>
