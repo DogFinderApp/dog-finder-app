@@ -14,7 +14,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { IconSend } from "@tabler/icons-react";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
-import { DogSex, DogType, ReportDogPayload } from "../../facades/payload.types";
+import { DogType, ReportDogPayload } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { cleanImage } from "../../utils/imageUtils";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
@@ -24,13 +24,9 @@ import { RTLTextField } from "../../components/pageComponents/RTLTextInput/RTLTe
 import DatePicker from "../../components/DatePicker/DatePicker";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 import { useImageSelection } from "../../hooks/useImageSelection";
+import { useReportDogInputs } from "../../hooks/useReportDogInputs";
 import usePageTitle from "../../hooks/usePageTitle";
-import { useTextInput } from "../../hooks/useTextInput";
 import { createStyleHook } from "../../hooks/styleHooks";
-import { usePhoneNumberInput } from "../../hooks/usePhoneNumberInput";
-import { useEmailInput } from "../../hooks/useEmailInput";
-import { useSelectInput } from "../../hooks/useSelectInput";
-import { useDateInput } from "../../hooks/useDateInput";
 
 const useReportDogPageStyles = createStyleHook(
   (theme, props: { isError: boolean }) => {
@@ -59,6 +55,7 @@ interface ReportDogPageProps {
 
 export const ReportDogPage = withAuthenticationRequired(
   ({ dogType }: ReportDogPageProps) => {
+    const { inputs, getInputsData, dogSexOptions } = useReportDogInputs();
     const { onSelectImage, selectedImageUrl, clearSelection } =
       useImageSelection();
     const [isMissingImage, setIsMissingImage] = useState(false);
@@ -76,29 +73,6 @@ export const ReportDogPage = withAuthenticationRequired(
     const navigate = useNavigate();
     const styles = useReportDogPageStyles({ isError: showErrorMessage });
     const getServerApi = useGetServerApi();
-
-    const dogSexOptions = {
-      [DogSex.FEMALE]: AppTexts.reportPage.dogSex.female,
-      [DogSex.MALE]: AppTexts.reportPage.dogSex.male,
-    };
-
-    const inputs = {
-      dogBreed: useTextInput({ isMandatoryInput: false }),
-      dogSize: useTextInput({ isMandatoryInput: false }),
-      dogColor: useTextInput({ isMandatoryInput: false }),
-      dogSex: useSelectInput({
-        isMandatoryInput: true,
-        possibleValues: Object.keys(dogSexOptions),
-      }),
-      chipNumber: useTextInput({ isMandatoryInput: false }),
-      location: useTextInput({ isMandatoryInput: true }),
-      date: useDateInput({ isMandatoryInput: true }),
-      contactName: useTextInput({ isMandatoryInput: true }),
-      contactPhone: usePhoneNumberInput({ isMandatoryInput: true }),
-      contactEmail: useEmailInput({ isMandatoryInput: true }),
-      contactAddress: useTextInput({ isMandatoryInput: false }),
-      extraDetails: useTextInput({ isMandatoryInput: false }),
-    };
 
     const clearInputs = () => {
       Object.values(inputs).forEach((input) => {
@@ -189,77 +163,6 @@ export const ReportDogPage = withAuthenticationRequired(
         ? AppTexts.reportPage.request.error
         : successMessage;
 
-    const locationText =
-      dogType === DogType.LOST
-        ? AppTexts.reportPage.locationDetails.locationDescriptionLost
-        : AppTexts.reportPage.locationDetails.locationDescriptionFound;
-
-    interface InputData {
-      name: keyof typeof inputs;
-      label: string;
-      onChange?: (event: any) => void;
-      error?: boolean;
-      multiline?: boolean;
-      rows?: number;
-    }
-
-    const inputsData: InputData[] = [
-      {
-        name: "dogBreed",
-        label: AppTexts.reportPage.dogDetails.dogRace,
-      },
-      {
-        name: "dogSize",
-        label: AppTexts.reportPage.dogDetails.dogSize,
-      },
-      {
-        name: "dogColor",
-        label: AppTexts.reportPage.dogDetails.dogColor,
-      },
-      {
-        name: "chipNumber",
-        label: AppTexts.reportPage.dogDetails.chipNumber,
-      },
-      {
-        name: "location",
-        label: locationText,
-      },
-      {
-        name: "contactName",
-        label: AppTexts.reportPage.extraDetails.contactName,
-        multiline: true,
-        rows: 2,
-      },
-      {
-        name: "contactPhone",
-        label: AppTexts.reportPage.extraDetails.contactPhone,
-        onChange: inputs.contactPhone.onPhoneChange,
-        error: !inputs.contactPhone.isPhoneValid,
-        multiline: true,
-        rows: 2,
-      },
-      {
-        name: "contactEmail",
-        label: AppTexts.reportPage.extraDetails.contactEmail,
-        onChange: inputs.contactEmail.onEmailChange,
-        error: !inputs.contactEmail.isEmailValid,
-        multiline: true,
-        rows: 2,
-      },
-      {
-        name: "contactAddress",
-        label: AppTexts.reportPage.extraDetails.contactAddress,
-        multiline: true,
-        rows: 2,
-      },
-      {
-        name: "extraDetails",
-        label: AppTexts.reportPage.extraDetails.extraDetails,
-        multiline: true,
-        rows: 5,
-      },
-    ];
-
     return (
       <PageContainer>
         <Box sx={styles.root}>
@@ -287,7 +190,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 clearSelection={clearSelection}
                 isError={isMissingImage}
               />
-              {inputsData.map((inputField) => {
+              {getInputsData(dogType).map((inputField) => {
                 const selectedInput = inputs[inputField.name];
                 return (
                   <>
