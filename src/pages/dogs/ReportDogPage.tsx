@@ -59,12 +59,6 @@ interface ReportDogPageProps {
 
 export const ReportDogPage = withAuthenticationRequired(
   ({ dogType }: ReportDogPageProps) => {
-    usePageTitle(
-      dogType === DogType.FOUND
-        ? AppTexts.reportPage.title.found
-        : AppTexts.reportPage.title.lost
-    );
-
     const { onSelectImage, selectedImageUrl, clearSelection } =
       useImageSelection();
     const [isMissingImage, setIsMissingImage] = useState(false);
@@ -72,6 +66,12 @@ export const ReportDogPage = withAuthenticationRequired(
     const [isLoading, setIsLoading] = useState(false);
     const [requestStatus, setRequestStatus] = useState<string>("");
 
+    const title =
+      dogType === DogType.LOST
+        ? AppTexts.reportPage.title.lost
+        : AppTexts.reportPage.title.found;
+
+    usePageTitle(title);
     const theme = useTheme();
     const navigate = useNavigate();
     const styles = useReportDogPageStyles({ isError: showErrorMessage });
@@ -107,9 +107,7 @@ export const ReportDogPage = withAuthenticationRequired(
       clearSelection();
     };
 
-    const handleCloseError = () => {
-      setRequestStatus("");
-    };
+    const handleCloseError = () => setRequestStatus("");
 
     const handleSubmitForm = async () => {
       // get server api
@@ -181,25 +179,91 @@ export const ReportDogPage = withAuthenticationRequired(
       setIsLoading(false);
     };
 
-    const getTitle = () =>
-      dogType === DogType.LOST
-        ? AppTexts.reportPage.title.lost
-        : AppTexts.reportPage.title.found;
-
-    const getSuccessMessage = () =>
+    const successMessage =
       dogType === DogType.LOST
         ? AppTexts.reportPage.request.success.reportedLost
         : AppTexts.reportPage.request.success.reportedFound;
 
-    const getLocationText = () =>
+    const alertText =
+      requestStatus === "error"
+        ? AppTexts.reportPage.request.error
+        : successMessage;
+
+    const locationText =
       dogType === DogType.LOST
         ? AppTexts.reportPage.locationDetails.locationDescriptionLost
         : AppTexts.reportPage.locationDetails.locationDescriptionFound;
 
+    interface InputData {
+      name: keyof typeof inputs;
+      label: string;
+      onChange?: (event: any) => void;
+      error?: boolean;
+      multiline?: boolean;
+      rows?: number;
+    }
+
+    const inputsData: InputData[] = [
+      {
+        name: "dogBreed",
+        label: AppTexts.reportPage.dogDetails.dogRace,
+      },
+      {
+        name: "dogSize",
+        label: AppTexts.reportPage.dogDetails.dogSize,
+      },
+      {
+        name: "dogColor",
+        label: AppTexts.reportPage.dogDetails.dogColor,
+      },
+      {
+        name: "chipNumber",
+        label: AppTexts.reportPage.dogDetails.chipNumber,
+      },
+      {
+        name: "location",
+        label: locationText,
+      },
+      {
+        name: "contactName",
+        label: AppTexts.reportPage.extraDetails.contactName,
+        multiline: true,
+        rows: 2,
+      },
+      {
+        name: "contactPhone",
+        label: AppTexts.reportPage.extraDetails.contactPhone,
+        onChange: inputs.contactPhone.onPhoneChange,
+        error: !inputs.contactPhone.isPhoneValid,
+        multiline: true,
+        rows: 2,
+      },
+      {
+        name: "contactEmail",
+        label: AppTexts.reportPage.extraDetails.contactEmail,
+        onChange: inputs.contactEmail.onEmailChange,
+        error: !inputs.contactEmail.isEmailValid,
+        multiline: true,
+        rows: 2,
+      },
+      {
+        name: "contactAddress",
+        label: AppTexts.reportPage.extraDetails.contactAddress,
+        multiline: true,
+        rows: 2,
+      },
+      {
+        name: "extraDetails",
+        label: AppTexts.reportPage.extraDetails.extraDetails,
+        multiline: true,
+        rows: 5,
+      },
+    ];
+
     return (
       <PageContainer>
         <Box sx={styles.root}>
-          <PageTitle text={getTitle()} />
+          <PageTitle text={title} />
           <Snackbar
             open={!!requestStatus}
             autoHideDuration={6000}
@@ -210,9 +274,7 @@ export const ReportDogPage = withAuthenticationRequired(
               severity={requestStatus as AlertColor}
               sx={{ width: "100%" }}
             >
-              {requestStatus === "error"
-                ? AppTexts.reportPage.request.error
-                : getSuccessMessage()}
+              {alertText}
             </Alert>
           </Snackbar>
           {isLoading ? (
@@ -225,116 +287,46 @@ export const ReportDogPage = withAuthenticationRequired(
                 clearSelection={clearSelection}
                 isError={isMissingImage}
               />
-              <RTLTextField
-                label={AppTexts.reportPage.dogDetails.dogRace}
-                type="text"
-                fullWidth
-                margin="normal"
-                value={inputs.dogBreed.value}
-                onChange={inputs.dogBreed.onTextChange}
-                error={!inputs.dogBreed.isTextValid}
-              />
-              <RTLTextField
-                label={AppTexts.reportPage.dogDetails.dogSize}
-                type="text"
-                fullWidth
-                margin="normal"
-                value={inputs.dogSize.value}
-                onChange={inputs.dogSize.onTextChange}
-                error={!inputs.dogSize.isTextValid}
-              />
-              <SelectInputField
-                options={dogSexOptions}
-                label={AppTexts.reportPage.dogDetails.dogSex}
-                onChange={inputs.dogSex.onSelectChange}
-              />
-              <RTLTextField
-                label={AppTexts.reportPage.dogDetails.dogColor}
-                type="text"
-                fullWidth
-                margin="normal"
-                value={inputs.dogColor.value}
-                onChange={inputs.dogColor.onTextChange}
-                error={!inputs.dogColor.isTextValid}
-              />
-              <RTLTextField
-                label={AppTexts.reportPage.dogDetails.chipNumber}
-                type="text"
-                fullWidth
-                margin="normal"
-                value={inputs.chipNumber.value}
-                onChange={inputs.chipNumber.onTextChange}
-                error={!inputs.chipNumber.isTextValid}
-              />
-              <RTLTextField
-                label={getLocationText()}
-                fullWidth
-                type="text"
-                margin="normal"
-                value={inputs.location.value}
-                onChange={inputs.location.onTextChange}
-                error={!inputs.location.isTextValid}
-              />
-              <DatePicker
-                reportType={dogType}
-                date={inputs.date.dateInput}
-                handleDateChange={inputs.date.handleDateChange}
-              />
-              <RTLTextField
-                rows={2}
-                label={AppTexts.reportPage.extraDetails.contactName}
-                fullWidth
-                multiline
-                type="text"
-                margin={"normal"}
-                value={inputs.contactName.value}
-                onChange={inputs.contactName.onTextChange}
-                error={!inputs.contactName.isTextValid}
-              />
-              <RTLTextField
-                rows={2}
-                label={AppTexts.reportPage.extraDetails.contactPhone}
-                fullWidth
-                multiline
-                type="text"
-                margin={"normal"}
-                value={inputs.contactPhone.value}
-                onChange={inputs.contactPhone.onPhoneChange}
-                error={!inputs.contactPhone.isPhoneValid}
-              />
-              <RTLTextField
-                rows={2}
-                label={AppTexts.reportPage.extraDetails.contactEmail}
-                fullWidth
-                multiline
-                type="text"
-                margin={"normal"}
-                value={inputs.contactEmail.value}
-                onChange={inputs.contactEmail.onEmailChange}
-                error={!inputs.contactEmail.isEmailValid}
-              />
-              <RTLTextField
-                rows={2}
-                label={AppTexts.reportPage.extraDetails.contactAddress}
-                fullWidth
-                multiline
-                type="text"
-                margin={"normal"}
-                value={inputs.contactAddress.value}
-                onChange={inputs.contactAddress.onTextChange}
-                error={!inputs.contactAddress.isTextValid}
-              />
-              <RTLTextField
-                rows={5}
-                label={AppTexts.reportPage.extraDetails.extraDetails}
-                fullWidth
-                multiline
-                type="text"
-                margin={"normal"}
-                value={inputs.extraDetails.value}
-                onChange={inputs.extraDetails.onTextChange}
-                error={!inputs.extraDetails.isTextValid}
-              />
+              {inputsData.map((inputField) => {
+                const selectedInput = inputs[inputField.name];
+                return (
+                  <>
+                    <RTLTextField
+                      key={inputField.name}
+                      label={inputField.label}
+                      type="text"
+                      margin="normal"
+                      fullWidth
+                      multiline={inputField.multiline}
+                      rows={inputField.rows}
+                      // @ts-expect-error
+                      value={selectedInput?.value}
+                      onChange={
+                        // @ts-expect-error
+                        inputField.onChange ?? selectedInput?.onTextChange
+                      }
+                      // @ts-expect-error
+                      error={inputField.error ?? !selectedInput?.isTextValid}
+                    />
+
+                    {/* We need to render the "dogSex" input RIGHT AFTER "dogSize", and "date" input after "location" */}
+                    {inputField.name === "dogSize" && (
+                      <SelectInputField
+                        options={dogSexOptions}
+                        label={AppTexts.reportPage.dogDetails.dogSex}
+                        onChange={inputs.dogSex.onSelectChange}
+                      />
+                    )}
+                    {inputField.name === "location" && (
+                      <DatePicker
+                        reportType={dogType}
+                        date={inputs.date.dateInput}
+                        handleDateChange={inputs.date.handleDateChange}
+                      />
+                    )}
+                  </>
+                );
+              })}
               <Typography
                 variant="subtitle1"
                 color={theme.palette.error.main}
