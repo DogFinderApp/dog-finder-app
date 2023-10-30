@@ -28,7 +28,9 @@ const DatePicker = ({
       root: {
         ...basicInputStyles.root,
         margin: "1rem 0 0.5rem",
-        ".MuiIconButton-root": { color: theme.palette.primary.main },
+        ".MuiIconButton-root": {
+          color: error ? theme.palette.error.dark : theme.palette.primary.main,
+        },
       },
     };
   });
