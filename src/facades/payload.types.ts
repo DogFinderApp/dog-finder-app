@@ -1,51 +1,52 @@
 import { Dayjs } from "dayjs";
 
 export enum DogType {
-    LOST = "lost",
-    FOUND = "found",
+  LOST = "lost",
+  FOUND = "found",
 }
 
 export enum DogSex {
-    FEMALE = "female",
-    MALE = "male",
+  FEMALE = "female",
+  MALE = "male",
 }
 
 export interface QueryPayload {
-    dogType: DogType;
-    base64Image: string;
+  dogType: DogType;
+  base64Image: string;
 }
 
 export interface ReportDogPayload {
-    type: DogType;
-    base64Images: Array<string>;
-    contactName: string;
-    contactPhone: string;
-    contactEmail?: string;
-    contactAddress?: string;
-    foundAtLocation: string;
-    date: string | Dayjs | null;
-    breed?: string;
-    color?: string;
-    size?: string;
-    sex?: string;
-    location?: string;
-    chipNumber: string;
-    extraDetails?: string;
+  type: DogType;
+  base64Images: Array<string>;
+  contactName: string;
+  contactPhone: string;
+  contactEmail?: string;
+  contactAddress?: string;
+  foundAtLocation: string;
+  date: string | Dayjs | null;
+  breed?: string;
+  color?: string;
+  size?: string;
+  sex?: string;
+  location?: string;
+  chipNumber: string;
+  extraDetails?: string;
 }
 
 export interface DogResult {
-    dogId: string;
-    contactName: string;
-    contactPhone: string;
-    contactEmail?: string;
-    contactAdress?: string;
-    breed?: string;
-    color?: string;
-    size?: string;
-    sex?: string;
-    location?: string;
-    chipNumber: string;
-    extraDetails?: string;
-    imageBase64: string;
-    imageContentType: string;
+  dogId: string;
+  contactName: string;
+  contactPhone: string;
+  contactEmail?: string;
+  contactAddress?: string;
+  breed?: string;
+  color?: string;
+  size?: string;
+  sex?: string;
+  location?: string;
+  chipNumber: string;
+  extraDetails?: string;
+  imageBase64: string;
+  imageContentType: string;
+  createdAt?: string;
 }

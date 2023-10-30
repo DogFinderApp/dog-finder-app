@@ -1,16 +1,16 @@
-import useSWR from "swr";
 import { Box } from "@mui/material";
+import useSWR from "swr";
+import { useLocation, useParams } from "react-router-dom";
 import usePageTitle from "../../hooks/usePageTitle";
+import { AppTexts } from "../../consts/texts";
+import { useGetServerApi } from "../../facades/ServerApi";
+import { DogType } from "../../facades/payload.types";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
-import { AppTexts } from "../../consts/texts";
 import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
 import { LoadingDogs } from "../../components/resultsComponents/LoadingDogs";
 import { NoDogs } from "../../components/resultsComponents/NoDogs";
-import { useLocation, useParams } from "react-router-dom";
-import { useGetServerApi } from "../../facades/ServerApi";
-import { DogType } from "../../facades/payload.types";
 
 const fetcher = async (
   payload: { img: Blob; type: DogType },
@@ -46,10 +46,12 @@ export const ResultsDogPage = () => {
   return (
     <PageContainer>
       <Box
-        height={"100%"}
-        display={"flex"}
-        flexDirection={"column"}
-        alignItems={"center"}
+        height="100%"
+        maxWidth={1400}
+        margin="0 auto"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
         px={4}
       >
         <PageTitle text={AppTexts.resultsPage.title} />
