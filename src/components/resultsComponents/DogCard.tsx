@@ -1,60 +1,94 @@
-import { Card, CardActions, CardMedia, Link } from "@mui/material";
-import { AppTexts } from "../../consts/texts";
-import { IconPhone, IconMail, IconUser } from "@tabler/icons-react";
-import { DogResult } from "../../facades/payload.types";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardMedia,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { IconGenderMale, IconGenderFemale } from "@tabler/icons-react";
+import { createStyleHook } from "../../hooks/styleHooks";
+import { DogResult, DogType } from "../../facades/payload.types";
+import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
 
-const linkStyle = { display: "flex", alignItems: "center", gap: "8px" };
+interface DogCardProps {
+  dog: DogResult;
+  dogType: DogType;
+}
 
-export const DogCard = ({ dog }: { dog: DogResult }) => {
+export const DogCard = ({ dog, dogType }: DogCardProps) => {
+  const useCardStyles = createStyleHook(() => {
+    return {
+      CardMedia: { height: 400, objectFit: "fill" },
+      CardActions: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        gap: 1,
+        background: "#fff",
+      },
+
+      BottomButton: {
+        m: "0 auto",
+        fontSize: 18,
+        fontWeight: 600,
+        color: "#116DFF",
+        width: "100%",
+      },
+
+      Typography: {
+        color: "#343842",
+        fontWeight: 600,
+        display: "flex",
+        gap: "2px",
+        alignItems: "center",
+      },
+    };
+  });
+
+  const styles = useCardStyles();
   const navigate = useNavigate();
+
+  const navigateToSelectedDog = () =>
+    navigate(AppRoutes.dogs.dogPage.replace(":dog_id", dog.dogId), {
+      state: { dogType },
+    });
+
+  const genderIcon =
+    dog.sex === "זכר" ? (
+      <IconGenderMale color="#116DFF" />
+    ) : (
+      <IconGenderFemale color="#ef11ff" />
+    );
+
+  const cardInfo = [
+    `${AppTexts.dogCard.locationText}: ${dog.location}`,
+    `${AppTexts.dogCard.sexText}: ${dog.sex}`,
+    `${AppTexts.dogCard.reportedAt}: ${dog.createdAt}`,
+  ];
+
   const image = `data:${dog.imageContentType};base64,${dog.imageBase64}`;
+
   return (
     <Card dir="rtl">
       <CardMedia
         image={image}
         component="img"
-        style={{ objectFit: "contain" }}
         title="Dog Image"
-        sx={{ height: 400 }}
-        onClick={() => navigate(AppRoutes.dogs.dogPage.replace(":dog_id", dog.dogId))}
+        sx={styles.CardMedia}
       />
-      <CardActions
-        style={{ display: "flex", alignItems: "center", gap: "20px" }}
-      >
-        <Link
-          underline="none"
-          href="#"
-          style={{
-            ...linkStyle,
-            cursor: "default",
-            pointerEvents: "none"
-          }}
-        >
-          <IconUser />
-          {dog.contactName}
-        </Link>
+      <CardActions sx={{ ...styles.CardActions, pr: 2, pt: 2 }}>
+        {cardInfo.map((sectionText, index) => (
+          <Typography key={sectionText} sx={styles.Typography}>
+            {sectionText} {index === 1 && genderIcon}
+          </Typography>
+        ))}
       </CardActions>
-      <CardActions
-        style={{ display: "flex", alignItems: "center", gap: "20px" }}
-      >
-        <Link
-          underline="none"
-          href={`tel:${dog.contactPhone}`}
-          style={linkStyle}
-        >
-          <IconPhone /> {AppTexts.resultsPage.call}
-        </Link>
-
-        <Link
-          underline="none"
-          href={`mailto:${dog.contactEmail}`}
-          style={linkStyle}
-        >
-          <IconMail />
-          {AppTexts.resultsPage.email}
-        </Link>
+      <CardActions sx={styles.CardActions}>
+        <Button sx={styles.BottomButton} onClick={navigateToSelectedDog}>
+          {AppTexts.resultsPage.moreDetails}
+        </Button>
       </CardActions>
     </Card>
   );

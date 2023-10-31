@@ -7,12 +7,9 @@ import { routesWithElements } from "../consts/routes";
 const useAppStyles = createStyleHook(() => {
   return {
     root: {
-      height: "100%",
-      overflow: "hidden",
-      position: "fixed",
-      top: 0,
-      left: 0,
       width: "100%",
+      minHeight: "100vh",
+      overflowX: "hidden",
       backgroundColor: theme.palette.background.default,
     },
   };
