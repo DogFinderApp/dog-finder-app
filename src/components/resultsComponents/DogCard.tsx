@@ -68,9 +68,9 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
     : AppTexts.reportPage.dogSex.female;
 
   const cardInfo = [
-    `${AppTexts.dogCard.locationText}: ${dog.location}`,
+    `${AppTexts.dogCard.locationText}: ${dog.location || ""}`,
     `${AppTexts.dogCard.sexText}: ${genderText}`,
-    `${AppTexts.dogCard.reportedAt}: ${dog.createdAt}`,
+    `${AppTexts.dogCard.reportedAt}: ${dog.createdAt || ""}`,
   ];
 
   const image = `data:${dog.imageContentType};base64,${dog.imageBase64}`;
