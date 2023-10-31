@@ -7,7 +7,7 @@ export const LogoutButton = () => {
   const { logout } = useAuth0();
 
   return (
-    <Button onClick={() => logout({ logoutParams: { returnTo: window.location.origin + "/dog-finder" } })}>
+    <Button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
       {AppTexts.authPage.logoutCta}
     </Button>
   );
