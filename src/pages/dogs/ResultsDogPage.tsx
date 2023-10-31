@@ -13,7 +13,7 @@ import { LoadingDogs } from "../../components/resultsComponents/LoadingDogs";
 import { NoDogs } from "../../components/resultsComponents/NoDogs";
 
 const fetcher = async (
-  payload: { img: Blob; type: DogType },
+  payload: { base64Image: string; type: DogType },
   getServerApi: Function
 ) => {
   const serverApi = await getServerApi();
