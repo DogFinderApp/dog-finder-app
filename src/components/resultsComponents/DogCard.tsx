@@ -55,16 +55,21 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
       state: { dogType },
     });
 
-  const genderIcon =
-    dog.sex === "זכר" ? (
-      <IconGenderMale color="#116DFF" />
-    ) : (
-      <IconGenderFemale color="#ef11ff" />
-    );
+  const isMaleGender = dog.sex?.toLowerCase() === "male";
+
+  const genderIcon = isMaleGender ? (
+    <IconGenderMale color="#116DFF" />
+  ) : (
+    <IconGenderFemale color="#ef11ff" />
+  );
+
+  const genderText = isMaleGender
+    ? AppTexts.reportPage.dogSex.male
+    : AppTexts.reportPage.dogSex.female;
 
   const cardInfo = [
     `${AppTexts.dogCard.locationText}: ${dog.location}`,
-    `${AppTexts.dogCard.sexText}: ${dog.sex}`,
+    `${AppTexts.dogCard.sexText}: ${genderText}`,
     `${AppTexts.dogCard.reportedAt}: ${dog.createdAt}`,
   ];
 
