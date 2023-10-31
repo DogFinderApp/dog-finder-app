@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createStyleHook } from "../hooks/styleHooks";
 import { theme } from "../theme/theme";
 import { routesWithElements } from "../consts/routes";
+import { PageToolbar } from "./pageComponents/PageToolbar/PageToolbar";
 
 const useAppStyles = createStyleHook(() => {
   return {
@@ -22,6 +23,7 @@ export const App = () => {
     <ThemeProvider theme={theme}>
       <Box sx={styles.root}>
         <BrowserRouter>
+          <PageToolbar />
           <Routes>
             {routesWithElements.map((route) => (
               <Route
@@ -30,8 +32,6 @@ export const App = () => {
                 element={<route.element {...route.props} />}
               />
             ))}
-            {/* //! path without an element */}
-            {/* <Route path={"/dog-finder/dogs/report"} /> */}
           </Routes>
         </BrowserRouter>
       </Box>
