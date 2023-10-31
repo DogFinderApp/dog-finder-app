@@ -14,23 +14,24 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { IconSend } from "@tabler/icons-react";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
-import { DogSex, DogType, ReportDogPayload } from "../../facades/payload.types";
+import { DogType, ReportDogPayload } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
+import { DogSex } from "../../facades/payload.types";
 import { cleanImage } from "../../utils/imageUtils";
+import { createStyleHook } from "../../hooks/styleHooks";
+import usePageTitle from "../../hooks/usePageTitle";
+import { useImageSelection } from "../../hooks/useImageSelection";
+import { useTextInput } from "../../hooks/useTextInput";
+import { useSelectInput } from "../../hooks/useSelectInput";
+import { useDateInput } from "../../hooks/useDateInput";
+import { usePhoneNumberInput } from "../../hooks/usePhoneNumberInput";
+import { useEmailInput } from "../../hooks/useEmailInput";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
 import { RTLTextField } from "../../components/pageComponents/RTLTextInput/RTLTextField";
 import DatePicker from "../../components/DatePicker/DatePicker";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
-import { useImageSelection } from "../../hooks/useImageSelection";
-import usePageTitle from "../../hooks/usePageTitle";
-import { useTextInput } from "../../hooks/useTextInput";
-import { createStyleHook } from "../../hooks/styleHooks";
-import { usePhoneNumberInput } from "../../hooks/usePhoneNumberInput";
-import { useEmailInput } from "../../hooks/useEmailInput";
-import { useSelectInput } from "../../hooks/useSelectInput";
-import { useDateInput } from "../../hooks/useDateInput";
 
 const useReportDogPageStyles = createStyleHook(
   (theme, props: { isError: boolean }) => {
@@ -59,12 +60,6 @@ interface ReportDogPageProps {
 
 export const ReportDogPage = withAuthenticationRequired(
   ({ dogType }: ReportDogPageProps) => {
-    usePageTitle(
-      dogType === DogType.FOUND
-        ? AppTexts.reportPage.title.found
-        : AppTexts.reportPage.title.lost
-    );
-
     const { onSelectImage, selectedImageUrl, clearSelection } =
       useImageSelection();
     const [isMissingImage, setIsMissingImage] = useState(false);
@@ -72,6 +67,12 @@ export const ReportDogPage = withAuthenticationRequired(
     const [isLoading, setIsLoading] = useState(false);
     const [requestStatus, setRequestStatus] = useState<string>("");
 
+    const title =
+      dogType === DogType.LOST
+        ? AppTexts.reportPage.title.lost
+        : AppTexts.reportPage.title.found;
+
+    usePageTitle(title);
     const theme = useTheme();
     const navigate = useNavigate();
     const styles = useReportDogPageStyles({ isError: showErrorMessage });
@@ -107,9 +108,7 @@ export const ReportDogPage = withAuthenticationRequired(
       clearSelection();
     };
 
-    const handleCloseError = () => {
-      setRequestStatus("");
-    };
+    const handleCloseError = () => setRequestStatus("");
 
     const handleSubmitForm = async () => {
       // get server api
@@ -181,17 +180,17 @@ export const ReportDogPage = withAuthenticationRequired(
       setIsLoading(false);
     };
 
-    const getTitle = () =>
-      dogType === DogType.LOST
-        ? AppTexts.reportPage.title.lost
-        : AppTexts.reportPage.title.found;
-
-    const getSuccessMessage = () =>
+    const successMessage =
       dogType === DogType.LOST
         ? AppTexts.reportPage.request.success.reportedLost
         : AppTexts.reportPage.request.success.reportedFound;
 
-    const getLocationText = () =>
+    const alertText =
+      requestStatus === "error"
+        ? AppTexts.reportPage.request.error
+        : successMessage;
+
+    const locationText =
       dogType === DogType.LOST
         ? AppTexts.reportPage.locationDetails.locationDescriptionLost
         : AppTexts.reportPage.locationDetails.locationDescriptionFound;
@@ -199,7 +198,7 @@ export const ReportDogPage = withAuthenticationRequired(
     return (
       <PageContainer>
         <Box sx={styles.root}>
-          <PageTitle text={getTitle()} />
+          <PageTitle text={title} />
           <Snackbar
             open={!!requestStatus}
             autoHideDuration={6000}
@@ -210,9 +209,7 @@ export const ReportDogPage = withAuthenticationRequired(
               severity={requestStatus as AlertColor}
               sx={{ width: "100%" }}
             >
-              {requestStatus === "error"
-                ? AppTexts.reportPage.request.error
-                : getSuccessMessage()}
+              {alertText}
             </Alert>
           </Snackbar>
           {isLoading ? (
@@ -267,7 +264,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 error={!inputs.chipNumber.isTextValid}
               />
               <RTLTextField
-                label={getLocationText()}
+                label={locationText}
                 fullWidth
                 type="text"
                 margin="normal"
@@ -279,6 +276,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 reportType={dogType}
                 date={inputs.date.dateInput}
                 handleDateChange={inputs.date.handleDateChange}
+                error={!inputs.date.isInputValid}
               />
               <RTLTextField
                 rows={2}

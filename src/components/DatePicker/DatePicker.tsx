@@ -12,12 +12,14 @@ interface DatePickerProps {
   reportType: DogType;
   date: Dayjs | null;
   handleDateChange: (newValue: Dayjs | null) => void;
+  error: boolean;
 }
 
 const DatePicker = ({
   reportType,
   date,
   handleDateChange,
+  error,
 }: DatePickerProps) => {
   const basicInputStyles = useRTLTextFieldStyles();
 
@@ -26,7 +28,9 @@ const DatePicker = ({
       root: {
         ...basicInputStyles.root,
         margin: "1rem 0 0.5rem",
-        ".MuiIconButton-root": { color: theme.palette.primary.main },
+        ".MuiIconButton-root": {
+          color: error ? theme.palette.error.dark : theme.palette.primary.main,
+        },
       },
     };
   });
@@ -49,6 +53,7 @@ const DatePicker = ({
           onChange={handleDateChange}
           disableFuture
           closeOnSelect
+          slotProps={{ textField: { error } }}
         />
       </LocalizationProvider>
     </RTLWrapper>
