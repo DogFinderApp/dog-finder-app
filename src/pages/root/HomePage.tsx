@@ -1,14 +1,14 @@
 import { Box, Button, ButtonOwnProps } from "@mui/material";
-import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
-import { createStyleHook } from "../../hooks/styleHooks";
-import { AppTexts } from "../../consts/texts";
+import { Link } from "react-router-dom";
 import { IconPaw, IconSearch, TablerIconsProps } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
-import { AppRoutes } from "../../consts/routes";
 import { Player } from "@lottiefiles/react-lottie-player";
-import dogAnim from "../../assets/animations/dogAnim.json";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import usePageTitle from "../../hooks/usePageTitle";
+import { createStyleHook } from "../../hooks/styleHooks";
+import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
+import { AppTexts } from "../../consts/texts";
+import { AppRoutes } from "../../consts/routes";
+import dogAnim from "../../assets/animations/dogAnim.json";
 
 const useHomePageStyles = createStyleHook((theme) => {
   return {
@@ -24,16 +24,17 @@ const useHomePageStyles = createStyleHook((theme) => {
       flexDirection: { xs: "column", sm: "row" },
       alignItems: "center",
       justifyContent: "center",
-      gap: "24px",
+      gap: 2,
     },
     pushRight: {
-      marginRight: "24px",
+      marginRight: 3,
     },
     pushLeft: {
-      marginLeft: "24px",
+      marginLeft: 3,
     },
     button: {
-      width: "240px",
+      width: 240,
+      height: 45,
     },
   };
 });
@@ -42,7 +43,7 @@ export const HomePage = () => {
   usePageTitle("Dog Finder");
   const styles = useHomePageStyles();
   const windowSize = useWindowSize();
-  const navigate = useNavigate();
+  const { innerWidth } = windowSize;
 
   const commonButtonProps: ButtonOwnProps = {
     size: "large",
@@ -51,8 +52,16 @@ export const HomePage = () => {
   };
 
   const commonIconProps: TablerIconsProps = {
-    style: { marginRight: "8px" },
+    style: { marginRight: innerWidth < 600 ? "auto" : "8px" },
     stroke: 1.5,
+  };
+
+  const linkStyles = {
+    width: innerWidth < 600 ? "100%" : "max-content",
+    color: "white",
+    textDecoration: "none",
+    display: "flex",
+    justifyContent: "center",
   };
 
   return (
@@ -62,24 +71,20 @@ export const HomePage = () => {
           autoplay={true}
           src={dogAnim}
           loop={true}
-          style={{
-            width: windowSize.innerWidth >= 800 ? "450px" : "300px",
-          }}
+          style={{ width: innerWidth >= 800 ? "450px" : "300px" }}
         />
         <Box sx={styles.content}>
-          <Button
-            {...commonButtonProps}
-            onClick={() => navigate(AppRoutes.dogs.searchLostDog)}
-          >
-            <IconSearch {...commonIconProps} />
-            {AppTexts.homePage.cta.lostDog}
+          <Button {...commonButtonProps}>
+            <Link to={AppRoutes.dogs.searchLostDog} style={linkStyles}>
+              <IconSearch {...commonIconProps} />
+              {AppTexts.homePage.cta.lostDog}
+            </Link>
           </Button>
-          <Button
-            {...commonButtonProps}
-            onClick={() => navigate(AppRoutes.dogs.reportFound)}
-          >
-            <IconPaw {...commonIconProps} />
-            {AppTexts.homePage.cta.foundDog}
+          <Button {...commonButtonProps}>
+            <Link to={AppRoutes.dogs.reportFound} style={linkStyles}>
+              <IconPaw {...commonIconProps} />
+              {AppTexts.homePage.cta.foundDog}
+            </Link>
           </Button>
         </Box>
       </Box>
