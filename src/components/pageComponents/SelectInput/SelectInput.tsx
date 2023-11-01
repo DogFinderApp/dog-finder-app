@@ -1,10 +1,14 @@
-import { SelectProps, alpha, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import {
+  SelectProps,
+  alpha,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import { FC, ReactElement, ReactNode } from "react";
 import { createStyleHook } from "../../../hooks/styleHooks";
-
-const RTLWrapper: FC<{ children: ReactNode }> = ({ children }) => {
-  return <div dir="rtl">{children}</div>;
-};
+import { RTLWrapper } from "../../common/RTLWrapper";
 
 // note: don't use any any paddings/margins in this component,
 // better add a wrapper like <Box mt={3} mb={1}><SelectInputField/></Box> instead.
@@ -12,6 +16,8 @@ const RTLWrapper: FC<{ children: ReactNode }> = ({ children }) => {
 const useSelectInputStyles = createStyleHook((theme) => {
   return {
     root: {
+      width: "100%",
+      maxWidth: "500px",
       margin: "1rem 0 0.5rem",
       "& .MuiFormLabel-root": {
         left: "unset",
@@ -19,61 +25,56 @@ const useSelectInputStyles = createStyleHook((theme) => {
         transformOrigin: "right",
         fontSize: "0.8rem",
       },
-      '& .MuiSvgIcon-root': {
+      "& .MuiSvgIcon-root": {
         color: theme.palette.primary.contrastText,
-        left: '7px',
-        right: 'unset',
+        left: "7px",
+        right: "unset",
       },
-      '& .MuiSelect-select': {
-        paddingLeft: '32px',
-        paddingRight: '14px !important',
+      "& .MuiSelect-select": {
+        paddingLeft: "32px",
+        paddingRight: "14px !important",
       },
-      '& legend': {
+      "& legend": {
         textAlign: "right",
         fontSize: "0.6rem",
-      }
+      },
     },
     select: {
-        width: "500px",
+      borderColor: alpha(theme.palette.primary.main, 0.6),
+      color: "#FFFFFF",
+      "& .MuiOutlinedInput-notchedOutline": {
         borderColor: alpha(theme.palette.primary.main, 0.6),
-        color: "#FFFFFF",
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: alpha(theme.palette.primary.main, 0.6),
-        },
-        "@media (max-width: 500px)": {
-          width: "375px",
-        },
-        "@media (max-width: 400px)": {
-          width: "300px",
-        },
-      }
+      },
+    },
   };
 });
 
-interface SelectInputProps extends SelectProps{
-  options: { [key: string]: string }
+interface SelectInputProps extends SelectProps {
+  options: { [key: string]: string };
   label: string;
 }
-
 
 export const SelectInputField: FC<SelectInputProps> = (props) => {
   const styles = useSelectInputStyles();
 
   const { options, label, ...selectProps } = props;
 
-  const menuItems: Array<ReactElement> = Object.keys(options).map((itemValue, index) => 
-      <MenuItem key={`menu_${itemValue}-${index}`} value={itemValue} dir="rtl">{options[itemValue]}</MenuItem>
-  )
-  
+  const menuItems: Array<ReactElement> = Object.keys(options).map(
+    (itemValue, index) => (
+      <MenuItem key={`menu_${itemValue}-${index}`} value={itemValue} dir="rtl">
+        {options[itemValue]}
+      </MenuItem>
+    )
+  );
 
   return (
-    <RTLWrapper>
+    <RTLWrapper withMaxWidth>
       <FormControl sx={styles.root}>
         <InputLabel>{label}</InputLabel>
         <Select {...selectProps} sx={styles.select}>
-            { menuItems }
+          {menuItems}
         </Select>
       </FormControl>
-      </RTLWrapper>
+    </RTLWrapper>
   );
 };
