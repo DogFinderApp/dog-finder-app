@@ -1,3 +1,4 @@
+import { FC, ReactElement } from "react";
 import {
   SelectProps,
   alpha,
@@ -6,7 +7,6 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { FC, ReactElement, ReactNode } from "react";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { RTLWrapper } from "../../common/RTLWrapper";
 

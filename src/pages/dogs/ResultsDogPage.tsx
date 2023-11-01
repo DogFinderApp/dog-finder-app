@@ -43,6 +43,7 @@ export const ResultsDogPage = () => {
   });
 
   const isEmpty = results?.length === 0;
+
   return (
     <PageContainer>
       <Box
@@ -52,13 +53,17 @@ export const ResultsDogPage = () => {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        px={4}
+        px={{ sm: 4, xs: 0 }}
       >
         <PageTitle text={AppTexts.resultsPage.title} />
         {isLoading && <LoadingDogs />}
-        {!isLoading && isEmpty && !error && <NoDogs dogType={dogType as DogType}/>}
+        {!isLoading && isEmpty && !error && (
+          <NoDogs dogType={dogType as DogType} />
+        )}
         {!isLoading && error && <ErrorLoadingDogs refresh={mutate} />}
-        {!isLoading && !error && !isEmpty && <ResultsGrid results={results} dogType={dogType as DogType} />}
+        {!isLoading && !error && !isEmpty && (
+          <ResultsGrid results={results} dogType={dogType as DogType} />
+        )}
       </Box>
     </PageContainer>
   );
