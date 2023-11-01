@@ -124,7 +124,6 @@ export const ReportDogPage = withAuthenticationRequired(
       const hasInvalidInputs = inputValidation.some((res) => !res);
       const showError = hasInvalidInputs || isMissingImage;
       setShowErrorMessage(showError);
-
       if (showError) return;
 
       const getFormattedDate = () => {
@@ -139,7 +138,6 @@ export const ReportDogPage = withAuthenticationRequired(
       };
 
       const imageInput = cleanImage(selectedImageUrl);
-
       const payload: ReportDogPayload = {
         type: dogType,
         contactName: inputs.contactName.value,
@@ -156,6 +154,7 @@ export const ReportDogPage = withAuthenticationRequired(
         sex: inputs.dogSex.value,
         base64Images: [imageInput],
       };
+
       setIsLoading(true);
       const response = await serverApi.report_dog(payload);
       if (response.status !== 200) {
@@ -167,16 +166,15 @@ export const ReportDogPage = withAuthenticationRequired(
       setRequestStatus("success");
       setIsLoading(false);
       clearInputs();
-      setTimeout(() => {
+      if (dogType === DogType.FOUND) {
         // wait before navigating to results page in order to show the success/error toast
-        if (dogType === DogType.FOUND) {
+        setTimeout(() => {
           navigate(AppRoutes.dogs.results.replace(":dogType", dogType), {
             state: { type: dogType, base64Image: imageInput },
           });
-        }
-      }, 2000);
+        }, 2000);
+      }
 
-      clearInputs();
       setIsLoading(false);
     };
 
