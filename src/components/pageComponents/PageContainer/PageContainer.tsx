@@ -17,7 +17,7 @@ const usePageContainerStyles = createStyleHook((theme) => {
       justifyContent: "flex-start",
     },
     content: {
-      width: "100%",
+      width: { sm: "100%", xs: "90%" },
       height: "100%",
       display: "flex",
       flexDirection: "column",

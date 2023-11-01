@@ -1,15 +1,13 @@
+import { FC } from "react";
 import { TextField, TextFieldProps, alpha } from "@mui/material";
-import React, { FC, ReactNode } from "react";
 import { createStyleHook } from "../../../hooks/styleHooks";
-
-export const RTLWrapper: FC<{ children: ReactNode }> = ({ children }) => {
-  return <div dir="rtl">{children}</div>;
-};
+import { RTLWrapper } from "../../common/RTLWrapper";
 
 export const useRTLTextFieldStyles = createStyleHook((theme) => {
   return {
     root: {
-      width: "500px",
+      width: "100%",
+      maxWidth: "500px",
       marginBottom: "8px",
       "& label": {
         left: "unset",
@@ -29,12 +27,6 @@ export const useRTLTextFieldStyles = createStyleHook((theme) => {
           borderColor: alpha(theme.palette.primary.main, 0.6),
         },
       },
-      "@media (max-width: 500px)": {
-        width: "375px",
-      },
-      "@media (max-width: 400px)": {
-        width: "300px",
-      },
     },
   };
 });
@@ -42,7 +34,7 @@ export const useRTLTextFieldStyles = createStyleHook((theme) => {
 export const RTLTextField: FC<TextFieldProps> = (props) => {
   const styles = useRTLTextFieldStyles();
   return (
-    <RTLWrapper>
+    <RTLWrapper withMaxWidth>
       <TextField {...props} sx={styles.root} />
     </RTLWrapper>
   );

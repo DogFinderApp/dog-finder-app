@@ -43,7 +43,7 @@ const DatePicker = ({
   };
 
   return (
-    <RTLWrapper>
+    <RTLWrapper withMaxWidth>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MaterialDatePicker
           label={labels[reportType]}

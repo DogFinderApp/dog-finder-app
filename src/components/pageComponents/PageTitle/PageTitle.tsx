@@ -8,6 +8,7 @@ export const PageTitle = ({ text }: { text: string }) => {
         variant="h3"
         color={theme.palette.text.primary}
         fontWeight={700}
+        textAlign="center"
       >
         {text}
       </Typography>
