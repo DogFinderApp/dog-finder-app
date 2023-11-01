@@ -6,7 +6,7 @@ import { createStyleHook } from "../../../hooks/styleHooks";
 import UserComponent from "../UserComponent/UserComponent";
 import { AppRoutes } from "../../../consts/routes";
 import { AppShadows } from "../../../consts/shadows";
-import { links } from "./links.";
+import { links } from "./links";
 
 const usePageToolbarStyles = createStyleHook((theme) => {
   return {
