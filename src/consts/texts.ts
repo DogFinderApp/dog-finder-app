@@ -84,8 +84,12 @@ export const AppTexts = {
     error: "תקלה בטעינת התוצאות",
     noResults: {
       title: "לא נמצאו תוצאות",
+      infoText1: "ייתכן שהתמונה הראשונה לא הייתה ברורה מספיק,",
+      infoText2:
+        "נסה להעלות תמונה אחרת או מלא את פרטי הכלב על מנת שנמצא התאמה בעתיד",
+      tryAgain: "נסה שוב עם תמונה אחרת",
       reportMissingDog: "דווח על הכלב כנעדר",
-      reportDogFound: "דווח על כלב כנמצא",
+      reportDogFound: "דווח על הכלב כנמצא",
     },
     notFound: {
       lostDogNotFound: "הכלב שלי לא נמצא כאן",

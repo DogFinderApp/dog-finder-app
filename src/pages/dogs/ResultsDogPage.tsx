@@ -27,7 +27,6 @@ const fetcher = async (
 };
 
 export const ResultsDogPage = () => {
-  usePageTitle(AppTexts.resultsPage.title);
   const { state: payload } = useLocation();
   const getServerApi = useGetServerApi();
   const { dogType } = useParams();
@@ -43,6 +42,13 @@ export const ResultsDogPage = () => {
   });
 
   const isEmpty = results?.length === 0;
+  const noResults = !isLoading && isEmpty && !error;
+
+  usePageTitle(
+    noResults
+      ? AppTexts.resultsPage.noResults.title
+      : AppTexts.resultsPage.title
+  );
 
   return (
     <PageContainer>
@@ -57,9 +63,7 @@ export const ResultsDogPage = () => {
       >
         <PageTitle text={AppTexts.resultsPage.title} />
         {isLoading && <LoadingDogs />}
-        {!isLoading && isEmpty && !error && (
-          <NoDogs dogType={dogType as DogType} />
-        )}
+        {noResults && <NoDogs dogType={dogType as DogType} />}
         {!isLoading && error && <ErrorLoadingDogs refresh={mutate} />}
         {!isLoading && !error && !isEmpty && (
           <ResultsGrid results={results} dogType={dogType as DogType} />

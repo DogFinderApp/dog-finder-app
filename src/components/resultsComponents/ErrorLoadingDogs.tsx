@@ -9,6 +9,8 @@ export const ErrorLoadingDogs = ({
   refresh: KeyedMutator<DogResult[]>;
 }) => {
   const alertStyles = {
+    position: "relative",
+    zIndex: 10,
     display: "flex",
     alignItems: "center",
     mb: 2,
