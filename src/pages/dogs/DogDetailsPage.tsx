@@ -42,6 +42,12 @@ enum DogGenderEnum {
   female = "נקבה",
 }
 
+enum DogTypeTranslateEnum {
+  found = "נמצא",
+  lost = "אבד",
+  resolved = "הושב לבעליו",
+}
+
 const fetcher = async (
   payload: { dogId: number },
   getServerApi: Function
@@ -94,6 +100,7 @@ export const DogDetailsPage = () => {
             fontSize: { xs: "2rem", md: "4rem" },
           }}
         >
+          {" "}
           {children}
         </Box>
       </PageContainer>
@@ -178,14 +185,27 @@ export const DogDetailsPage = () => {
                   </span>
                 </Box>
                 <Box sx={detailRowStyle}>
-                  <span style={detailHeaderStyle}>נמצא באיזור: </span>
+                  <span style={detailHeaderStyle}>סטטוס: </span>
+                  <span style={detailContentStyle}>
+                    {DogTypeTranslateEnum[data.type] || ""}
+                  </span>
+                </Box>
+                <Box sx={detailRowStyle}>
+                  <span style={detailHeaderStyle}>
+                    {data.type === DogType.FOUND
+                      ? "נמצא באיזור:"
+                      : "אבד באיזור:"}
+                  </span>
                   <span style={detailContentStyle}>{data.location || ""}</span>
                 </Box>
                 <Box sx={detailRowStyle}>
-                  <span style={detailHeaderStyle}>דווח בתאריך: </span>
-                  <span style={detailContentStyle}>
-                    {formattedDate() || ""}
+                  <span style={detailHeaderStyle}>
+                    {" "}
+                    {data.type === DogType.FOUND
+                      ? "נמצא בתאריך:"
+                      : "אבד בתאריך:"}
                   </span>
+                  <span style={detailContentStyle}>{data.dogFoundOn}</span>
                 </Box>
                 <Box sx={detailRowStyle}>
                   <span style={detailHeaderStyle}>גזע: </span>
