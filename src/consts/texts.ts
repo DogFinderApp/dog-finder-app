@@ -126,8 +126,5 @@ export const AppTexts = {
     sexText: "מין",
     reportedAt: "דווח הגיע בתאריך",
   },
-  privacyPolicy: {
-    tabTitle: "תנאי השימוש ומדיניות פרטיות",
-    pageTitle: "תנאי השימוש ומדיניות פרטיות - Dog Finder",
-  },
+  privacyPolicyTitle: "תנאי השימוש ומדיניות פרטיות",
 };

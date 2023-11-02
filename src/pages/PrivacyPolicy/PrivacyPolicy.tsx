@@ -3,8 +3,7 @@ import { createStyleHook } from "../../hooks/styleHooks";
 import usePageTitle from "../../hooks/usePageTitle";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
-import { AppTexts } from "../../consts/texts";
-import { description, lastUpdate, sections } from "./privacyPolicyText";
+import { privacyPolicyText } from "./privacyPolicyText";
 
 const usePrivacyPolicyStyles = createStyleHook(() => {
   return {
@@ -29,13 +28,16 @@ const usePrivacyPolicyStyles = createStyleHook(() => {
 });
 
 export const PrivacyPolicy = () => {
-  usePageTitle(AppTexts.privacyPolicy.tabTitle);
+  const { description, lastUpdate, tabTitle, pageTitle, sections } =
+    privacyPolicyText;
+
+  usePageTitle(tabTitle);
   const styles = usePrivacyPolicyStyles();
 
   return (
     <PageContainer>
       <Box maxWidth={1000} margin="0 auto">
-        <PageTitle text={AppTexts.privacyPolicy.pageTitle} />
+        <PageTitle text={pageTitle} />
         <Typography sx={{ ...styles.typography, my: 6 }}>
           {description}
         </Typography>

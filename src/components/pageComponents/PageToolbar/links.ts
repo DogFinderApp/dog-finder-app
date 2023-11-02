@@ -20,6 +20,6 @@ export const links = [
   },
   {
     href: AppRoutes.privacyPolicy,
-    text: AppTexts.privacyPolicy.tabTitle,
+    text: AppTexts.privacyPolicyTitle,
   },
 ];
