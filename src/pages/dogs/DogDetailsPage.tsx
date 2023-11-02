@@ -1,17 +1,18 @@
+import { FC, ReactNode } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 import { Box, Button, CardMedia, Typography, useTheme } from "@mui/material";
-import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
-import { AppTexts } from "../../consts/texts";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useGetServerApi } from "../../facades/ServerApi";
-import { DogType } from "../../facades/payload.types";
-import { AppRoutes } from "../../consts/routes";
 import {
   TablerIconsProps,
   IconPhoneCall,
   IconArrowLeft,
 } from "@tabler/icons-react";
-import { FC, ReactNode } from "react";
+import usePageTitle from "../../hooks/usePageTitle";
+import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
+import { useGetServerApi } from "../../facades/ServerApi";
+import { DogType } from "../../facades/payload.types";
+import { AppTexts } from "../../consts/texts";
+import { AppRoutes } from "../../consts/routes";
 
 interface DogDetailsReturnType {
   id: number;
@@ -53,15 +54,13 @@ const fetcher = async (
 ): Promise<DogDetailsReturnType> => {
   const serverApi = await getServerApi();
   const response = await serverApi.getDogDetails(payload.dogId);
-  if (response?.ok) {
-    const json = await response.json();
-    return json?.data?.results || [];
-  } else {
-    throw new Error("Failed to fetch results");
-  }
+  if (!response?.ok) throw new Error("Failed to fetch results");
+  const json = await response.json();
+  return json?.data?.results || [];
 };
 
 export const DogDetailsPage = () => {
+  usePageTitle(AppTexts.dogDetails.title);
   const { state: payload } = useLocation();
   const getServerApi = useGetServerApi();
   const { dog_id } = useParams();
@@ -76,6 +75,14 @@ export const DogDetailsPage = () => {
       revalidateOnFocus: false,
     }
   );
+
+  // convert the date format from yyyy-mm-dd back to dd/mm/yyyy
+  const formattedDate = () => {
+    const dateParts = data?.dogFoundOn.split("-");
+    return !!dateParts
+      ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`
+      : data?.dogFoundOn;
+  };
 
   const image = `data:${data?.images[0].imageContentType};base64${data?.images[0].base64Image}`;
 
