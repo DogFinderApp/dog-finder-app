@@ -4,7 +4,7 @@ import usePageTitle from "../../hooks/usePageTitle";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { AppTexts } from "../../consts/texts";
-import { description, sections } from "./privacyPolicyText";
+import { description, lastUpdate, sections } from "./privacyPolicyText";
 
 const usePrivacyPolicyStyles = createStyleHook(() => {
   return {
@@ -50,6 +50,9 @@ export const PrivacyPolicy = () => {
               </Typography>
             </Box>
           ))}
+          <Typography sx={{ ...styles.typography, fontSize: 16, my: 2 }}>
+            {lastUpdate}
+          </Typography>
         </Box>
       </Box>
     </PageContainer>

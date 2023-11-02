@@ -5,6 +5,8 @@ export const description = `Dog Finder הוא מיזם לא מאוגד שנוע�
 מדיניות הפרטיות שלנו. היא מנוסחת בלשון זכר מטעמי נוחות בלבד אבל מיועדת
 כמובן לכל המינים והמגדרים.`;
 
+export const lastUpdate = "עודכן לאחרונה: 2.11.2023";
+
 interface Section {
   title: string;
   text: string | JSX.Element;

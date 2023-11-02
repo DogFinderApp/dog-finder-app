@@ -20,7 +20,7 @@ const usePageToolbarStyles = createStyleHook((theme) => {
       justifyContent: "center",
       boxShadow: AppShadows.toolbarShadow,
       position: "fixed",
-      zIndex: 10,
+      zIndex: 20,
     },
     menuButton: {
       position: "absolute",
