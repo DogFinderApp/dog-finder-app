@@ -122,7 +122,6 @@ export const HomePage = () => {
                 {AppTexts.homePage.noUser.welcomeMessage1} <br />
                 {AppTexts.homePage.noUser.welcomeMessage2}
               </Typography>
-
               <Button
                 {...commonButtonProps}
                 onClick={() => loginWithRedirect()}
@@ -132,7 +131,12 @@ export const HomePage = () => {
             </Box>
             <Typography sx={styles.footer}>
               {AppTexts.homePage.noUser.footer1}{" "}
-              <Link to={AppRoutes.privacyPolicy} style={{ color: "white" }}>
+              <Link
+                to={AppRoutes.privacyPolicy}
+                style={{ color: "white" }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {AppTexts.homePage.noUser.footer2}
               </Link>{" "}
               {AppTexts.homePage.noUser.footer3}
