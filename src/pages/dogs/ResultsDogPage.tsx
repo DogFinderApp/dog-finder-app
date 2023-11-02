@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import useSWR from "swr";
 import { useLocation, useParams } from "react-router-dom";
 import usePageTitle from "../../hooks/usePageTitle";
@@ -9,7 +9,6 @@ import { PageContainer } from "../../components/pageComponents/PageContainer/Pag
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
-import { LoadingDogs } from "../../components/resultsComponents/LoadingDogs";
 import { NoDogs } from "../../components/resultsComponents/NoDogs";
 
 const fetcher = async (
@@ -62,7 +61,7 @@ export const ResultsDogPage = () => {
         px={{ sm: 4, xs: 0 }}
       >
         <PageTitle text={AppTexts.resultsPage.title} />
-        {isLoading && <LoadingDogs />}
+        {isLoading && <CircularProgress size={60} sx={{ my: 2 }} />}
         {noResults && <NoDogs dogType={dogType as DogType} />}
         {!isLoading && error && <ErrorLoadingDogs refresh={mutate} />}
         {!isLoading && !error && !isEmpty && (
