@@ -74,18 +74,18 @@ export const HomePage = () => {
           style={{ width: innerWidth >= 800 ? "450px" : "300px" }}
         />
         <Box sx={styles.content}>
-          <Button {...commonButtonProps}>
-            <Link to={AppRoutes.dogs.searchLostDog} style={linkStyles}>
+          <Link to={AppRoutes.dogs.searchLostDog} style={linkStyles}>
+            <Button {...commonButtonProps}>
               <IconSearch {...commonIconProps} />
               {AppTexts.homePage.cta.lostDog}
-            </Link>
-          </Button>
-          <Button {...commonButtonProps}>
-            <Link to={AppRoutes.dogs.reportFound} style={linkStyles}>
+            </Button>
+          </Link>
+          <Link to={AppRoutes.dogs.reportFound} style={linkStyles}>
+            <Button {...commonButtonProps}>
               <IconPaw {...commonIconProps} />
               {AppTexts.homePage.cta.foundDog}
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </Box>
       </Box>
     </PageContainer>

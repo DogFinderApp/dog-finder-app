@@ -73,14 +73,16 @@ export const PageToolbar = () => {
       </IconButton>
       <Menu open={isMenuOpen} onClose={handleCloseMenu} anchorEl={anchorEl}>
         {links.map((link) => (
-          <MenuItem key={link.href} sx={styles.menuItem}>
-            <Link
-              to={link.href}
-              style={{ color: "white", textDecoration: "none" }}
-            >
+          <Link
+            key={link.text}
+            to={link.href}
+            style={{ color: "white", textDecoration: "none" }}
+            onClick={handleCloseMenu}
+          >
+            <MenuItem key={link.href} sx={styles.menuItem}>
               {link.text}
-            </Link>
-          </MenuItem>
+            </MenuItem>
+          </Link>
         ))}
       </Menu>
     </Box>
