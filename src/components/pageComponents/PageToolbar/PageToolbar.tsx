@@ -79,9 +79,7 @@ export const PageToolbar = () => {
             style={{ color: "white", textDecoration: "none" }}
             onClick={handleCloseMenu}
           >
-            <MenuItem key={link.href} sx={styles.menuItem}>
-              {link.text}
-            </MenuItem>
+            <MenuItem sx={styles.menuItem}>{link.text}</MenuItem>
           </Link>
         ))}
       </Menu>
