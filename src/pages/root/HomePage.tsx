@@ -78,13 +78,15 @@ export const HomePage = () => {
     sx: styles.button,
   };
 
+  const isMobile = innerWidth < 600;
+
   const commonIconProps: TablerIconsProps = {
-    style: { marginRight: innerWidth < 600 ? "auto" : "8px" },
+    style: { marginRight: isMobile ? "auto" : "8px" },
     stroke: 1.5,
   };
 
   const linkStyles = {
-    width: innerWidth < 600 ? "100%" : "max-content",
+    width: isMobile ? "100%" : "max-content",
     color: "white",
     textDecoration: "none",
     display: "flex",
@@ -118,7 +120,11 @@ export const HomePage = () => {
         ) : (
           <>
             <Box sx={styles.noUser}>
-              <Typography variant="h5" sx={styles.typography}>
+              <Typography
+                variant="h5"
+                fontSize={isMobile ? 22 : 24}
+                sx={styles.typography}
+              >
                 {AppTexts.homePage.noUser.welcomeMessage1} <br />
                 {AppTexts.homePage.noUser.welcomeMessage2}
               </Typography>
