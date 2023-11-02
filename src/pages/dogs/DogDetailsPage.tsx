@@ -205,7 +205,9 @@ export const DogDetailsPage = () => {
                       ? "נמצא בתאריך:"
                       : "אבד בתאריך:"}
                   </span>
-                  <span style={detailContentStyle}>{data.dogFoundOn}</span>
+                  <span style={detailContentStyle}>
+                    {formattedDate() ?? ""}
+                  </span>
                 </Box>
                 <Box sx={detailRowStyle}>
                   <span style={detailHeaderStyle}>גזע: </span>
