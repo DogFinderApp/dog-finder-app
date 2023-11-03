@@ -145,7 +145,7 @@ export const ReportDogPage = withAuthenticationRequired(
         contactPhone: inputs.contactPhone.value,
         contactEmail: inputs.contactEmail.value,
         location: inputs.location.value,
-        dogFoundAt: getFormattedDate(),
+        dogFoundOn: getFormattedDate(),
         breed: inputs.dogBreed.value,
         color: inputs.dogColor.value,
         size: inputs.dogSize.value,
