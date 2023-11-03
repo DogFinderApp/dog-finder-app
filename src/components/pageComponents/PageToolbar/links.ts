@@ -18,4 +18,8 @@ export const links = [
     href: AppRoutes.dogs.reportFound,
     text: AppTexts.navigation.reportFound,
   },
+  {
+    href: AppRoutes.privacyPolicy,
+    text: AppTexts.privacyPolicyTitle,
+  },
 ];

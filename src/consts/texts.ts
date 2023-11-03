@@ -71,6 +71,15 @@ export const AppTexts = {
       searchPage: "חיפוש אחר כלב",
       reportPage: "דיווח על כלב",
     },
+    noUser: {
+      title: "ברוך הבא אל Dog Finder",
+      welcomeMessage1: "כדי להשתמש בשירות יש להרשם",
+      welcomeMessage2: "או לחלופין להתחבר עם חשבון גוגל",
+      cta: "התחל עכשיו",
+      footer1: "בעת הרשמה אתה מאשר את",
+      footer2: "תנאי השימוש ומדיניות הפרטיות",
+      footer3: "של Dog Finder",
+    },
   },
   resultsPage: {
     title: "תוצאות חיפוש",
@@ -117,4 +126,5 @@ export const AppTexts = {
     sexText: "מין",
     reportedAt: "דווח הגיע בתאריך",
   },
+  privacyPolicyTitle: "תנאי השימוש ומדיניות פרטיות",
 };

@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { DogType } from "../facades/payload.types";
 import { HomePage } from "./../pages/root/HomePage";
+import { PrivacyPolicy } from "./../pages/PrivacyPolicy/PrivacyPolicy";
 import { ReportDogPage } from "../pages/dogs/ReportDogPage";
 import { SearchDogPage } from "../pages/dogs/SearchDogPage";
 import { ResultsDogPage } from "../pages/dogs/ResultsDogPage";
@@ -8,6 +9,7 @@ import { DogDetailsPage } from "../pages/dogs/DogDetailsPage";
 
 export const AppRoutes = {
   root: "/",
+  privacyPolicy: "/PrivacyPolicy",
   dogs: {
     dogPage: "/dogs/:dog_id",
     report: "/dogs/report",
@@ -31,6 +33,10 @@ export const routesWithElements: Route[] = [
   {
     path: AppRoutes.root,
     element: HomePage,
+  },
+  {
+    path: AppRoutes.privacyPolicy,
+    element: PrivacyPolicy,
   },
   {
     path: AppRoutes.dogs.reportLost,

@@ -1,4 +1,5 @@
-import { Box, Button, ButtonOwnProps } from "@mui/material";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Box, Button, ButtonOwnProps, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { IconPaw, IconSearch, TablerIconsProps } from "@tabler/icons-react";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -26,6 +27,16 @@ const useHomePageStyles = createStyleHook((theme) => {
       justifyContent: "center",
       gap: 2,
     },
+    noUser: {
+      // the svg container is taking a lot of space (twice the size of the actual svg),
+      // so we display this section with absolute position and overlap the container
+      position: "absolute",
+      top: { sm: "25rem", xs: "20rem" },
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 8,
+    },
     pushRight: {
       marginRight: 3,
     },
@@ -36,14 +47,30 @@ const useHomePageStyles = createStyleHook((theme) => {
       width: 240,
       height: 45,
     },
+    typography: {
+      color: "white",
+      textAlign: "center",
+    },
+    footer: {
+      position: "absolute",
+      bottom: "2rem",
+      width: "90%",
+      direction: "rtl",
+      color: "white",
+      opacity: 0.7,
+      textAlign: "center",
+      fontSize: 14,
+      textWrap: "balance",
+    },
   };
 });
 
 export const HomePage = () => {
-  usePageTitle("Dog Finder");
   const styles = useHomePageStyles();
   const windowSize = useWindowSize();
   const { innerWidth } = windowSize;
+  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  usePageTitle(isAuthenticated ? "Dog Finder" : AppTexts.homePage.noUser.title);
 
   const commonButtonProps: ButtonOwnProps = {
     size: "large",
@@ -51,13 +78,15 @@ export const HomePage = () => {
     sx: styles.button,
   };
 
+  const isMobile = innerWidth < 600;
+
   const commonIconProps: TablerIconsProps = {
-    style: { marginRight: innerWidth < 600 ? "auto" : "8px" },
+    style: { marginRight: isMobile ? "auto" : "8px" },
     stroke: 1.5,
   };
 
   const linkStyles = {
-    width: innerWidth < 600 ? "100%" : "max-content",
+    width: isMobile ? "100%" : "max-content",
     color: "white",
     textDecoration: "none",
     display: "flex",
@@ -71,22 +100,55 @@ export const HomePage = () => {
           autoplay={true}
           src={dogAnim}
           loop={true}
-          style={{ width: innerWidth >= 800 ? "450px" : "300px" }}
+          style={{ width: innerWidth >= 800 ? "400px" : "300px" }}
         />
-        <Box sx={styles.content}>
-          <Link to={AppRoutes.dogs.searchLostDog} style={linkStyles}>
-            <Button {...commonButtonProps}>
-              <IconSearch {...commonIconProps} />
-              {AppTexts.homePage.cta.lostDog}
-            </Button>
-          </Link>
-          <Link to={AppRoutes.dogs.reportFound} style={linkStyles}>
-            <Button {...commonButtonProps}>
-              <IconPaw {...commonIconProps} />
-              {AppTexts.homePage.cta.foundDog}
-            </Button>
-          </Link>
-        </Box>
+        {isLoading || isAuthenticated ? (
+          <Box sx={styles.content}>
+            <Link to={AppRoutes.dogs.searchLostDog} style={linkStyles}>
+              <Button {...commonButtonProps}>
+                <IconSearch {...commonIconProps} />
+                {AppTexts.homePage.cta.lostDog}
+              </Button>
+            </Link>
+            <Link to={AppRoutes.dogs.reportFound} style={linkStyles}>
+              <Button {...commonButtonProps}>
+                <IconPaw {...commonIconProps} />
+                {AppTexts.homePage.cta.foundDog}
+              </Button>
+            </Link>
+          </Box>
+        ) : (
+          <>
+            <Box sx={styles.noUser}>
+              <Typography
+                variant="h5"
+                fontSize={isMobile ? 22 : 24}
+                sx={styles.typography}
+              >
+                {AppTexts.homePage.noUser.welcomeMessage1} <br />
+                {AppTexts.homePage.noUser.welcomeMessage2}
+              </Typography>
+              <Button
+                {...commonButtonProps}
+                onClick={() => loginWithRedirect()}
+              >
+                {AppTexts.homePage.noUser.cta}
+              </Button>
+            </Box>
+            <Typography sx={styles.footer}>
+              {AppTexts.homePage.noUser.footer1}{" "}
+              <Link
+                to={AppRoutes.privacyPolicy}
+                style={{ color: "white" }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {AppTexts.homePage.noUser.footer2}
+              </Link>{" "}
+              {AppTexts.homePage.noUser.footer3}
+            </Typography>
+          </>
+        )}
       </Box>
     </PageContainer>
   );
