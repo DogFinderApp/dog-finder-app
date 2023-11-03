@@ -23,7 +23,7 @@ export interface ReportDogPayload {
   contactEmail?: string;
   contactAddress?: string;
   location: string;
-  dogFoundAt: string | Dayjs | null;
+  dogFoundOn: string | Dayjs | null;
   breed?: string;
   color?: string;
   size?: string;
