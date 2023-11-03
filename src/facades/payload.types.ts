@@ -22,13 +22,12 @@ export interface ReportDogPayload {
   contactPhone: string;
   contactEmail?: string;
   contactAddress?: string;
-  foundAtLocation: string;
-  date: string | Dayjs | null;
+  location: string;
+  dogFoundAt: string | Dayjs | null;
   breed?: string;
   color?: string;
   size?: string;
   sex?: string;
-  location?: string;
   chipNumber: string;
   extraDetails?: string;
 }
