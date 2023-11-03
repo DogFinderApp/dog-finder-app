@@ -22,7 +22,7 @@ const usePrivacyPolicyStyles = createStyleHook(() => {
       color: "white",
       textAlign: "right",
       direction: "rtl",
-      fontSize: 18,
+      fontSize: { sm: 18, xs: 16 },
     },
   };
 });
@@ -36,7 +36,7 @@ export const PrivacyPolicy = () => {
 
   return (
     <PageContainer>
-      <Box maxWidth={1000} margin="0 auto">
+      <Box maxWidth={1000} margin="0 auto" paddingX={{ sm: 4, xs: 0 }}>
         <PageTitle text={pageTitle} />
         <Typography sx={{ ...styles.typography, my: 6 }}>
           {description}
@@ -47,7 +47,7 @@ export const PrivacyPolicy = () => {
             <Box key={section.title} sx={styles.section}>
               <Typography
                 variant="h4"
-                sx={{ ...styles.typography, fontSize: 34 }}
+                sx={{ ...styles.typography, fontSize: { sm: 34, xs: 30 } }}
               >
                 {section.title}
               </Typography>
