@@ -37,8 +37,8 @@ export const PrivacyPolicy = () => {
   return (
     <PageContainer>
       <Box maxWidth={1000} margin="0 auto" paddingX={{ sm: 4, xs: 0 }}>
-        <PageTitle text={pageTitle} />
-        <Typography sx={{ ...styles.typography, my: 6 }}>
+        <PageTitle text={pageTitle} fontSize={{ md: 48, sm: 40, xs: 32 }} />
+        <Typography sx={{ ...styles.typography, my: { sm: 6, xs: 5 } }}>
           {description}
         </Typography>
 
@@ -47,7 +47,7 @@ export const PrivacyPolicy = () => {
             <Box key={section.title} sx={styles.section}>
               <Typography
                 variant="h4"
-                sx={{ ...styles.typography, fontSize: { sm: 34, xs: 30 } }}
+                sx={{ ...styles.typography, fontSize: { sm: 34, xs: 26 } }}
               >
                 {section.title}
               </Typography>
