@@ -242,6 +242,8 @@ export const ReportDogPage = withAuthenticationRequired(
                 options={dogSexOptions}
                 label={AppTexts.reportPage.dogDetails.dogSex}
                 onChange={inputs.dogSex.onSelectChange}
+                error={!inputs.dogSex.isValueValid}
+                value={inputs.dogSex.value}
               />
               <RTLTextField
                 label={AppTexts.reportPage.dogDetails.dogColor}
