@@ -134,7 +134,8 @@ export const ReportDogPage = withAuthenticationRequired(
         // @ts-expect-error
         const { $D, $M, $y } = dateInput;
         // format the selected date to match yyyy-mm-dd
-        return `${$y}-${withZero($M)}-${withZero($D)}`;
+        // the $M parameter starts from 0, so we need to add 1 to it
+        return `${$y}-${withZero($M + 1)}-${withZero($D)}`;
       };
 
       const imageInput = cleanImage(selectedImageUrl);
