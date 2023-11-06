@@ -1,18 +1,21 @@
 import { FC, ReactNode } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
 import useSWR from "swr";
-import { Box, Button, CardMedia, Typography, useTheme } from "@mui/material";
 import {
-  TablerIconsProps,
-  IconPhoneCall,
-  IconArrowLeft,
-} from "@tabler/icons-react";
+  Box,
+  Button,
+  CardMedia,
+  Theme,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import { TablerIconsProps, IconArrowLeft } from "@tabler/icons-react";
 import usePageTitle from "../../hooks/usePageTitle";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { DogType } from "../../facades/payload.types";
 import { AppTexts } from "../../consts/texts";
-import { AppRoutes } from "../../consts/routes";
+import WhatsappIcon from "../../assets/svg/whatsapp.svg";
 
 interface DogDetailsReturnType {
   id: number;
@@ -35,6 +38,7 @@ interface DogDetailsReturnType {
   chipNumber: number;
   location: string;
   dogFoundOn: string;
+  contactPhone: string;
 }
 
 enum DogGenderEnum {
@@ -84,7 +88,19 @@ export const DogDetailsPage = () => {
       : data?.dogFoundOn;
   };
 
-  const image = `data:${data?.images[0].imageContentType};base64${data?.images[0].base64Image}`;
+  const image = `data:${data?.images[0].imageContentType};base64, ${data?.images[0].base64Image}`;
+
+  const contactNumber = `${
+    data?.contactPhone[0] === "0"
+      ? `+972${data?.contactPhone.slice(1)}`
+      : data?.contactPhone
+  }`.replace(/-/g, "");
+
+  const contactMessage =
+    "היי! אני מחפש את הכלב שלי שהלך לאיבוד, ולפי אפליקציית Dog Finder יכול להיות שהוא נמצא אצלך.".replace(
+      / /g,
+      "%20"
+    );
 
   const BackdropComp: FC<{ children: ReactNode }> = ({ children }) => {
     return (
@@ -100,7 +116,6 @@ export const DogDetailsPage = () => {
             fontSize: { xs: "2rem", md: "4rem" },
           }}
         >
-          {" "}
           {children}
         </Box>
       </PageContainer>
@@ -148,15 +163,24 @@ export const DogDetailsPage = () => {
                 <IconArrowLeft {...commonIconProps} />
                 {AppTexts.dogDetails.backButton}
               </Button>
-              <Button
-                size="large"
-                variant="outlined"
-                sx={actionBtnStyle}
-                onClick={() => navigate(AppRoutes.root)}
+              <Link
+                to={`https://wa.me/${contactNumber}/?text=${contactMessage}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <IconPhoneCall {...commonIconProps} />
-                {AppTexts.dogDetails.hamalButton}
-              </Button>
+                <Button
+                  size="large"
+                  variant="contained"
+                  sx={contactBtnStyle(theme)}
+                >
+                  <img
+                    src={WhatsappIcon}
+                    alt="Chat on Whatsapp"
+                    style={{ marginRight: "4px" }}
+                  />
+                  {AppTexts.dogDetails.hamalButton}
+                </Button>
+              </Link>
             </Box>
           </Box>
           <Box sx={fetchedDataContainer}>
@@ -165,10 +189,7 @@ export const DogDetailsPage = () => {
               component="img"
               style={{ objectFit: "contain" }}
               title="Dog Image"
-              sx={{
-                height: "inherit",
-                width: { xs: "100%", md: "auto" },
-              }}
+              sx={{ height: "inherit", width: { xs: "100%", md: "auto" } }}
             />
             <Box component={"div"} sx={detailsStyle}>
               <Box sx={detailsListStyle}>
@@ -224,10 +245,7 @@ export const DogDetailsPage = () => {
                   </span>
                 </Box>
                 <Box
-                  sx={{
-                    display: { xs: "block", md: "none" },
-                    height: "5vh",
-                  }}
+                  sx={{ display: { xs: "block", md: "none" }, height: "5vh" }}
                 />
               </Box>
             </Box>
@@ -250,7 +268,6 @@ const pageContainer = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  padding: "4",
 };
 
 const contentWrapper = {
@@ -272,20 +289,28 @@ const actionBtnWrapper = {
     xs: "column-reverse",
     md: "row",
   },
-  gap: "2rem",
+  gap: { md: "2rem", xs: "1rem" },
 };
 
 const actionBtnStyle = {
   width: { xs: "85vw", md: "15rem" },
+  maxWidth: "480px",
   height: { xs: "5vh", md: "5vh" },
 };
 
+const contactBtnStyle = (theme: Theme) => ({
+  ...actionBtnStyle,
+  backgroundColor: "#E3F0FF",
+  color: theme.palette.primary.main,
+  "&:hover": { backgroundColor: "#cad6e4 !important" },
+});
+
 const fetchedDataContainer = {
   display: "flex",
-  flexDirection: { xs: "column", sm: "row" },
+  flexDirection: { md: "row", xs: "column" },
   alignItems: "center",
   gap: "3rem",
-  marginTop: "10vh",
+  marginTop: { md: "5rem", xs: "3rem" },
   height: "45vh",
   width: "85vw",
 };

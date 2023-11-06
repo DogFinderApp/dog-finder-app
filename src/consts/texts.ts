@@ -116,7 +116,7 @@ export const AppTexts = {
   },
   dogDetails: {
     title: "פרטי הכלב",
-    hamalButton: "המשך ליצירת קשר",
+    hamalButton: "שלח הודעת וואטסאפ",
     backButton: "חזרה אחורה",
     markAsReturndButton: "סמן כהושב לבעליו",
     loading: "...דף בטעינה",
