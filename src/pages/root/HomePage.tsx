@@ -104,7 +104,7 @@ export const HomePage = () => {
         />
         {isLoading || isAuthenticated ? (
           <Box sx={styles.content}>
-            <Link to={AppRoutes.dogs.searchLostDog} style={linkStyles}>
+            <Link to={AppRoutes.dogs.reportLost} style={linkStyles}>
               <Button {...commonButtonProps}>
                 <IconSearch {...commonIconProps} />
                 {AppTexts.homePage.cta.lostDog}

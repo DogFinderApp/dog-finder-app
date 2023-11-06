@@ -88,7 +88,7 @@ export const ReportDogPage = withAuthenticationRequired(
       dogSize: useTextInput({ isMandatoryInput: false }),
       dogColor: useTextInput({ isMandatoryInput: false }),
       dogSex: useSelectInput({
-        isMandatoryInput: true,
+        isMandatoryInput: false,
         possibleValues: Object.keys(dogSexOptions),
       }),
       chipNumber: useTextInput({ isMandatoryInput: false }),
