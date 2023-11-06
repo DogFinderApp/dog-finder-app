@@ -96,11 +96,17 @@ export const DogDetailsPage = () => {
       : data?.contactPhone
   }`.replace(/-/g, "");
 
-  const contactMessage =
-    "היי! אני מחפש את הכלב שלי שהלך לאיבוד, ולפי אפליקציית Dog Finder יכול להיות שהוא נמצא אצלך.".replace(
-      / /g,
-      "%20"
-    );
+  const getContactMessage = (status: "lost" | "found") => {
+    const messages = {
+      lost: `היי, זה {השם שלך} והגעתי אליך דרך פלטפורמת Dog Finder. ייתכן והכלב/ה שלי נמצא אצלך?\n\n${window.location.href}`,
+      found: `היי, זה {השם שלך} והגעתי אליך דרך פלטפורמת Dog Finder. מצאתי כלב/ה שדומה לשלך, שנבדוק?\n\n${window.location.href}`,
+    };
+    return messages[status];
+  };
+
+  const whatsappLink = `https://wa.me/${contactNumber}/?text=${getContactMessage(
+    data?.type ?? "found"
+  )}`;
 
   const BackdropComp: FC<{ children: ReactNode }> = ({ children }) => {
     return (
@@ -163,11 +169,7 @@ export const DogDetailsPage = () => {
                 <IconArrowLeft {...commonIconProps} />
                 {AppTexts.dogDetails.backButton}
               </Button>
-              <Link
-                to={`https://wa.me/${contactNumber}/?text=${contactMessage}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link to={whatsappLink} target="_blank" rel="noopener noreferrer">
                 <Button
                   size="large"
                   variant="contained"
