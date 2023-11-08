@@ -166,16 +166,13 @@ export const ReportDogPage = withAuthenticationRequired(
       setRequestStatus("success");
       setIsLoading(false);
       clearInputs();
-      if (dogType === DogType.FOUND) {
+      setTimeout(() => {
         // wait before navigating to results page in order to show the success/error toast
-        setTimeout(() => {
-          navigate(AppRoutes.dogs.results.replace(":dogType", dogType), {
-            state: { type: dogType, base64Image: imageInput },
-          });
-        }, 2000);
-      }
-
-      setIsLoading(false);
+        const dogTypeToSearch = dogType === "found" ? "lost" : "found";
+        navigate(AppRoutes.dogs.results.replace(":dogType", dogTypeToSearch), {
+          state: { type: dogType, base64Image: imageInput },
+        });
+      }, 2000);
     };
 
     const successMessage =
