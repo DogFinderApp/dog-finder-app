@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { TablerIconsProps, IconArrowLeft } from "@tabler/icons-react";
 import usePageTitle from "../../hooks/usePageTitle";
+import { useDogContext } from "../../hooks/useDogContext";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { DogType } from "../../facades/payload.types";
@@ -63,8 +64,22 @@ const fetcher = async (
   return json?.data?.results || [];
 };
 
+const reportPossibleMatch = async (
+  payload: { dogId: number; possibleMatchId: number | null },
+  getServerApi: Function
+): Promise<void> => {
+  if (!payload.possibleMatchId)
+    throw new Error("Context has no memorized dog id");
+  const serverApi = await getServerApi();
+  const response = await serverApi.addPossibleDogMatch(payload);
+  if (!response?.ok) throw new Error("Failed to report possible match");
+};
+
 export const DogDetailsPage = () => {
   usePageTitle(AppTexts.dogDetails.title);
+  const {
+    state: { lastReportedDogId },
+  } = useDogContext();
   const { state: payload } = useLocation();
   const getServerApi = useGetServerApi();
   const { dog_id } = useParams();
@@ -174,6 +189,12 @@ export const DogDetailsPage = () => {
                   size="large"
                   variant="contained"
                   sx={contactBtnStyle(theme)}
+                  onClick={() =>
+                    reportPossibleMatch(
+                      { dogId: data.id, possibleMatchId: lastReportedDogId },
+                      getServerApi
+                    )
+                  }
                 >
                   <img
                     src={WhatsappIcon}

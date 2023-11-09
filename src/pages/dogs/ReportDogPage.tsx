@@ -20,6 +20,7 @@ import { DogSex } from "../../facades/payload.types";
 import { cleanImage } from "../../utils/imageUtils";
 import { createStyleHook } from "../../hooks/styleHooks";
 import usePageTitle from "../../hooks/usePageTitle";
+import { useDogContext } from "../../hooks/useDogContext";
 import { useImageSelection } from "../../hooks/useImageSelection";
 import { useTextInput } from "../../hooks/useTextInput";
 import { useSelectInput } from "../../hooks/useSelectInput";
@@ -60,6 +61,7 @@ interface ReportDogPageProps {
 
 export const ReportDogPage = withAuthenticationRequired(
   ({ dogType }: ReportDogPageProps) => {
+    const { dispatch } = useDogContext();
     const { onSelectImage, selectedImageUrl, clearSelection } =
       useImageSelection();
     const [isMissingImage, setIsMissingImage] = useState(false);
@@ -164,9 +166,11 @@ export const ReportDogPage = withAuthenticationRequired(
         return;
       }
 
+      const json = await response.json();
       setRequestStatus("success");
       setIsLoading(false);
       clearInputs();
+      dispatch({ type: "SAVE_DOG_ID", payload: json.data.id });
       setTimeout(() => {
         // wait before navigating to results page in order to show the success/error toast
         const dogTypeToSearch = dogType === "found" ? "lost" : "found";
