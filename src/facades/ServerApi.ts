@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback } from "react";
-import { DogType, QueryPayload, ReportDogPayload } from "./payload.types";
+import { QueryPayload, ReportDogPayload } from "./payload.types";
 
 const API_URL = process.env.REACT_APP_API_URL || "";
 
@@ -72,10 +72,7 @@ class ServerApi {
 
     async searchDog(payload: QueryPayload) {
         const { dogType, ...newPayload } = payload;
-        let url = build_endpoint("/dogfinder/search_in_found_dogs");
-        if (dogType === DogType.FOUND) {
-            url = build_endpoint("/dogfinder/search_in_lost_dogs");
-        }
+    const url = build_endpoint(`/dogfinder/search_in_${dogType}_dog`);
 
         return this.fetch(url, {
           method: "POST",

@@ -171,7 +171,7 @@ export const ReportDogPage = withAuthenticationRequired(
         // wait before navigating to results page in order to show the success/error toast
         const dogTypeToSearch = dogType === "found" ? "lost" : "found";
         navigate(AppRoutes.dogs.results.replace(":dogType", dogTypeToSearch), {
-          state: { type: dogType, base64Image: imageInput },
+          state: { type: dogTypeToSearch, base64Image: imageInput },
         });
       }, 2000);
     };
