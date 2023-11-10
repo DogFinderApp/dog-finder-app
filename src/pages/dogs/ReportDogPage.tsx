@@ -50,6 +50,15 @@ const useReportDogPageStyles = createStyleHook(
       error: {
         opacity: props.isError ? "100%" : "0%",
       },
+      alert: {
+        width: "100%",
+        fontSize: { sm: 22, xs: 20 },
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        ".MuiAlert-action": { ml: "unset" },
+        ".MuiAlert-icon": { fontSize: 24 },
+      },
     };
   }
 );
@@ -203,7 +212,7 @@ export const ReportDogPage = withAuthenticationRequired(
             <Alert
               onClose={handleCloseError}
               severity={requestStatus as AlertColor}
-              sx={{ width: "100%" }}
+              sx={styles.alert}
             >
               {alertText}
             </Alert>

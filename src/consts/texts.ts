@@ -126,5 +126,5 @@ export const AppTexts = {
     sexText: "מין",
     reportedAt: "דווח הגיע בתאריך",
   },
-  privacyPolicyTitle: "תנאי השימוש ומדיניות פרטיות",
+  privacyPolicyTitle: "אודות ותנאי שימוש",
 };
