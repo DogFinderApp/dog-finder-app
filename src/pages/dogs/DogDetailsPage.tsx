@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { TablerIconsProps, IconArrowLeft } from "@tabler/icons-react";
 import usePageTitle from "../../hooks/usePageTitle";
-import { useDogContext } from "../../hooks/useDogContext";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { DogType } from "../../facades/payload.types";
@@ -65,24 +64,23 @@ const fetcher = async (
 };
 
 const reportPossibleMatch = async (
-  payload: { dogId: number; possibleMatchId: number | null },
+  payload: { dogId: string | undefined; possibleMatchId: number },
   getServerApi: Function
 ): Promise<void> => {
-  if (!payload.possibleMatchId)
-    throw new Error("Context has no memorized dog id");
+  if (!payload.dogId) console.error("No memorized dog id");
   const serverApi = await getServerApi();
-  const response = await serverApi.addPossibleDogMatch(payload);
-  if (!response?.ok) throw new Error("Failed to report possible match");
+  const response = await serverApi.addPossibleDogMatch({
+    ...payload,
+    dogId: Number(payload.dogId),
+  });
+  if (!response?.ok) console.error("Failed to report possible match");
 };
 
 export const DogDetailsPage = () => {
   usePageTitle(AppTexts.dogDetails.title);
-  const {
-    state: { lastReportedDogId },
-  } = useDogContext();
   const { state: payload } = useLocation();
   const getServerApi = useGetServerApi();
-  const { dog_id } = useParams();
+  const { dog_id, lastReportedId } = useParams();
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -126,19 +124,7 @@ export const DogDetailsPage = () => {
   const BackdropComp: FC<{ children: ReactNode }> = ({ children }) => {
     return (
       <PageContainer>
-        <Box
-          sx={{
-            width: "inherit",
-            height: "inherit",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "white",
-            fontSize: { xs: "2rem", md: "4rem" },
-          }}
-        >
-          {children}
-        </Box>
+        <Box sx={backdropStyles}>{children}</Box>
       </PageContainer>
     );
   };
@@ -191,7 +177,7 @@ export const DogDetailsPage = () => {
                   sx={contactBtnStyle(theme)}
                   onClick={() =>
                     reportPossibleMatch(
-                      { dogId: data.id, possibleMatchId: lastReportedDogId },
+                      { dogId: lastReportedId, possibleMatchId: data.id },
                       getServerApi
                     )
                   }
@@ -280,6 +266,16 @@ export const DogDetailsPage = () => {
 };
 
 //#region Styles
+
+const backdropStyles = {
+  width: "inherit",
+  height: "inherit",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  color: "white",
+  fontSize: { xs: "2rem", md: "4rem" },
+};
 
 const commonIconProps: TablerIconsProps = {
   style: { marginRight: "0.5rem" },

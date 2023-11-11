@@ -11,13 +11,13 @@ export const AppRoutes = {
   root: "/",
   privacyPolicy: "/PrivacyPolicy",
   dogs: {
-    dogPage: "/dogs/:dog_id",
+    dogPage: "/dogs/:dog_id/:lastReportedId?",
     report: "/dogs/report",
     reportFound: "/dogs/report-found",
     reportLost: "/dogs/report-missing",
     searchLostDog: "/dogs/search-lost",
     searchFoundDog: "/dogs/search-found",
-    results: "/dogs/results/:dogType",
+    results: "/dogs/results/:dogType/:lastReportedId?",
   },
 };
 
