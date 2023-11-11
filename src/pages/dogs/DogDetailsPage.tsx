@@ -10,6 +10,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { TablerIconsProps, IconArrowLeft } from "@tabler/icons-react";
+import { decryptData, encryptData } from "../../utils/encryptionUtils";
 import usePageTitle from "../../hooks/usePageTitle";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { useGetServerApi } from "../../facades/ServerApi";
@@ -64,14 +65,25 @@ const fetcher = async (
 };
 
 const reportPossibleMatch = async (
-  payload: { dogId: string | undefined; possibleMatchId: number },
+  payload: { lastReportedId: string | undefined; possibleMatchId: number },
   getServerApi: Function
 ): Promise<void> => {
-  if (!payload.dogId) console.error("No memorized dog id");
+  const { lastReportedId, possibleMatchId } = payload;
+  const memorizedDogId: string | null = decryptData("lastReportedDogId");
+
+  if (!lastReportedId && !memorizedDogId)
+    return console.error("No memorized dog id in both URL and localStorage");
+
+  if (
+    lastReportedId &&
+    (!memorizedDogId || (memorizedDogId && lastReportedId !== memorizedDogId))
+  )
+    encryptData("lastReportedDogId", lastReportedId);
+
   const serverApi = await getServerApi();
   const response = await serverApi.addPossibleDogMatch({
-    ...payload,
-    dogId: Number(payload.dogId),
+    dogId: Number(lastReportedId ?? memorizedDogId),
+    possibleMatchId,
   });
   if (!response?.ok) console.error("Failed to report possible match");
 };
@@ -177,7 +189,7 @@ export const DogDetailsPage = () => {
                   sx={contactBtnStyle(theme)}
                   onClick={() =>
                     reportPossibleMatch(
-                      { dogId: lastReportedId, possibleMatchId: data.id },
+                      { lastReportedId, possibleMatchId: data.id },
                       getServerApi
                     )
                   }

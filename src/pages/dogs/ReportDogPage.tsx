@@ -18,6 +18,7 @@ import { DogType, ReportDogPayload } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { DogSex } from "../../facades/payload.types";
 import { cleanImage } from "../../utils/imageUtils";
+import { encryptData } from "../../utils/encryptionUtils";
 import { createStyleHook } from "../../hooks/styleHooks";
 import usePageTitle from "../../hooks/usePageTitle";
 import { useImageSelection } from "../../hooks/useImageSelection";
@@ -170,6 +171,7 @@ export const ReportDogPage = withAuthenticationRequired(
       setRequestStatus("success");
       setIsLoading(false);
       clearInputs();
+      encryptData("lastReportedDogId", lastReportedId);
       setTimeout(() => {
         // wait before navigating to results page in order to show the success/error toast
         const dogTypeToSearch = dogType === "found" ? "lost" : "found";
