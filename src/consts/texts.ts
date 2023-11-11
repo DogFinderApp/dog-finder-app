@@ -90,6 +90,7 @@ export const AppTexts = {
     moreDetails: "לחצו לעוד פרטים",
     call: "טלפון",
     email: "מייל",
+    loading: "...מאתר כלבים דומים במאגר שלנו",
     error: "תקלה בטעינת התוצאות",
     noResults: {
       title: "לא נמצאו תוצאות",
@@ -105,7 +106,6 @@ export const AppTexts = {
       foundDogNotFound: "הכלב שמצאתי לא כאן",
     },
     refresh: "רענן",
-    loading: "...טוען תוצאות",
   },
   navigation: {
     home: "בית",

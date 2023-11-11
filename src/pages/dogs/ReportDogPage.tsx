@@ -200,6 +200,14 @@ export const ReportDogPage = withAuthenticationRequired(
         ? AppTexts.reportPage.locationDetails.locationDescriptionLost
         : AppTexts.reportPage.locationDetails.locationDescriptionFound;
 
+    const phoneInputHelperText = !inputs.contactPhone.isPhoneValid
+      ? "מספר הטלפון אינו תקין"
+      : "";
+
+    const emailInputHelperText = !inputs.contactEmail.isEmailValid
+      ? "כתובת המייל אינה חוקית"
+      : "";
+
     return (
       <PageContainer>
         <Box sx={styles.root}>
@@ -306,6 +314,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 value={inputs.contactPhone.value}
                 onChange={inputs.contactPhone.onPhoneChange}
                 error={!inputs.contactPhone.isPhoneValid}
+                helperText={phoneInputHelperText}
               />
               <RTLTextField
                 rows={2}
@@ -317,6 +326,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 value={inputs.contactEmail.value}
                 onChange={inputs.contactEmail.onEmailChange}
                 error={!inputs.contactEmail.isEmailValid}
+                helperText={emailInputHelperText}
               />
               <RTLTextField
                 rows={2}
