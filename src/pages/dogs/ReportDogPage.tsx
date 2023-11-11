@@ -201,11 +201,11 @@ export const ReportDogPage = withAuthenticationRequired(
         : AppTexts.reportPage.locationDetails.locationDescriptionFound;
 
     const phoneInputHelperText = !inputs.contactPhone.isPhoneValid
-      ? "מספר הטלפון אינו תקין"
+      ? AppTexts.reportPage.helperTexts.phone
       : "";
 
     const emailInputHelperText = !inputs.contactEmail.isEmailValid
-      ? "כתובת המייל אינה חוקית"
+      ? AppTexts.reportPage.helperTexts.email
       : "";
 
     return (

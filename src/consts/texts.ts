@@ -55,6 +55,10 @@ export const AppTexts = {
       contactEmail: "אימייל איש קשר",
       contactAddress: "כתובת איש קשר",
     },
+    helperTexts: {
+      phone: "מספר הטלפון אינו תקין",
+      email: "כתובת המייל אינה חוקית",
+    },
     cta: "שלח דיווח",
     error: "אנא מלאו את כל השדות המסומנים באדום",
     request: {
