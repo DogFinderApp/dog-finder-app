@@ -1,7 +1,8 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import useSWR from "swr";
 import { useLocation, useParams } from "react-router-dom";
 import usePageTitle from "../../hooks/usePageTitle";
+import { createStyleHook } from "../../hooks/styleHooks";
 import { AppTexts } from "../../consts/texts";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { DogType } from "../../facades/payload.types";
@@ -11,12 +12,32 @@ import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
 import { NoDogs } from "../../components/resultsComponents/NoDogs";
 
+const usePageStyles = createStyleHook(() => {
+  return {
+    loadingContainer: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 2,
+      textWrap: "balance",
+    },
+    loadingText: {
+      color: "white",
+      textAlign: "center",
+      fontSize: 26,
+    },
+  };
+});
+
 const fetcher = async (
   payload: { base64Image: string; type: DogType },
   getServerApi: Function
 ) => {
   const serverApi = await getServerApi();
-  const response = await serverApi.searchDog(payload);
+  const response = await serverApi.searchDog({
+    ...payload,
+    dogType: payload.type,
+  });
   if (response?.ok) {
     const json = await response.json();
     return json?.data?.results || [];
@@ -29,6 +50,7 @@ export const ResultsDogPage = () => {
   const { state: payload } = useLocation();
   const getServerApi = useGetServerApi();
   const { dogType } = useParams();
+  const styles = usePageStyles();
 
   const {
     data: results,
@@ -61,7 +83,14 @@ export const ResultsDogPage = () => {
         px={{ sm: 4, xs: 0 }}
       >
         <PageTitle text={AppTexts.resultsPage.title} />
-        {isLoading && <CircularProgress size={60} sx={{ my: 2 }} />}
+        {isLoading && (
+          <Box sx={styles.loadingContainer}>
+            <Typography sx={styles.loadingText}>
+              {AppTexts.resultsPage.loading}
+            </Typography>
+            <CircularProgress size={60} sx={{ my: 2 }} />
+          </Box>
+        )}
         {noResults && <NoDogs dogType={dogType as DogType} />}
         {!isLoading && error && <ErrorLoadingDogs refresh={mutate} />}
         {!isLoading && !error && !isEmpty && (

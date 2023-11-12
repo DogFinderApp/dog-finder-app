@@ -18,6 +18,7 @@ import { DogType, ReportDogPayload } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { DogSex } from "../../facades/payload.types";
 import { cleanImage } from "../../utils/imageUtils";
+import { dateToString } from "../../utils/datesFormatter";
 import { encryptData } from "../../utils/encryptionUtils";
 import { createStyleHook } from "../../hooks/styleHooks";
 import usePageTitle from "../../hooks/usePageTitle";
@@ -50,6 +51,15 @@ const useReportDogPageStyles = createStyleHook(
       },
       error: {
         opacity: props.isError ? "100%" : "0%",
+      },
+      alert: {
+        width: "100%",
+        fontSize: { sm: 22, xs: 20 },
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        ".MuiAlert-action": { ml: "unset" },
+        ".MuiAlert-icon": { fontSize: 24 },
       },
     };
   }
@@ -127,18 +137,6 @@ export const ReportDogPage = withAuthenticationRequired(
       setShowErrorMessage(showError);
       if (showError) return;
 
-      const getFormattedDate = () => {
-        const withZero = (number: number) =>
-          `${number}`.length === 2 ? number : `0${number}`;
-
-        const { dateInput } = inputs.date;
-        // @ts-expect-error
-        const { $D, $M, $y } = dateInput;
-        // format the selected date to match yyyy-mm-dd
-        // the $M parameter starts from 0, so we need to add 1 to it
-        return `${$y}-${withZero($M + 1)}-${withZero($D)}`;
-      };
-
       const base64Image = cleanImage(selectedImageUrl);
       const payload: ReportDogPayload = {
         type: dogType,
@@ -147,7 +145,7 @@ export const ReportDogPage = withAuthenticationRequired(
         contactPhone: inputs.contactPhone.value,
         contactEmail: inputs.contactEmail.value,
         location: inputs.location.value,
-        dogFoundOn: getFormattedDate(),
+        dogFoundOn: dateToString(inputs.date.dateInput!),
         breed: inputs.dogBreed.value,
         color: inputs.dogColor.value,
         size: inputs.dogSize.value,
@@ -197,6 +195,14 @@ export const ReportDogPage = withAuthenticationRequired(
         ? AppTexts.reportPage.locationDetails.locationDescriptionLost
         : AppTexts.reportPage.locationDetails.locationDescriptionFound;
 
+    const phoneInputHelperText = !inputs.contactPhone.isPhoneValid
+      ? AppTexts.reportPage.helperTexts.phone
+      : "";
+
+    const emailInputHelperText = !inputs.contactEmail.isEmailValid
+      ? AppTexts.reportPage.helperTexts.email
+      : "";
+
     return (
       <PageContainer>
         <Box sx={styles.root}>
@@ -209,7 +215,7 @@ export const ReportDogPage = withAuthenticationRequired(
             <Alert
               onClose={handleCloseError}
               severity={requestStatus as AlertColor}
-              sx={{ width: "100%" }}
+              sx={styles.alert}
             >
               {alertText}
             </Alert>
@@ -303,6 +309,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 value={inputs.contactPhone.value}
                 onChange={inputs.contactPhone.onPhoneChange}
                 error={!inputs.contactPhone.isPhoneValid}
+                helperText={phoneInputHelperText}
               />
               <RTLTextField
                 rows={2}
@@ -314,6 +321,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 value={inputs.contactEmail.value}
                 onChange={inputs.contactEmail.onEmailChange}
                 error={!inputs.contactEmail.isEmailValid}
+                helperText={emailInputHelperText}
               />
               <RTLTextField
                 rows={2}

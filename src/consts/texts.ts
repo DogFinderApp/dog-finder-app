@@ -55,6 +55,10 @@ export const AppTexts = {
       contactEmail: "אימייל איש קשר",
       contactAddress: "כתובת איש קשר",
     },
+    helperTexts: {
+      phone: "מספר הטלפון אינו תקין",
+      email: "כתובת המייל אינה חוקית",
+    },
     cta: "שלח דיווח",
     error: "אנא מלאו את כל השדות המסומנים באדום",
     request: {
@@ -90,6 +94,7 @@ export const AppTexts = {
     moreDetails: "לחצו לעוד פרטים",
     call: "טלפון",
     email: "מייל",
+    loading: "...מאתר כלבים דומים במאגר שלנו",
     error: "תקלה בטעינת התוצאות",
     noResults: {
       title: "לא נמצאו תוצאות",
@@ -105,7 +110,6 @@ export const AppTexts = {
       foundDogNotFound: "הכלב שמצאתי לא כאן",
     },
     refresh: "רענן",
-    loading: "...טוען תוצאות",
   },
   navigation: {
     home: "בית",
@@ -124,7 +128,8 @@ export const AppTexts = {
   dogCard: {
     locationText: "אבד באיזור",
     sexText: "מין",
-    reportedAt: "דווח הגיע בתאריך",
+    foundDate: "נמצא בתאריך",
+    lostDate: "אבד בתאריך",
   },
-  privacyPolicyTitle: "תנאי השימוש ומדיניות פרטיות",
+  privacyPolicyTitle: "אודות ותנאי שימוש",
 };
