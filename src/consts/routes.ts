@@ -12,11 +12,11 @@ export const AppRoutes = {
   privacyPolicy: "/PrivacyPolicy",
   dogs: {
     dogPage: "/dogs/:dog_id/:lastReportedId?",
-    reportFound: "/dogs/report-found",
-    reportLost: "/dogs/report-missing",
-    searchLostDog: "/dogs/search-lost",
-    searchFoundDog: "/dogs/search-found",
-    results: "/dogs/results/:dogType/:lastReportedId?",
+    reportFound: "/report-found",
+    reportLost: "/report-missing",
+    searchLostDog: "/search-lost",
+    searchFoundDog: "/search-found",
+    results: "/results/:dogType/:lastReportedId?",
   },
 };
 

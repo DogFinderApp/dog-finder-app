@@ -13,6 +13,7 @@ interface DatePickerProps {
   date: Dayjs | null;
   handleDateChange: (newValue: Dayjs | null) => void;
   error: boolean;
+  required?: boolean;
 }
 
 const DatePicker = ({
@@ -20,6 +21,7 @@ const DatePicker = ({
   date,
   handleDateChange,
   error,
+  required,
 }: DatePickerProps) => {
   const basicInputStyles = useRTLTextFieldStyles();
 
@@ -53,7 +55,7 @@ const DatePicker = ({
           onChange={handleDateChange}
           disableFuture
           closeOnSelect
-          slotProps={{ textField: { error } }}
+          slotProps={{ textField: { error, required } }}
         />
       </LocalizationProvider>
     </RTLWrapper>

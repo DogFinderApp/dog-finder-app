@@ -69,7 +69,13 @@ export const UploadPhoto: FC<UploadPhotoProps> = ({ onSelectImage, selectedImage
       />
       <Box sx={styles.uploadButon} onClick={() => imageInputRef?.current?.click()}>
         <IconCameraUp style={{ marginBottom: "8px" }} size={"60px"} strokeWidth={1} color={buttonColors} />
-        <Typography color={buttonColors}>{uploadText}</Typography>
+        <Typography
+          color={buttonColors}
+          textAlign={"center"}
+          sx={{ textWrap: "balance" }}
+        >
+          {uploadText}
+        </Typography>
       </Box>
     </Box>
   );

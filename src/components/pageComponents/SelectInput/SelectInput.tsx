@@ -79,7 +79,13 @@ export const SelectInputField = ({
     <RTLWrapper withMaxWidth>
       <FormControl sx={styles.root}>
         <InputLabel>{label}</InputLabel>
-        <Select {...selectProps} sx={styles.select} value={value} error={error}>
+        <Select
+          {...selectProps}
+          sx={styles.select}
+          value={value}
+          error={error}
+          label={label}
+        >
           {menuItems}
         </Select>
       </FormControl>
