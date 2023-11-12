@@ -18,6 +18,7 @@ import { DogType, ReportDogPayload } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { DogSex } from "../../facades/payload.types";
 import { cleanImage } from "../../utils/imageUtils";
+import { dateToString } from "../../utils/datesFormatter";
 import { createStyleHook } from "../../hooks/styleHooks";
 import usePageTitle from "../../hooks/usePageTitle";
 import { useImageSelection } from "../../hooks/useImageSelection";
@@ -135,18 +136,6 @@ export const ReportDogPage = withAuthenticationRequired(
       setShowErrorMessage(showError);
       if (showError) return;
 
-      const getFormattedDate = () => {
-        const withZero = (number: number) =>
-          `${number}`.length === 2 ? number : `0${number}`;
-
-        const { dateInput } = inputs.date;
-        // @ts-expect-error
-        const { $D, $M, $y } = dateInput;
-        // format the selected date to match yyyy-mm-dd
-        // the $M parameter starts from 0, so we need to add 1 to it
-        return `${$y}-${withZero($M + 1)}-${withZero($D)}`;
-      };
-
       const imageInput = cleanImage(selectedImageUrl);
       const payload: ReportDogPayload = {
         type: dogType,
@@ -155,7 +144,7 @@ export const ReportDogPage = withAuthenticationRequired(
         contactPhone: inputs.contactPhone.value,
         contactEmail: inputs.contactEmail.value,
         location: inputs.location.value,
-        dogFoundOn: getFormattedDate(),
+        dogFoundOn: dateToString(inputs.date.dateInput!),
         breed: inputs.dogBreed.value,
         color: inputs.dogColor.value,
         size: inputs.dogSize.value,

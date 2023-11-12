@@ -20,71 +20,76 @@ import { useNavigate } from "react-router-dom";
 import { RTLWrapper } from "../../components/common/RTLWrapper";
 import { AppRoutes } from "../../consts/routes";
 
-
 interface SearchProps {
-  dogType: DogType
-};
+  dogType: DogType;
+}
 
 export const SearchDogPage = withAuthenticationRequired(
   ({ dogType }: SearchProps) => {
     usePageTitle(AppTexts.searchPage.title);
-  const navigate = useNavigate();
-  const theme = useTheme();
-  const { onSelectImage, selectedImageFile, selectedImageUrl, clearSelection } =
-    useImageSelection();
-  const [isMissingPhoto, setIsMissingPhoto] = useState(false);
+    const navigate = useNavigate();
+    const theme = useTheme();
+    const {
+      onSelectImage,
+      selectedImageFile,
+      selectedImageUrl,
+      clearSelection,
+    } = useImageSelection();
+    const [isMissingPhoto, setIsMissingPhoto] = useState(false);
 
-  const onClickSearch = async () => {
-    if (!selectedImageUrl || !selectedImageFile) {
-      setIsMissingPhoto(true);
-      return;
-    }
+    const onClickSearch = async () => {
+      if (!selectedImageUrl || !selectedImageFile) {
+        setIsMissingPhoto(true);
+        return;
+      }
 
-    if (!selectedImageUrl) {
+      if (!selectedImageUrl) return;
+      const imageInput = await cleanImage(selectedImageUrl);
+      const payload: QueryPayload = {
+        dogType,
+        base64Image: imageInput,
+      };
+
+      navigate(AppRoutes.dogs.results.replace(":dogType", dogType), {
+        state: { ...payload, type: dogType },
+      });
       return;
-    }
-    const imageInput = await cleanImage(selectedImageUrl);
-    const payload: QueryPayload = {
-      dogType: dogType,
-      base64Image: imageInput,
     };
 
-    navigate(AppRoutes.dogs.results.replace(":dogType", dogType), { state: payload });
-    return;
-  };
+    const isFound = () => {
+      return dogType === DogType.FOUND;
+    };
 
-  const isFound = () => {
-    return dogType === DogType.FOUND;
+    return (
+      <PageContainer>
+        <Box
+          height={"100%"}
+          width={"100%"}
+          display={"flex"}
+          flexDirection={"column"}
+          alignItems={"center"}
+          gap={"24px"}
+        >
+          <PageTitle text={AppTexts.searchPage.title} />
+          {isFound() && (
+            <RTLWrapper>
+              <Typography color={theme.palette.text.primary}>
+                {AppTexts.searchPage.beforeReportingLost}
+              </Typography>
+            </RTLWrapper>
+          )}
+          <DogPhoto
+            onSelectImage={onSelectImage}
+            selectedImageUrl={selectedImageUrl}
+            clearSelection={clearSelection}
+            isError={isMissingPhoto}
+          />
+          <Button size="large" variant="contained" onClick={onClickSearch}>
+            <IconSearch style={{ marginRight: "8px" }} stroke={1.5} />
+            {AppTexts.searchPage.submit}
+          </Button>
+        </Box>
+      </PageContainer>
+    );
   }
-
-  return (
-    <PageContainer>
-      <Box
-        height={"100%"}
-        width={"100%"}
-        display={"flex"}
-        flexDirection={"column"}
-        alignItems={"center"}
-        gap={"24px"}
-      >
-        <PageTitle text={AppTexts.searchPage.title} />
-        {
-          isFound() && 
-          <RTLWrapper>
-            <Typography color={theme.palette.text.primary}>{AppTexts.searchPage.beforeReportingLost}</Typography>
-          </RTLWrapper>
-        }
-        <DogPhoto
-          onSelectImage={onSelectImage}
-          selectedImageUrl={selectedImageUrl}
-          clearSelection={clearSelection}
-          isError={isMissingPhoto}
-        />
-        <Button size="large" variant="contained" onClick={onClickSearch}>
-          <IconSearch style={{ marginRight: "8px" }} stroke={1.5} />
-          {AppTexts.searchPage.submit}
-        </Button>
-      </Box>
-    </PageContainer>
-  );
-});
+);

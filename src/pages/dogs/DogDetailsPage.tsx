@@ -10,10 +10,11 @@ import {
   useTheme,
 } from "@mui/material";
 import { TablerIconsProps, IconArrowLeft } from "@tabler/icons-react";
+import { formatDateString } from "../../utils/datesFormatter";
+import { DogType } from "../../facades/payload.types";
+import { useGetServerApi } from "../../facades/ServerApi";
 import usePageTitle from "../../hooks/usePageTitle";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
-import { useGetServerApi } from "../../facades/ServerApi";
-import { DogType } from "../../facades/payload.types";
 import { AppTexts } from "../../consts/texts";
 import WhatsappIcon from "../../assets/svg/whatsapp.svg";
 
@@ -79,14 +80,6 @@ export const DogDetailsPage = () => {
       revalidateOnFocus: false,
     }
   );
-
-  // convert the date format from yyyy-mm-dd back to dd/mm/yyyy
-  const formattedDate = () => {
-    const dateParts = data?.dogFoundOn.split("-");
-    return !!dateParts
-      ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`
-      : data?.dogFoundOn;
-  };
 
   const image = `data:${data?.images[0].imageContentType};base64, ${data?.images[0].base64Image}`;
 
@@ -195,12 +188,14 @@ export const DogDetailsPage = () => {
             />
             <Box component={"div"} sx={detailsStyle}>
               <Box sx={detailsListStyle}>
-                <Box sx={advancedDetailsRowStyle}>
-                  <span style={detailHeaderStyle}>פרטים נוספים: </span>
-                  <span style={detailContentStyle}>
-                    {data.extraDetails || ""}
-                  </span>
-                </Box>
+                {data.extraDetails && (
+                  <Box sx={advancedDetailsRowStyle}>
+                    <span style={detailHeaderStyle}>פרטים נוספים: </span>
+                    <span style={detailContentStyle}>
+                      {data.extraDetails || ""}
+                    </span>
+                  </Box>
+                )}
                 <Box sx={detailRowStyle}>
                   <span style={detailHeaderStyle}>מין: </span>
                   <span style={detailContentStyle}>
@@ -229,7 +224,7 @@ export const DogDetailsPage = () => {
                       : "אבד בתאריך:"}
                   </span>
                   <span style={detailContentStyle}>
-                    {formattedDate() ?? ""}
+                    {formatDateString(data?.dogFoundOn ?? "")}
                   </span>
                 </Box>
                 <Box sx={detailRowStyle}>

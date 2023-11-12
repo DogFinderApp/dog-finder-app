@@ -72,7 +72,7 @@ class ServerApi {
 
     async searchDog(payload: QueryPayload) {
         const { dogType, ...newPayload } = payload;
-    const url = build_endpoint(`/dogfinder/search_in_${dogType}_dog`);
+    const url = build_endpoint(`/dogfinder/search_in_${dogType}_dogs`);
 
         return this.fetch(url, {
           method: "POST",

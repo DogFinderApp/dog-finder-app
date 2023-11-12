@@ -128,7 +128,8 @@ export const AppTexts = {
   dogCard: {
     locationText: "אבד באיזור",
     sexText: "מין",
-    reportedAt: "דווח הגיע בתאריך",
+    foundDate: "נמצא בתאריך",
+    lostDate: "אבד בתאריך",
   },
   privacyPolicyTitle: "אודות ותנאי שימוש",
 };
