@@ -276,6 +276,7 @@ export const ReportDogPage = withAuthenticationRequired(
               <RTLTextField
                 label={locationText}
                 fullWidth
+                required
                 type="text"
                 margin="normal"
                 value={inputs.location.value}
@@ -287,11 +288,13 @@ export const ReportDogPage = withAuthenticationRequired(
                 date={inputs.date.dateInput}
                 handleDateChange={inputs.date.handleDateChange}
                 error={!inputs.date.isInputValid}
+                required
               />
               <RTLTextField
                 rows={2}
                 label={AppTexts.reportPage.extraDetails.contactName}
                 fullWidth
+                required
                 multiline
                 type="text"
                 margin={"normal"}
@@ -303,6 +306,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 rows={2}
                 label={AppTexts.reportPage.extraDetails.contactPhone}
                 fullWidth
+                required
                 multiline
                 type="text"
                 margin={"normal"}
@@ -315,6 +319,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 rows={2}
                 label={AppTexts.reportPage.extraDetails.contactEmail}
                 fullWidth
+                required
                 multiline
                 type="text"
                 margin={"normal"}
