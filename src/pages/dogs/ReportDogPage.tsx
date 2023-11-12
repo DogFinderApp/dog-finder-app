@@ -19,6 +19,7 @@ import { useGetServerApi } from "../../facades/ServerApi";
 import { DogSex } from "../../facades/payload.types";
 import { cleanImage } from "../../utils/imageUtils";
 import { dateToString } from "../../utils/datesFormatter";
+import { encryptData } from "../../utils/encryptionUtils";
 import { createStyleHook } from "../../hooks/styleHooks";
 import usePageTitle from "../../hooks/usePageTitle";
 import { useImageSelection } from "../../hooks/useImageSelection";
@@ -136,7 +137,7 @@ export const ReportDogPage = withAuthenticationRequired(
       setShowErrorMessage(showError);
       if (showError) return;
 
-      const imageInput = cleanImage(selectedImageUrl);
+      const base64Image = cleanImage(selectedImageUrl);
       const payload: ReportDogPayload = {
         type: dogType,
         contactName: inputs.contactName.value,
@@ -151,7 +152,7 @@ export const ReportDogPage = withAuthenticationRequired(
         chipNumber: inputs.chipNumber.value,
         extraDetails: inputs.extraDetails.value,
         sex: inputs.dogSex.value,
-        base64Images: [imageInput],
+        base64Images: [base64Image],
       };
 
       setIsLoading(true);
@@ -162,15 +163,20 @@ export const ReportDogPage = withAuthenticationRequired(
         return;
       }
 
+      const json = await response.json();
+      const lastReportedId = json.data.id;
+
       setRequestStatus("success");
       setIsLoading(false);
       clearInputs();
+      encryptData("lastReportedDogId", lastReportedId);
       setTimeout(() => {
         // wait before navigating to results page in order to show the success/error toast
         const dogTypeToSearch = dogType === "found" ? "lost" : "found";
-        navigate(AppRoutes.dogs.results.replace(":dogType", dogTypeToSearch), {
-          state: { type: dogTypeToSearch, base64Image: imageInput },
-        });
+        const url = AppRoutes.dogs.results
+          .replace(":dogType", dogTypeToSearch)
+          .replace(":lastReportedId", lastReportedId);
+        navigate(url, { state: { type: dogType, base64Image } });
       }, 2000);
     };
 

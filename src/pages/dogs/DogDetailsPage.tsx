@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { TablerIconsProps, IconArrowLeft } from "@tabler/icons-react";
 import { formatDateString } from "../../utils/datesFormatter";
+import { decryptData, encryptData } from "../../utils/encryptionUtils";
 import { DogType } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import usePageTitle from "../../hooks/usePageTitle";
@@ -64,11 +65,35 @@ const fetcher = async (
   return json?.data?.results || [];
 };
 
+const reportPossibleMatch = async (
+  payload: { lastReportedId: string | undefined; possibleMatchId: number },
+  getServerApi: Function
+): Promise<void> => {
+  const { lastReportedId, possibleMatchId } = payload;
+  const memorizedDogId: string | null = decryptData("lastReportedDogId");
+
+  if (!lastReportedId && !memorizedDogId)
+    return console.error("No memorized dog id in both URL and localStorage");
+
+  if (
+    lastReportedId &&
+    (!memorizedDogId || (memorizedDogId && lastReportedId !== memorizedDogId))
+  )
+    encryptData("lastReportedDogId", lastReportedId);
+
+  const serverApi = await getServerApi();
+  const response = await serverApi.addPossibleDogMatch({
+    dogId: Number(lastReportedId ?? memorizedDogId),
+    possibleMatchId,
+  });
+  if (!response?.ok) console.error("Failed to report possible match");
+};
+
 export const DogDetailsPage = () => {
   usePageTitle(AppTexts.dogDetails.title);
   const { state: payload } = useLocation();
   const getServerApi = useGetServerApi();
-  const { dog_id } = useParams();
+  const { dog_id, lastReportedId } = useParams();
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -104,19 +129,7 @@ export const DogDetailsPage = () => {
   const BackdropComp: FC<{ children: ReactNode }> = ({ children }) => {
     return (
       <PageContainer>
-        <Box
-          sx={{
-            width: "inherit",
-            height: "inherit",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "white",
-            fontSize: { xs: "2rem", md: "4rem" },
-          }}
-        >
-          {children}
-        </Box>
+        <Box sx={backdropStyles}>{children}</Box>
       </PageContainer>
     );
   };
@@ -167,6 +180,12 @@ export const DogDetailsPage = () => {
                   size="large"
                   variant="contained"
                   sx={contactBtnStyle(theme)}
+                  onClick={() =>
+                    reportPossibleMatch(
+                      { lastReportedId, possibleMatchId: data.id },
+                      getServerApi
+                    )
+                  }
                 >
                   <img
                     src={WhatsappIcon}
@@ -254,6 +273,16 @@ export const DogDetailsPage = () => {
 };
 
 //#region Styles
+
+const backdropStyles = {
+  width: "inherit",
+  height: "inherit",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  color: "white",
+  fontSize: { xs: "2rem", md: "4rem" },
+};
 
 const commonIconProps: TablerIconsProps = {
   style: { marginRight: "0.5rem" },
