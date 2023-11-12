@@ -1,5 +1,4 @@
 import { Grid, Typography, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { DogResult, DogType } from "../../facades/payload.types";
 import { AppTexts } from "../../consts/texts";
@@ -17,14 +16,12 @@ const useResultsStyles = createStyleHook(() => {
   };
 });
 
-export const ResultsGrid = ({
-  results,
-  dogType,
-}: {
+interface ResultsGridProps {
   results: DogResult[] | undefined;
   dogType: DogType;
-}) => {
-  const navigate = useNavigate();
+}
+
+export const ResultsGrid = ({ results, dogType }: ResultsGridProps) => {
   const styles = useResultsStyles();
   const theme = useTheme();
 
