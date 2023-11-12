@@ -176,7 +176,7 @@ export const ReportDogPage = withAuthenticationRequired(
         const url = AppRoutes.dogs.results
           .replace(":dogType", dogTypeToSearch)
           .replace(":lastReportedId", lastReportedId);
-        navigate(url, { state: { type: dogType, base64Image } });
+        navigate(url, { state: { type: dogTypeToSearch, base64Image } });
       }, 2000);
     };
 
