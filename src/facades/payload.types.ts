@@ -47,5 +47,5 @@ export interface DogResult {
   extraDetails?: string;
   imageBase64: string;
   imageContentType: string;
-  createdAt?: string;
+  dogFoundOn?: string;
 }

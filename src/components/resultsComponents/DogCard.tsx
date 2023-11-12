@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { IconGenderMale, IconGenderFemale } from "@tabler/icons-react";
 import { createStyleHook } from "../../hooks/styleHooks";
+import { formatDateString } from "../../utils/datesFormatter";
 import { DogResult, DogType } from "../../facades/payload.types";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
@@ -67,10 +68,15 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
     ? AppTexts.reportPage.dogSex.male
     : AppTexts.reportPage.dogSex.female;
 
+  const reportType =
+    dogType === "found"
+      ? AppTexts.dogCard.foundDate
+      : AppTexts.dogCard.lostDate;
+
   const cardInfo = [
     `${AppTexts.dogCard.locationText}: ${dog.location || ""}`,
     `${AppTexts.dogCard.sexText}: ${genderText}`,
-    `${AppTexts.dogCard.reportedAt}: ${dog.createdAt || ""}`,
+    `${reportType}: ${formatDateString(dog.dogFoundOn || "")}`,
   ];
 
   const image = `data:${dog.imageContentType};base64,${dog.imageBase64}`;

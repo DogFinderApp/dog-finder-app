@@ -12,7 +12,6 @@ export const AppRoutes = {
   privacyPolicy: "/PrivacyPolicy",
   dogs: {
     dogPage: "/dogs/:dog_id",
-    report: "/dogs/report",
     reportFound: "/dogs/report-found",
     reportLost: "/dogs/report-missing",
     searchLostDog: "/dogs/search-lost",

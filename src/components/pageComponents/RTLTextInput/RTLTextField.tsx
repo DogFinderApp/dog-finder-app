@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { TextField, TextFieldProps, alpha } from "@mui/material";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { RTLWrapper } from "../../common/RTLWrapper";
@@ -27,15 +26,20 @@ export const useRTLTextFieldStyles = createStyleHook((theme) => {
           borderColor: alpha(theme.palette.primary.main, 0.6),
         },
       },
+      "& .MuiFormHelperText-root": { textAlign: "right" },
     },
   };
 });
 
-export const RTLTextField: FC<TextFieldProps> = (props) => {
+type RTLTextFieldProps = {
+  helperText?: string;
+} & TextFieldProps;
+
+export const RTLTextField = (props: RTLTextFieldProps) => {
   const styles = useRTLTextFieldStyles();
   return (
     <RTLWrapper withMaxWidth>
-      <TextField {...props} sx={styles.root} />
+      <TextField {...props} sx={styles.root} helperText={props.helperText} />
     </RTLWrapper>
   );
 };
