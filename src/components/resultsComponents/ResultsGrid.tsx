@@ -1,21 +1,12 @@
-import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
+import { Grid, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { IconPlus } from "@tabler/icons-react";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { DogResult, DogType } from "../../facades/payload.types";
 import { AppTexts } from "../../consts/texts";
-import { AppRoutes } from "../../consts/routes";
 import { DogCard } from "./DogCard";
 
 const useResultsStyles = createStyleHook(() => {
   return {
-    buttonContainer: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      pb: 4,
-    },
-    button: { display: "flex", gap: 1 },
     topTextStyle: {
       width: "100%",
       fontSize: 20,
@@ -37,13 +28,6 @@ export const ResultsGrid = ({
   const styles = useResultsStyles();
   const theme = useTheme();
 
-  const navigateToReportPage = () =>
-    navigate(
-      dogType === DogType.FOUND
-        ? AppRoutes.dogs.reportFound
-        : AppRoutes.dogs.reportLost
-    );
-
   return (
     <>
       <Typography color={theme.palette.text.primary} sx={styles.topTextStyle}>
@@ -64,17 +48,6 @@ export const ResultsGrid = ({
       >
         {AppTexts.resultsPage.bottomText}
       </Typography>
-
-      <Box sx={styles.buttonContainer}>
-        <Button
-          size="large"
-          variant="contained"
-          onClick={navigateToReportPage}
-          sx={styles.button}
-        >
-          <IconPlus size={20} /> {AppTexts.resultsPage.addReport}
-        </Button>
-      </Box>
     </>
   );
 };
