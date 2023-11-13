@@ -32,6 +32,11 @@ export const AppTexts = {
       female: "נקבה",
       male: "זכר",
     },
+    dogAge: {
+      puppy: "גור",
+      grown: "בוגר",
+      old: "מבוגר",
+    },
     locationDetails: {
       locationDescriptionFound: "המיקום בו נמצא",
       locationDescriptionLost: "המיקום בו נאבד",
@@ -46,6 +51,7 @@ export const AppTexts = {
       dogColor: "צבע הפרווה",
       dogSex: "מין הכלב/ה",
       chipNumber: "מספר שבב",
+      dogAge: "איזור גיל",
     },
     extraDetails: {
       extraDetails: "מידע נוסף שיעזור לזיהוי הכלב",

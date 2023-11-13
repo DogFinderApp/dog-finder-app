@@ -36,6 +36,7 @@ interface DogDetailsReturnType {
   color: string;
   size: string;
   sex: "male" | "female";
+  ageGroup: "puppy" | "grown" | "old";
   extraDetails: string;
   chipNumber: number;
   location: string;
@@ -219,6 +220,12 @@ export const DogDetailsPage = () => {
                   <span style={detailHeaderStyle}>מין: </span>
                   <span style={detailContentStyle}>
                     {DogGenderEnum[data.sex] || ""}
+                  </span>
+                </Box>
+                <Box sx={detailRowStyle}>
+                  <span style={detailHeaderStyle}>איזור גיל: </span>
+                  <span style={detailContentStyle}>
+                    {AppTexts.reportPage.dogAge[data.ageGroup] || ""}
                   </span>
                 </Box>
                 <Box sx={detailRowStyle}>

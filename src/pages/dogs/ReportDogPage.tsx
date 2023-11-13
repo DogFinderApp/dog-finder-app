@@ -97,6 +97,10 @@ export const ReportDogPage = withAuthenticationRequired(
     const inputs = {
       dogBreed: useTextInput({ isMandatoryInput: false }),
       dogSize: useTextInput({ isMandatoryInput: false }),
+      ageGroup: useSelectInput({
+        isMandatoryInput: false,
+        possibleValues: Object.keys(AppTexts.reportPage.dogAge),
+      }),
       dogColor: useTextInput({ isMandatoryInput: false }),
       dogSex: useSelectInput({
         isMandatoryInput: false,
@@ -152,6 +156,7 @@ export const ReportDogPage = withAuthenticationRequired(
         chipNumber: inputs.chipNumber.value,
         extraDetails: inputs.extraDetails.value,
         sex: inputs.dogSex.value,
+        ageGroup: inputs.ageGroup.value,
         base64Images: [base64Image],
       };
 
@@ -254,6 +259,13 @@ export const ReportDogPage = withAuthenticationRequired(
                 onChange={inputs.dogSex.onSelectChange}
                 error={!inputs.dogSex.isValueValid}
                 value={inputs.dogSex.value}
+              />
+              <SelectInputField
+                options={AppTexts.reportPage.dogAge}
+                label={AppTexts.reportPage.dogDetails.dogAge}
+                onChange={inputs.ageGroup.onSelectChange}
+                error={!inputs.ageGroup.isValueValid}
+                value={inputs.ageGroup.value}
               />
               <RTLTextField
                 label={AppTexts.reportPage.dogDetails.dogColor}
