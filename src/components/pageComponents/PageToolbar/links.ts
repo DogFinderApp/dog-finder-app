@@ -15,6 +15,10 @@ export const links = [
     text: AppTexts.navigation.reportFound,
   },
   {
+    href: AppRoutes.about,
+    text: AppTexts.aboutUsTitle,
+  },
+  {
     href: AppRoutes.privacyPolicy,
     text: AppTexts.privacyPolicyTitle,
   },

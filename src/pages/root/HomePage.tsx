@@ -1,12 +1,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Button, ButtonOwnProps, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import { IconPaw, IconSearch, TablerIconsProps } from "@tabler/icons-react";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import usePageTitle from "../../hooks/usePageTitle";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
+import { StartFlowButtons } from "../../components/StartFlowButtons/StartFlowButtons";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
 import dogAnim from "../../assets/animations/dogAnim.json";
@@ -67,8 +67,7 @@ const useHomePageStyles = createStyleHook((theme) => {
 
 export const HomePage = () => {
   const styles = useHomePageStyles();
-  const windowSize = useWindowSize();
-  const { innerWidth } = windowSize;
+  const { innerWidth } = useWindowSize();
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
   usePageTitle(isAuthenticated ? "Dog Finder" : AppTexts.homePage.noUser.title);
 
@@ -80,19 +79,6 @@ export const HomePage = () => {
 
   const isMobile = innerWidth < 600;
 
-  const commonIconProps: TablerIconsProps = {
-    style: { marginRight: isMobile ? "auto" : "8px" },
-    stroke: 1.5,
-  };
-
-  const linkStyles = {
-    width: isMobile ? "100%" : "max-content",
-    color: "white",
-    textDecoration: "none",
-    display: "flex",
-    justifyContent: "center",
-  };
-
   return (
     <PageContainer>
       <Box sx={styles.root}>
@@ -103,20 +89,7 @@ export const HomePage = () => {
           style={{ width: innerWidth >= 800 ? "400px" : "300px" }}
         />
         {isLoading || isAuthenticated ? (
-          <Box sx={styles.content}>
-            <Link to={AppRoutes.dogs.reportLost} style={linkStyles}>
-              <Button {...commonButtonProps}>
-                <IconSearch {...commonIconProps} />
-                {AppTexts.homePage.cta.lostDog}
-              </Button>
-            </Link>
-            <Link to={AppRoutes.dogs.reportFound} style={linkStyles}>
-              <Button {...commonButtonProps}>
-                <IconPaw {...commonIconProps} />
-                {AppTexts.homePage.cta.foundDog}
-              </Button>
-            </Link>
-          </Box>
+          <StartFlowButtons />
         ) : (
           <>
             <Box sx={styles.noUser}>
