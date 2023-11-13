@@ -7,6 +7,7 @@ import { ReportDogPage } from "../pages/dogs/ReportDogPage";
 import { SearchDogPage } from "../pages/dogs/SearchDogPage";
 import { ResultsDogPage } from "../pages/dogs/ResultsDogPage";
 import { DogDetailsPage } from "../pages/dogs/DogDetailsPage";
+import { AllReportsPage } from "../pages/dogs/AllReportsPage";
 
 export const AppRoutes = {
   root: "/",
@@ -19,6 +20,7 @@ export const AppRoutes = {
     searchLostDog: "/search-lost",
     searchFoundDog: "/search-found",
     results: "/results/:dogType/:lastReportedId?",
+    allReports: "/all-reports",
   },
 };
 
@@ -70,5 +72,9 @@ export const routesWithElements: Route[] = [
   {
     path: AppRoutes.dogs.dogPage,
     element: DogDetailsPage,
+  },
+  {
+    path: AppRoutes.dogs.allReports,
+    element: AllReportsPage,
   },
 ];

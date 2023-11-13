@@ -110,6 +110,16 @@ export const AppTexts = {
     },
     refresh: "רענן",
   },
+  allReportsPage: {
+    title: "כל הדיווחים",
+    loading: "טוען את מאגר הדיווחים",
+    selectLabel: "מיין לפי:",
+    select: {
+      found: "הצג כלבים שנמצאו",
+      lost: "הצג כלבים נעדרים",
+      all: "הצג את כל הכלבים שדווחו",
+    },
+  },
   navigation: {
     home: "בית",
     report: "דיווח על כלב",
@@ -125,7 +135,8 @@ export const AppTexts = {
     loading: "...דף בטעינה",
   },
   dogCard: {
-    locationText: "אבד באיזור",
+    lostLocation: "אבד באיזור",
+    foundLocation: "נמצא באיזור",
     sexText: "מין",
     foundDate: "נמצא בתאריך",
     lostDate: "אבד בתאריך",

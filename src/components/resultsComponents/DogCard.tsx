@@ -78,8 +78,13 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
       ? AppTexts.dogCard.foundDate
       : AppTexts.dogCard.lostDate;
 
+  const locationType =
+    dogType === "found"
+      ? AppTexts.dogCard.foundLocation
+      : AppTexts.dogCard.lostLocation;
+
   const cardInfo = [
-    `${AppTexts.dogCard.locationText}: ${dog.location || ""}`,
+    `${locationType}: ${dog.location || ""}`,
     `${AppTexts.dogCard.sexText}: ${genderText}`,
     `${reportType}: ${formatDateString(dog.dogFoundOn || "")}`,
   ];

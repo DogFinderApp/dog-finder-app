@@ -1,6 +1,6 @@
 import { Grid, Typography, useTheme } from "@mui/material";
 import { createStyleHook } from "../../hooks/styleHooks";
-import { DogResult, DogType } from "../../facades/payload.types";
+import { DogResult } from "../../facades/payload.types";
 import { AppTexts } from "../../consts/texts";
 import { DogCard } from "./DogCard";
 
@@ -18,33 +18,37 @@ const useResultsStyles = createStyleHook(() => {
 
 interface ResultsGridProps {
   results: DogResult[] | undefined;
-  dogType: DogType;
+  noTexts?: boolean;
 }
 
-export const ResultsGrid = ({ results, dogType }: ResultsGridProps) => {
+export const ResultsGrid = ({ results, noTexts }: ResultsGridProps) => {
   const styles = useResultsStyles();
   const theme = useTheme();
 
   return (
     <>
-      <Typography color={theme.palette.text.primary} sx={styles.topTextStyle}>
-        {AppTexts.resultsPage.topText}
-      </Typography>
+      {!noTexts && (
+        <Typography color={theme.palette.text.primary} sx={styles.topTextStyle}>
+          {AppTexts.resultsPage.topText}
+        </Typography>
+      )}
       <Grid container spacing={4} dir="rtl">
         {results?.map((dog) => {
           return (
             <Grid item xs={12} sm={6} md={4} key={dog.dogId}>
-              <DogCard dog={dog} dogType={dogType} />
+              <DogCard dog={dog} dogType={dog.type!} />
             </Grid>
           );
         })}
       </Grid>
-      <Typography
-        color={theme.palette.text.primary}
-        sx={{ ...styles.topTextStyle, my: 4 }}
-      >
-        {AppTexts.resultsPage.bottomText}
-      </Typography>
+      {!noTexts && (
+        <Typography
+          color={theme.palette.text.primary}
+          sx={{ ...styles.topTextStyle, my: 4 }}
+        >
+          {AppTexts.resultsPage.bottomText}
+        </Typography>
+      )}
     </>
   );
 };

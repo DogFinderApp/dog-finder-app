@@ -48,4 +48,5 @@ export interface DogResult {
   imageBase64: string;
   imageContentType: string;
   dogFoundOn?: string;
+  type?: DogType;
 }
