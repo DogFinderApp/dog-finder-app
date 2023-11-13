@@ -34,8 +34,8 @@ export const AppTexts = {
     },
     dogAge: {
       puppy: "גור",
-      grown: "בוגר",
-      old: "מבוגר",
+      adult: "בוגר",
+      senior: "מבוגר",
     },
     locationDetails: {
       locationDescriptionFound: "המיקום בו נמצא",

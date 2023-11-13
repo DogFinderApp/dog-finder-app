@@ -36,7 +36,7 @@ interface DogDetailsReturnType {
   color: string;
   size: string;
   sex: "male" | "female";
-  ageGroup: "puppy" | "grown" | "old";
+  ageGroup: "puppy" | "adult" | "senior";
   extraDetails: string;
   chipNumber: number;
   location: string;
