@@ -1,6 +1,6 @@
 const homePageButtons = {
-  lostDog: "אני מחפש את הכלב שלי",
-  foundDog: "אני מצאתי כלב",
+  lostDog: "דיווח על כלב נעדר",
+  foundDog: "מצאתי כלב",
 };
 
 export const AppTexts = {
@@ -130,5 +130,6 @@ export const AppTexts = {
     foundDate: "נמצא בתאריך",
     lostDate: "אבד בתאריך",
   },
-  privacyPolicyTitle: "אודות ותנאי שימוש",
+  privacyPolicyTitle: "תנאי השימוש",
+  aboutUsTitle: "אודות",
 };

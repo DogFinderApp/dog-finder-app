@@ -1,19 +1,24 @@
 import { ReactNode } from "react";
 
-const wrapperStyles = {
-  width: "100%",
-  display: "flex",
-  justifyContent: "center",
-};
-
 interface RTLWrapperProps {
   children: ReactNode;
   withMaxWidth?: Boolean;
+  notCentered?: Boolean;
 }
 
-export const RTLWrapper = ({ children, withMaxWidth }: RTLWrapperProps) => {
+export const RTLWrapper = ({
+  children,
+  withMaxWidth,
+  notCentered,
+}: RTLWrapperProps) => {
+  const wrapperStyles = {
+    width: withMaxWidth && "100%",
+    display: "flex",
+    justifyContent: !!notCentered ? "unset" : "center",
+  };
+
   return (
-    <div dir="rtl" style={withMaxWidth ? wrapperStyles : {}}>
+    <div dir="rtl" style={wrapperStyles}>
       {children}
     </div>
   );

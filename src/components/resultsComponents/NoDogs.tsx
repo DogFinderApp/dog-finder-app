@@ -44,8 +44,7 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
   const theme = useTheme();
   const styles = useNoResultsStyles();
   const navigate = useNavigate();
-  const windowSize = useWindowSize();
-  const { innerWidth } = windowSize;
+  const { innerWidth } = useWindowSize();
 
   const newReportText =
     dogType === DogType.FOUND

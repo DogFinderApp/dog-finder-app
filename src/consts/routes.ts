@@ -2,6 +2,7 @@ import { FC } from "react";
 import { DogType } from "../facades/payload.types";
 import { HomePage } from "./../pages/root/HomePage";
 import { PrivacyPolicy } from "./../pages/PrivacyPolicy/PrivacyPolicy";
+import { AboutUsPage } from "../pages/AboutUsPage";
 import { ReportDogPage } from "../pages/dogs/ReportDogPage";
 import { SearchDogPage } from "../pages/dogs/SearchDogPage";
 import { ResultsDogPage } from "../pages/dogs/ResultsDogPage";
@@ -10,6 +11,7 @@ import { DogDetailsPage } from "../pages/dogs/DogDetailsPage";
 export const AppRoutes = {
   root: "/",
   privacyPolicy: "/PrivacyPolicy",
+  about: "/about",
   dogs: {
     dogPage: "/dogs/:dog_id/:lastReportedId?",
     reportFound: "/report-found",
@@ -36,6 +38,10 @@ export const routesWithElements: Route[] = [
   {
     path: AppRoutes.privacyPolicy,
     element: PrivacyPolicy,
+  },
+  {
+    path: AppRoutes.about,
+    element: AboutUsPage,
   },
   {
     path: AppRoutes.dogs.reportLost,
