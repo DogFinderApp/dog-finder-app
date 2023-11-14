@@ -7,6 +7,7 @@ import { ReportDogPage } from "../pages/dogs/ReportDogPage";
 import { SearchDogPage } from "../pages/dogs/SearchDogPage";
 import { ResultsDogPage } from "../pages/dogs/ResultsDogPage";
 import { DogDetailsPage } from "../pages/dogs/DogDetailsPage";
+import { NotFound } from "../pages/NotFound";
 
 export const AppRoutes = {
   root: "/",
@@ -70,5 +71,9 @@ export const routesWithElements: Route[] = [
   {
     path: AppRoutes.dogs.dogPage,
     element: DogDetailsPage,
+  },
+  {
+    path: "/*",
+    element: NotFound,
   },
 ];
