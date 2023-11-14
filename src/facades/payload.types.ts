@@ -30,6 +30,7 @@ export interface ReportDogPayload {
   sex?: string;
   chipNumber: string;
   extraDetails?: string;
+  ageGroup?: string;
 }
 
 export interface DogResult {
