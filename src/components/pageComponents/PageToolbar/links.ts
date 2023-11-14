@@ -7,16 +7,16 @@ export const links = [
     text: AppTexts.navigation.home,
   },
   {
-    href: AppRoutes.dogs.reportLost,
-    text: AppTexts.navigation.searchLostDog,
+    href: AppRoutes.about,
+    text: AppTexts.aboutUsTitle,
   },
   {
     href: AppRoutes.dogs.reportFound,
     text: AppTexts.navigation.reportFound,
   },
   {
-    href: AppRoutes.about,
-    text: AppTexts.aboutUsTitle,
+    href: AppRoutes.dogs.reportLost,
+    text: AppTexts.navigation.searchLostDog,
   },
   {
     href: AppRoutes.privacyPolicy,

@@ -5,7 +5,7 @@ import { QueryPayload, ReportDogPayload } from "./payload.types";
 const API_URL = process.env.REACT_APP_API_URL || "";
 
 const build_endpoint = (path: string) => {
-  return `${API_URL}${path}`;
+  return `${API_URL}/dogfinder/${path}`;
 };
 
 class ServerApi {
@@ -77,7 +77,7 @@ class ServerApi {
 
   async searchDog(payload: QueryPayload) {
     const { dogType, ...newPayload } = payload;
-    const url = build_endpoint(`/dogfinder/search_in_${dogType}_dogs`);
+    const url = build_endpoint(`search_in_${dogType}_dogs`);
 
     return this.fetch(url, {
       method: "POST",
@@ -90,7 +90,7 @@ class ServerApi {
   }
 
   async report_dog(payload: ReportDogPayload) {
-    let url = build_endpoint("/dogfinder/add_document");
+    let url = build_endpoint("add_document");
 
     return this.fetch(url, {
       method: "POST",
@@ -106,7 +106,7 @@ class ServerApi {
     dogId: number;
     possibleMatchId: number;
   }) {
-    let url = build_endpoint("/dogfinder/add_possible_dog_match");
+    let url = build_endpoint("add_possible_dog_match");
     return this.fetch(url, {
       method: "POST",
       headers: {
@@ -118,12 +118,17 @@ class ServerApi {
   }
 
   async getDogDetails(dogId: number) {
-    let url = build_endpoint(`/dogfinder/get_dog_by_id?dogId=${dogId}`);
+    let url = build_endpoint(`get_dog_by_id?dogId=${dogId}`);
     return this.fetch(url);
   }
 
   async getFullDogDetails(dogId: number) {
-    const url = build_endpoint(`/dogfinder/get_dog_by_id?dogId=${dogId}`);
+    const url = build_endpoint(`get_dog_by_id?dogId=${dogId}`);
+    return this.fetch(url);
+  }
+
+  async getAllReportedDogs() {
+    const url = build_endpoint("dogs");
     return this.fetch(url);
   }
 }

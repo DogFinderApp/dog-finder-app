@@ -55,7 +55,8 @@ interface SelectInputProps extends SelectProps {
   options: { [key: string]: string };
   label: string;
   value: string;
-  error: boolean;
+  error?: boolean;
+  notCentered?: boolean;
 }
 
 export const SelectInputField = ({
@@ -63,9 +64,10 @@ export const SelectInputField = ({
   label,
   value,
   error,
+  notCentered,
   ...selectProps
 }: SelectInputProps) => {
-  const styles = useSelectInputStyles({ error });
+  const styles = useSelectInputStyles({ error: !!error });
 
   const menuItems: Array<ReactElement> = Object.keys(options).map(
     (itemValue, index) => (
@@ -76,7 +78,7 @@ export const SelectInputField = ({
   );
 
   return (
-    <RTLWrapper withMaxWidth>
+    <RTLWrapper withMaxWidth notCentered={notCentered}>
       <FormControl sx={styles.root}>
         <InputLabel>{label}</InputLabel>
         <Select

@@ -93,9 +93,7 @@ export const ResultsDogPage = () => {
         )}
         {noResults && <NoDogs dogType={dogType as DogType} />}
         {!isLoading && error && <ErrorLoadingDogs refresh={mutate} />}
-        {!isLoading && !error && !isEmpty && (
-          <ResultsGrid results={results} dogType={dogType as DogType} />
-        )}
+        {!isLoading && !error && !isEmpty && <ResultsGrid results={results} />}
       </Box>
     </PageContainer>
   );

@@ -3,11 +3,11 @@ import { AppTexts } from "../../consts/texts";
 import { KeyedMutator } from "swr";
 import { DogResult } from "../../facades/payload.types";
 
-export const ErrorLoadingDogs = ({
-  refresh,
-}: {
-  refresh: KeyedMutator<DogResult[]>;
-}) => {
+interface ErrorLoadingProps {
+  refresh?: KeyedMutator<DogResult[]>;
+  text?: string;
+}
+export const ErrorLoadingDogs = ({ refresh, text }: ErrorLoadingProps) => {
   const alertStyles = {
     position: "relative",
     zIndex: 10,
@@ -24,12 +24,18 @@ export const ErrorLoadingDogs = ({
       severity="error"
       sx={alertStyles}
       action={
-        <Button color="inherit" size="small" onClick={() => refresh(undefined)}>
-          {AppTexts.resultsPage.refresh}
-        </Button>
+        refresh && (
+          <Button
+            color="inherit"
+            size="small"
+            onClick={() => refresh && refresh(undefined)}
+          >
+            {AppTexts.resultsPage.refresh}
+          </Button>
+        )
       }
     >
-      <Typography px={6}>{AppTexts.resultsPage.error}</Typography>
+      <Typography px={6}>{text ?? AppTexts.resultsPage.error}</Typography>
     </Alert>
   );
 };
