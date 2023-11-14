@@ -21,7 +21,7 @@ export const AppRoutes = {
     searchLostDog: "/search-lost",
     searchFoundDog: "/search-found",
     results: "/results/:dogType/:lastReportedId?",
-    allReports: "/all-reports",
+    allReports: "/all-reports/:dogType?",
   },
 };
 

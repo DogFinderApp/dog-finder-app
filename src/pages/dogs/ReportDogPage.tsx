@@ -58,6 +58,7 @@ const useReportDogPageStyles = createStyleHook(
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        textAlign: "right",
         ".MuiAlert-action": { ml: "unset" },
         ".MuiAlert-icon": { fontSize: 24 },
       },
@@ -108,7 +109,7 @@ export const ReportDogPage = withAuthenticationRequired(
       }),
       chipNumber: useTextInput({ isMandatoryInput: false }),
       location: useTextInput({ isMandatoryInput: true }),
-      date: useDateInput({ isMandatoryInput: true }),
+      date: useDateInput({ isMandatoryInput: false }),
       contactName: useTextInput({ isMandatoryInput: true }),
       contactPhone: usePhoneNumberInput({ isMandatoryInput: true }),
       contactEmail: useEmailInput({ isMandatoryInput: true }),
@@ -153,7 +154,9 @@ export const ReportDogPage = withAuthenticationRequired(
         breed: inputs.dogBreed.value,
         color: inputs.dogColor.value,
         size: inputs.dogSize.value,
-        chipNumber: inputs.chipNumber.value,
+        chipNumber: inputs.chipNumber.value.length
+          ? inputs.chipNumber.value
+          : "לא ידוע",
         extraDetails: inputs.extraDetails.value,
         sex: inputs.dogSex.value,
         ageGroup: inputs.ageGroup.value,
@@ -223,6 +226,9 @@ export const ReportDogPage = withAuthenticationRequired(
               sx={styles.alert}
             >
               {alertText}
+              <br />
+              {alertText === successMessage &&
+                AppTexts.reportPage.request.success.redirect}
             </Alert>
           </Snackbar>
           {isLoading ? (
@@ -285,6 +291,12 @@ export const ReportDogPage = withAuthenticationRequired(
                 onChange={inputs.chipNumber.onTextChange}
                 error={!inputs.chipNumber.isTextValid}
               />
+              <DatePicker
+                reportType={dogType}
+                date={inputs.date.dateInput}
+                handleDateChange={inputs.date.handleDateChange}
+                error={!inputs.date.isInputValid}
+              />
               <RTLTextField
                 label={locationText}
                 fullWidth
@@ -294,13 +306,6 @@ export const ReportDogPage = withAuthenticationRequired(
                 value={inputs.location.value}
                 onChange={inputs.location.onTextChange}
                 error={!inputs.location.isTextValid}
-              />
-              <DatePicker
-                reportType={dogType}
-                date={inputs.date.dateInput}
-                handleDateChange={inputs.date.handleDateChange}
-                error={!inputs.date.isInputValid}
-                required
               />
               <RTLTextField
                 rows={2}

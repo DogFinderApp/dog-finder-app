@@ -72,6 +72,7 @@ export const AppTexts = {
       success: {
         reportedFound: "הכלב דווח בהצלחה כנמצא",
         reportedLost: "הכלב דווח בהצלחה כנעדר",
+        redirect: "מיד תועברו לחיפוש במאגר",
       },
     },
   },

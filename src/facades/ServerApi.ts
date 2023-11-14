@@ -128,7 +128,7 @@ class ServerApi {
   }
 
   async getAllReportedDogs() {
-    const url = build_endpoint(`get_all_reports`); //* TEMP ENDPOINT
+    const url = build_endpoint("dogs");
     return this.fetch(url);
   }
 }
