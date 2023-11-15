@@ -1,10 +1,9 @@
 import { Alert, Button, Typography } from "@mui/material";
 import { AppTexts } from "../../consts/texts";
 import { KeyedMutator } from "swr";
-import { DogResult } from "../../facades/payload.types";
 
 interface ErrorLoadingProps {
-  refresh?: KeyedMutator<DogResult[]>;
+  refresh?: KeyedMutator<any>;
   text?: string;
 }
 export const ErrorLoadingDogs = ({ refresh, text }: ErrorLoadingProps) => {
