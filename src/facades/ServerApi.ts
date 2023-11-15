@@ -127,9 +127,17 @@ class ServerApi {
     return this.fetch(url);
   }
 
-  async getAllReportedDogs() {
-    const url = build_endpoint("dogs");
-    return this.fetch(url);
+  async getAllReportedDogs(payload: {
+    page: number;
+    page_size: number;
+    type?: String;
+  }) {
+    const url = new URL(build_endpoint("dogs"));
+    const stringKeys = Object.keys(payload) as Array<keyof typeof payload>;
+    stringKeys.forEach((key) =>
+      url.searchParams.append(key, payload[key]?.toString()!)
+    );
+    return this.fetch(url.toString());
   }
 }
 

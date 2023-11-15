@@ -253,10 +253,12 @@ export const DogDetailsPage = () => {
                     {formatDateString(data?.dogFoundOn ?? "")}
                   </span>
                 </Box>
-                <Box sx={detailRowStyle}>
-                  <span style={detailHeaderStyle}>גזע: </span>
-                  <span style={detailContentStyle}>{data.breed || ""}</span>
-                </Box>
+                {data.breed && (
+                  <Box sx={detailRowStyle}>
+                    <span style={detailHeaderStyle}>גזע: </span>
+                    <span style={detailContentStyle}>{data.breed || ""}</span>
+                  </Box>
+                )}
                 <Box sx={detailRowStyle}>
                   <span style={detailHeaderStyle}>צבע: </span>
                   <span style={detailContentStyle}>{data.color || ""}</span>
