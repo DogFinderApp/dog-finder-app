@@ -8,7 +8,7 @@ export const links = [
   },
   {
     href: AppRoutes.about,
-    text: AppTexts.aboutUsTitle,
+    text: AppTexts.navigation.aboutUs,
   },
   {
     href: AppRoutes.dogs.reportFound,
@@ -16,10 +16,10 @@ export const links = [
   },
   {
     href: AppRoutes.dogs.reportLost,
-    text: AppTexts.navigation.searchLostDog,
+    text: AppTexts.navigation.reportLost,
   },
   {
     href: AppRoutes.privacyPolicy,
-    text: AppTexts.privacyPolicyTitle,
+    text: AppTexts.navigation.privacyPolicy,
   },
 ];

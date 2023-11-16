@@ -1,8 +1,3 @@
-const homePageButtons = {
-  lostDog: "דיווח על כלב נעדר",
-  foundDog: "מצאתי כלב",
-};
-
 export const AppTexts = {
   authPage: {
     loginCta: "התחבר",
@@ -15,12 +10,9 @@ export const AppTexts = {
     submit: "חיפוש",
   },
   reportPage: {
-    title: {
-      lost: "דיווח על כלב נעדר",
-      found: "דיווח על כלב שנמצא",
-    },
     photo: {
       cta: "העלו תמונה ברורה ככל האפשר של הכלב",
+      ctaNote: "(שרק הכלב יהיה בתמונה)",
       ctaError: "חסרה תמונה של הכלב. העלו תמונה ברורה ככל האפשר",
     },
     dogType: {
@@ -51,7 +43,7 @@ export const AppTexts = {
       dogColor: "צבע הפרווה",
       dogSex: "מין הכלב/ה",
       chipNumber: "מספר שבב",
-      dogAge: "איזור גיל",
+      dogAge: "גיל משוער",
     },
     extraDetails: {
       extraDetails: "מידע נוסף שיעזור לזיהוי הכלב",
@@ -63,6 +55,7 @@ export const AppTexts = {
     },
     helperTexts: {
       phone: "מספר הטלפון אינו תקין",
+      phonePlaceholder: "נא להכניס מספר בן 10 ספרות ללא מקפים",
       email: "כתובת המייל אינה חוקית",
     },
     cta: "שלח דיווח",
@@ -78,7 +71,6 @@ export const AppTexts = {
   },
   homePage: {
     cta: {
-      ...homePageButtons,
       searchPage: "חיפוש אחר כלב",
       reportPage: "דיווח על כלב",
     },
@@ -120,6 +112,7 @@ export const AppTexts = {
   allReportsPage: {
     title: "כל הדיווחים",
     loading: "טוען את מאגר הדיווחים",
+    unauthorized: "אין למשתמש זה גישה למאגר הכלבים המלא",
     selectLabel: "מיין לפי:",
     select: {
       found: "הצג כלבים שנמצאו",
@@ -129,10 +122,11 @@ export const AppTexts = {
   },
   navigation: {
     home: "בית",
-    report: "דיווח על כלב",
-    reportFound: homePageButtons.foundDog,
-    searchLostDog: homePageButtons.lostDog,
+    aboutUs: "אודות",
+    reportFound: "מצאתי כלב",
+    reportLost: "איבדתי כלב",
     searchFoundDog: "חיפוש כלב במאגר הנעדרים",
+    privacyPolicy: "תנאי השימוש",
   },
   dogDetails: {
     title: "פרטי הכלב",
@@ -140,6 +134,11 @@ export const AppTexts = {
     backButton: "חזרה אחורה",
     markAsReturndButton: "סמן כהושב לבעליו",
     loading: "...דף בטעינה",
+    whatsappLinks: {
+      lost: "היי, זה {השם שלך} והגעתי אליך דרך פלטפורמת Dog Finder. ייתכן והכלב/ה שלי נמצא אצלך?",
+      found:
+        "היי, זה {השם שלך} והגעתי אליך דרך פלטפורמת Dog Finder. מצאתי כלב/ה שדומה לשלך, שנבדוק?",
+    },
   },
   dogCard: {
     lostLocation: "אבד באיזור",
@@ -148,6 +147,4 @@ export const AppTexts = {
     foundDate: "נמצא בתאריך",
     lostDate: "אבד בתאריך",
   },
-  privacyPolicyTitle: "תנאי השימוש",
-  aboutUsTitle: "אודות",
 };

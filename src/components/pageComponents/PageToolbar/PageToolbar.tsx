@@ -31,10 +31,11 @@ const usePageToolbarStyles = createStyleHook((theme) => {
       },
     },
     menuItem: {
+      backgroundColor: theme.palette.background.paper,
+      width: 135,
       "&:hover, &.Mui-focusVisible": {
         backgroundColor: theme.palette.primary.light,
       },
-      backgroundColor: theme.palette.background.paper,
     },
   };
 });

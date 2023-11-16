@@ -81,8 +81,8 @@ export const ReportDogPage = withAuthenticationRequired(
 
     const title =
       dogType === DogType.LOST
-        ? AppTexts.reportPage.title.lost
-        : AppTexts.reportPage.title.found;
+        ? AppTexts.navigation.reportLost
+        : AppTexts.navigation.reportFound;
 
     usePageTitle(title);
     const theme = useTheme();
@@ -325,12 +325,13 @@ export const ReportDogPage = withAuthenticationRequired(
                 fullWidth
                 required
                 multiline
-                type="text"
+                type="tel"
                 margin={"normal"}
                 value={inputs.contactPhone.value}
                 onChange={inputs.contactPhone.onPhoneChange}
                 error={!inputs.contactPhone.isPhoneValid}
                 helperText={phoneInputHelperText}
+                placeholder={AppTexts.reportPage.helperTexts.phonePlaceholder}
               />
               <RTLTextField
                 rows={2}
