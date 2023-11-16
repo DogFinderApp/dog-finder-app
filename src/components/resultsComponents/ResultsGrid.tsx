@@ -4,17 +4,15 @@ import { DogResult } from "../../facades/payload.types";
 import { AppTexts } from "../../consts/texts";
 import { DogCard } from "./DogCard";
 
-const useResultsStyles = createStyleHook(() => {
-  return {
-    topTextStyle: {
-      width: "100%",
-      fontSize: 20,
-      lineHeight: "25px",
-      mb: 4,
-      direction: "rtl",
-    },
-  };
-});
+const useResultsStyles = createStyleHook(() => ({
+  topTextStyle: {
+    width: "100%",
+    fontSize: 20,
+    lineHeight: "25px",
+    mb: 4,
+    direction: "rtl",
+  },
+}));
 
 interface ResultsGridProps {
   results: DogResult[] | undefined;
@@ -33,13 +31,11 @@ export const ResultsGrid = ({ results, noTexts }: ResultsGridProps) => {
         </Typography>
       )}
       <Grid container spacing={4} dir="rtl">
-        {results?.map((dog) => {
-          return (
-            <Grid item xs={12} sm={6} md={4} key={dog.dogId}>
-              <DogCard dog={dog} dogType={dog.type!} />
-            </Grid>
-          );
-        })}
+        {results?.map((dog) => (
+          <Grid item xs={12} sm={6} md={4} key={dog.dogId}>
+            <DogCard dog={dog} dogType={dog.type!} />
+          </Grid>
+        ))}
       </Grid>
       {!noTexts && (
         <Typography

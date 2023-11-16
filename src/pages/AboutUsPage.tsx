@@ -6,22 +6,20 @@ import { PageTitle } from "../components/pageComponents/PageTitle/PageTitle";
 import { StartFlowButtons } from "../components/StartFlowButtons/StartFlowButtons";
 import { AppTexts } from "../consts/texts";
 
-const useAboutUsStyles = createStyleHook(() => {
-  return {
-    textContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 4,
-      my: 4,
-    },
-    typography: {
-      color: "white",
-      textAlign: "right",
-      direction: "rtl",
-      fontSize: 20,
-    },
-  };
-});
+const useAboutUsStyles = createStyleHook(() => ({
+  textContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+    my: 4,
+  },
+  typography: {
+    color: "white",
+    textAlign: "right",
+    direction: "rtl",
+    fontSize: 20,
+  },
+}));
 
 export const AboutUsPage = () => {
   const styles = useAboutUsStyles();

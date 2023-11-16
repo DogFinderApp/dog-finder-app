@@ -5,19 +5,17 @@ import { LogoutButton } from "../LogoutButton/LogoutButton";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { PageImage } from "../PageImage/PageImage";
 
-const useUserComponentStyles = createStyleHook(() => {
-  return {
-    root: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      color: "white",
-      columnGap: "20px",
-      position: "absolute",
-      right: 20,
-    },
-  };
-});
+const useUserComponentStyles = createStyleHook(() => ({
+  root: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    columnGap: "20px",
+    position: "absolute",
+    right: 20,
+  },
+}));
 
 const UserComponent = () => {
   const { user, isAuthenticated } = useAuth0();

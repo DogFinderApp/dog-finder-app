@@ -1,4 +1,4 @@
-import { alpha, createTheme } from "@mui/material";
+import { createTheme } from "@mui/material";
 import { AppColors } from "../consts/colors";
 
 const {

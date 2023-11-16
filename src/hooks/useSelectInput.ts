@@ -1,10 +1,13 @@
 import { useCallback, useState } from "react";
 
-// TODO: make this DRYER. @galzo don't kill me. we're at war
-export const useSelectInput = (props: {
+interface UseSelectInput {
   isMandatoryInput: boolean;
   possibleValues: Array<any>;
-}) => {
+}
+export const useSelectInput = ({
+  isMandatoryInput,
+  possibleValues,
+}: UseSelectInput) => {
   const [valueInput, setValueInput] = useState("");
   const [isInputValid, setIsInputValid] = useState(true);
 
@@ -27,12 +30,12 @@ export const useSelectInput = (props: {
 
   const validateInput = useCallback(() => {
     const isValid =
-      (!props.isMandatoryInput && !valueInput) ||
-      (Boolean(valueInput) && props.possibleValues.includes(valueInput));
+      (!isMandatoryInput && !valueInput) ||
+      (Boolean(valueInput) && possibleValues.includes(valueInput));
     setIsInputValid(isValid);
 
     return isValid;
-  }, [props.isMandatoryInput, valueInput]);
+  }, [isMandatoryInput, valueInput, possibleValues]);
 
   return {
     value: valueInput,

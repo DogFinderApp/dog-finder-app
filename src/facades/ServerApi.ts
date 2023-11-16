@@ -4,9 +4,7 @@ import { QueryPayload, ReportDogPayload } from "./payload.types";
 
 const API_URL = process.env.REACT_APP_API_URL || "";
 
-const build_endpoint = (path: string) => {
-  return `${API_URL}/dogfinder/${path}`;
-};
+const buildEndpoint = (path: string) => `${API_URL}/dogfinder/${path}`;
 
 class ServerApi {
   constructor(
@@ -58,13 +56,15 @@ class ServerApi {
           formData.append(listAttributeName, value);
         });
 
-        delete data[listAttributeName];
+        delete data[listAttributeName]; // eslint-disable-line
       });
     }
 
-    for (const value in data) {
-      formData.append(value, data[value]);
-    }
+    Object.keys(data).forEach((key) => {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        formData.append(key, data[key]);
+      }
+    });
 
     const response = await fetch(url, {
       method,
@@ -80,7 +80,7 @@ class ServerApi {
 
   async searchDog(payload: QueryPayload) {
     const { dogType, ...newPayload } = payload;
-    const url = build_endpoint(`search_in_${dogType}_dogs`);
+    const url = buildEndpoint(`search_in_${dogType}_dogs`);
 
     return this.fetch(url, {
       method: "POST",
@@ -93,7 +93,7 @@ class ServerApi {
   }
 
   async report_dog(payload: ReportDogPayload) {
-    const url = build_endpoint("add_document");
+    const url = buildEndpoint("add_document");
 
     return this.fetch(url, {
       method: "POST",
@@ -109,7 +109,7 @@ class ServerApi {
     dogId: number;
     possibleMatchId: number;
   }) {
-    const url = build_endpoint("add_possible_dog_match");
+    const url = buildEndpoint("add_possible_dog_match");
     return this.fetch(url, {
       method: "POST",
       headers: {
@@ -121,12 +121,12 @@ class ServerApi {
   }
 
   async getDogDetails(dogId: number) {
-    const url = build_endpoint(`get_dog_by_id?dogId=${dogId}`);
+    const url = buildEndpoint(`get_dog_by_id?dogId=${dogId}`);
     return this.fetch(url);
   }
 
   async getFullDogDetails(dogId: number) {
-    const url = build_endpoint(`get_dog_by_id?dogId=${dogId}`);
+    const url = buildEndpoint(`get_dog_by_id?dogId=${dogId}`);
     return this.fetch(url);
   }
 
@@ -135,7 +135,7 @@ class ServerApi {
     page_size: number;
     type?: String;
   }) {
-    const url = new URL(build_endpoint("dogs"));
+    const url = new URL(buildEndpoint("dogs"));
     const stringKeys = Object.keys(payload) as Array<keyof typeof payload>;
     stringKeys.forEach((key) =>
       url.searchParams.append(key, payload[key]?.toString()!),

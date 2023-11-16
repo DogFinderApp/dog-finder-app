@@ -20,59 +20,57 @@ import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
 
-const usePageStyles = createStyleHook(() => {
-  return {
-    pageWrapper: {
-      height: "100%",
-      width: "90%",
-      maxWidth: 1400,
-      margin: "0 auto",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      px: { sm: 4 },
-      mt: 10,
+const usePageStyles = createStyleHook(() => ({
+  pageWrapper: {
+    height: "100%",
+    width: "90%",
+    maxWidth: 1400,
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    px: { sm: 4 },
+    mt: 10,
+  },
+  loadingContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 2,
+    textWrap: "balance",
+  },
+  loadingText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 26,
+  },
+  responseContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 5,
+    width: "100%",
+  },
+  paginationContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "2rem",
+    position: "sticky",
+  },
+  pagination: {
+    "& .MuiPaginationItem-previousNext": {
+      transform: "rotate(180deg) !important",
     },
-    loadingContainer: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 2,
-      textWrap: "balance",
-    },
-    loadingText: {
-      color: "white",
-      textAlign: "center",
-      fontSize: 26,
-    },
-    responseContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 5,
-      width: "100%",
-    },
-    paginationContainer: {
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      marginBottom: "2rem",
-      position: "sticky",
-    },
-    pagination: {
-      "& .MuiPaginationItem-previousNext": {
-        transform: "rotate(180deg) !important",
-      },
-      "@media (max-width: 600px)": {
-        "& .MuiPaginationItem-root": {
-          padding: "0 !important",
-          margin: "0 !important",
-          minWidth: "35px !important",
-          height: "35px !important",
-        },
+    "@media (max-width: 600px)": {
+      "& .MuiPaginationItem-root": {
+        padding: "0 !important",
+        margin: "0 !important",
+        minWidth: "35px !important",
+        height: "35px !important",
       },
     },
-  };
-});
+  },
+}));
 
 export const AllReportsPage = withAuthenticationRequired(() => {
   usePageTitle(AppTexts.allReportsPage.title);
@@ -150,8 +148,9 @@ export const AllReportsPage = withAuthenticationRequired(() => {
   const filteredReports: DogResult[] = getFilteredReports();
   const itemsPerPage = response?.pagination?.page_size ?? 12;
   const paginatedReports = usePagination(filteredReports, itemsPerPage);
-  const count: number =
-    Math.ceil(response?.pagination?.total / itemsPerPage) ?? 0;
+  const count: number = Math.ceil(
+    response?.pagination?.total ?? 0 / itemsPerPage,
+  );
 
   const handlePagination = (
     event: React.ChangeEvent<unknown> | SelectChangeEvent<any>,

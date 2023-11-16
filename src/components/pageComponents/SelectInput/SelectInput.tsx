@@ -70,8 +70,8 @@ export const SelectInputField = ({
   const styles = useSelectInputStyles({ error: !!error });
 
   const menuItems: Array<ReactElement> = Object.keys(options).map(
-    (itemValue, index) => (
-      <MenuItem key={`menu_${itemValue}-${index}`} value={itemValue} dir="rtl">
+    (itemValue) => (
+      <MenuItem key={`menu_${itemValue}`} value={itemValue} dir="rtl">
         {options[itemValue]}
       </MenuItem>
     ),

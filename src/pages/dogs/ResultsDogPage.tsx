@@ -12,22 +12,20 @@ import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
 import { NoDogs } from "../../components/resultsComponents/NoDogs";
 
-const usePageStyles = createStyleHook(() => {
-  return {
-    loadingContainer: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 2,
-      textWrap: "balance",
-    },
-    loadingText: {
-      color: "white",
-      textAlign: "center",
-      fontSize: 26,
-    },
-  };
-});
+const usePageStyles = createStyleHook(() => ({
+  loadingContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 2,
+    textWrap: "balance",
+  },
+  loadingText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 26,
+  },
+}));
 
 const fetcher = async (
   payload: { base64Image: string; type: DogType },

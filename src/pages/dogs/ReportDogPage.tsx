@@ -16,7 +16,6 @@ import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
 import { DogType, ReportDogPayload, DogSex } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
-
 import { cleanImage } from "../../utils/imageUtils";
 import { dateToString } from "../../utils/datesFormatter";
 import { encryptData } from "../../utils/encryptionUtils";
@@ -36,34 +35,32 @@ import DatePicker from "../../components/DatePicker/DatePicker";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 
 const useReportDogPageStyles = createStyleHook(
-  (theme, props: { isError: boolean }) => {
-    return {
-      root: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100%",
-        width: "100%",
-      },
-      button: {
-        marginTop: "24px",
-        marginBottom: "24px",
-      },
-      error: {
-        opacity: props.isError ? "100%" : "0%",
-      },
-      alert: {
-        width: "100%",
-        fontSize: { sm: 22, xs: 20 },
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        textAlign: "right",
-        ".MuiAlert-action": { ml: "unset" },
-        ".MuiAlert-icon": { fontSize: 24 },
-      },
-    };
-  },
+  (theme, props: { isError: boolean }) => ({
+    root: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      height: "100%",
+      width: "100%",
+    },
+    button: {
+      marginTop: "24px",
+      marginBottom: "24px",
+    },
+    error: {
+      opacity: props.isError ? "100%" : "0%",
+    },
+    alert: {
+      width: "100%",
+      fontSize: { sm: 22, xs: 20 },
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      textAlign: "right",
+      ".MuiAlert-action": { ml: "unset" },
+      ".MuiAlert-icon": { fontSize: 24 },
+    },
+  }),
 );
 
 interface ReportDogPageProps {
@@ -130,15 +127,15 @@ export const ReportDogPage = withAuthenticationRequired(
       // get server api
       const serverApi = await getServerApi();
       // Validate image upload
-      const isMissingImage = !selectedImageUrl;
-      setIsMissingImage(isMissingImage);
+      const noSelectedImage = !selectedImageUrl;
+      setIsMissingImage(noSelectedImage);
 
       // Validate all mandatory fields were filled
       const inputValidation = Object.values(inputs).map((input) =>
         input.validateInput(),
       );
       const hasInvalidInputs = inputValidation.some((res) => !res);
-      const showError = hasInvalidInputs || isMissingImage;
+      const showError = hasInvalidInputs || noSelectedImage;
       setShowErrorMessage(showError);
       if (showError) return;
 

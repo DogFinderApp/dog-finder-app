@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import { Auth0Provider } from "@auth0/auth0-react";
 import { App } from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { Auth0Provider } from "@auth0/auth0-react";
 
 const authDomain = process.env.REACT_APP_AUTH0_DOMAIN || "unknown";
 const authClient = process.env.REACT_APP_AUTH0_CLIENT_ID || "unknonw";

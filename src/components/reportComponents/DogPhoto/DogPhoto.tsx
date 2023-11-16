@@ -6,37 +6,35 @@ import { PageImage } from "../../pageComponents/PageImage/PageImage";
 import { AppShadows } from "../../../consts/shadows";
 import { UploadPhoto } from "./UploadPhoto";
 
-const useDogPhotoStyles = createStyleHook((theme) => {
-  return {
-    root: {
-      width: "100%",
-      maxWidth: "500px",
-      display: "flex",
-      justifyContent: "center",
-      position: "relative",
-      boxShadow: AppShadows.toolbarShadow,
-    },
-    photo: {
-      width: "100%",
-      maxWidth: "500px",
-      minHeight: "188px",
-      maxHeight: "350px",
-      borderRadius: "8px",
-      objectFit: "cover",
-    },
-    deleteButton: {
-      position: "absolute",
-      zIndex: "30",
-      borderRadius: "100%",
-      padding: "8px",
-      backgroundColor: "white",
-      right: 15,
-      bottom: 15,
-      boxShadow: AppShadows.deleteButtonShadow,
-      cursor: "pointer",
-    },
-  };
-});
+const useDogPhotoStyles = createStyleHook(() => ({
+  root: {
+    width: "100%",
+    maxWidth: "500px",
+    display: "flex",
+    justifyContent: "center",
+    position: "relative",
+    boxShadow: AppShadows.toolbarShadow,
+  },
+  photo: {
+    width: "100%",
+    maxWidth: "500px",
+    minHeight: "188px",
+    maxHeight: "350px",
+    borderRadius: "8px",
+    objectFit: "cover",
+  },
+  deleteButton: {
+    position: "absolute",
+    zIndex: "30",
+    borderRadius: "100%",
+    padding: "8px",
+    backgroundColor: "white",
+    right: 15,
+    bottom: 15,
+    boxShadow: AppShadows.deleteButtonShadow,
+    cursor: "pointer",
+  },
+}));
 
 interface DogPhotoProps {
   onSelectImage: (file: File) => Promise<void>;
@@ -61,7 +59,7 @@ export const DogPhoto: FC<DogPhotoProps> = ({
     <Box sx={styles.root}>
       <PageImage src={selectedImageUrl} alt="dog-photo" sx={styles.photo} />
       <Box sx={styles.deleteButton} onClick={() => clearSelection()}>
-        <IconTrash strokeWidth={1.5} />
+        <IconTrash strokeWidth={1.5} />`
       </Box>
     </Box>
   );

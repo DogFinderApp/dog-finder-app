@@ -24,7 +24,14 @@ const usePagination = (data: DogResult[], itemsPerPage: number) => {
     setCurrentPage(Math.min(pageNumber, maxPage));
   };
 
-  return { next, prev, jump, currentData, currentPage, maxPage };
+  return {
+    next,
+    prev,
+    jump,
+    currentData,
+    currentPage,
+    maxPage,
+  };
 };
 
 export default usePagination;

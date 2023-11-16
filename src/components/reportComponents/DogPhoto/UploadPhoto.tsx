@@ -8,41 +8,37 @@ import { AppShadows } from "../../../consts/shadows";
 
 interface UploadPhotoProps {
   onSelectImage: (file: File) => Promise<void>;
-  selectedImageUrl?: string;
   isError: boolean;
 }
 
 const useUploadPhotoStyles = createStyleHook(
-  (theme, props: { isError: boolean }) => {
-    return {
-      root: {
-        width: "100%",
-        maxWidth: "500px",
-        display: "flex",
-        justifyContent: "center",
-        boxShadow: AppShadows.toolbarShadow,
-      },
-      uploadButon: {
-        width: "100%",
-        maxWidth: "500px",
-        height: "188px",
-        backgroundColor: "white",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        cursor: "pointer",
-        borderRadius: "8px",
-        border: props.isError ? `4px solid ${theme.palette.error.main}` : "",
-        transition: "all 200ms ease-in-out",
-      },
-    };
-  },
+  (theme, props: { isError: boolean }) => ({
+    root: {
+      width: "100%",
+      maxWidth: "500px",
+      display: "flex",
+      justifyContent: "center",
+      boxShadow: AppShadows.toolbarShadow,
+    },
+    uploadButon: {
+      width: "100%",
+      maxWidth: "500px",
+      height: "188px",
+      backgroundColor: "white",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "pointer",
+      borderRadius: "8px",
+      border: props.isError ? `4px solid ${theme.palette.error.main}` : "",
+      transition: "all 200ms ease-in-out",
+    },
+  }),
 );
 
 export const UploadPhoto: FC<UploadPhotoProps> = ({
   onSelectImage,
-  selectedImageUrl,
   isError,
 }) => {
   const imageInputRef = useRef<HTMLInputElement>(null);

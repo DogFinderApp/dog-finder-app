@@ -1,10 +1,4 @@
-import {
-  Box,
-  Button,
-  SelectChangeEvent,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import { IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
@@ -55,9 +49,7 @@ export const SearchDogPage = withAuthenticationRequired(
       });
     };
 
-    const isFound = () => {
-      return dogType === DogType.FOUND;
-    };
+    const isFound = () => dogType === DogType.FOUND;
 
     return (
       <PageContainer>

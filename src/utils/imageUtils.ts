@@ -3,6 +3,5 @@ export const getImageBlob = async (imageUrl: string) => {
   return imageResponse.blob();
 };
 
-export const cleanImage = (imageUrl: string) => {
-  return imageUrl.replace(/^data:image\/[a-z]+;base64/, "");
-};
+export const cleanImage = (imageUrl: string) =>
+  imageUrl.replace(/^data:image\/[a-z]+;base64/, "");

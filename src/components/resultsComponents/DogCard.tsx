@@ -19,34 +19,32 @@ interface DogCardProps {
 }
 
 export const DogCard = ({ dog, dogType }: DogCardProps) => {
-  const useCardStyles = createStyleHook(() => {
-    return {
-      CardMedia: { height: 400, objectFit: "fill" },
-      CardActions: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        gap: 1,
-        background: "#fff",
-      },
+  const useCardStyles = createStyleHook(() => ({
+    CardMedia: { height: 400, objectFit: "fill" },
+    CardActions: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      gap: 1,
+      background: "#fff",
+    },
 
-      BottomButton: {
-        m: "0 auto",
-        fontSize: 18,
-        fontWeight: 600,
-        color: "#116DFF",
-        width: "100%",
-      },
+    BottomButton: {
+      m: "0 auto",
+      fontSize: 18,
+      fontWeight: 600,
+      color: "#116DFF",
+      width: "100%",
+    },
 
-      Typography: {
-        color: "#343842",
-        fontWeight: 600,
-        display: "flex",
-        gap: "2px",
-        alignItems: "center",
-      },
-    };
-  });
+    Typography: {
+      color: "#343842",
+      fontWeight: 600,
+      display: "flex",
+      gap: "2px",
+      alignItems: "center",
+    },
+  }));
 
   const styles = useCardStyles();
   const navigate = useNavigate();
