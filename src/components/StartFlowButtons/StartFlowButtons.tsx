@@ -1,8 +1,6 @@
 import { Box, Button, ButtonOwnProps } from "@mui/material";
 import { Link } from "react-router-dom";
-import { IconPaw } from "@tabler/icons-react";
-import { IconSearch } from "@tabler/icons-react";
-import { TablerIconsProps } from "@tabler/icons-react";
+import { IconPaw, IconSearch, TablerIconsProps } from "@tabler/icons-react";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import { AppRoutes } from "../../consts/routes";

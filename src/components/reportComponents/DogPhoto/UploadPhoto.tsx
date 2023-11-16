@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import { AppTexts } from "../../../consts/texts";
 import { IconCameraUp } from "@tabler/icons-react";
 import { ChangeEvent, FC, useCallback, useRef } from "react";
+import { AppTexts } from "../../../consts/texts";
 import { acceptableFormats } from "../../../consts/formats";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { AppShadows } from "../../../consts/shadows";
@@ -37,7 +37,7 @@ const useUploadPhotoStyles = createStyleHook(
         transition: "all 200ms ease-in-out",
       },
     };
-  }
+  },
 );
 
 export const UploadPhoto: FC<UploadPhotoProps> = ({
@@ -56,7 +56,7 @@ export const UploadPhoto: FC<UploadPhotoProps> = ({
 
       onSelectImage(file);
     },
-    [onSelectImage]
+    [onSelectImage],
   );
 
   const uploadText = isError
@@ -83,18 +83,18 @@ export const UploadPhoto: FC<UploadPhotoProps> = ({
       >
         <IconCameraUp
           style={{ marginBottom: "8px" }}
-          size={"60px"}
+          size="60px"
           strokeWidth={1}
           color={buttonColors}
         />
         <Typography
           color={buttonColors}
-          textAlign={"center"}
+          textAlign="center"
           sx={{ textWrap: "balance" }}
         >
           {uploadText}
         </Typography>
-        <Typography color={buttonColors} textAlign={"center"}>
+        <Typography color={buttonColors} textAlign="center">
           {AppTexts.reportPage.photo.ctaNote}
         </Typography>
       </Box>

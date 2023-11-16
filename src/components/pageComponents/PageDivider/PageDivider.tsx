@@ -1,6 +1,6 @@
 import { Box, alpha } from "@mui/material";
-import { createStyleHook } from "../../../hooks/styleHooks";
 import { FC } from "react";
+import { createStyleHook } from "../../../hooks/styleHooks";
 import { AppShadows } from "../../../consts/shadows";
 
 const usePageDividerStyles = createStyleHook((theme) => {

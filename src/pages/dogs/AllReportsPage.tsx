@@ -83,7 +83,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
 
   type SelectOptions = "found" | "lost" | "all";
   const [selectedType, setSelectedType] = useState<SelectOptions>(
-    (dogType as SelectOptions) ?? "all"
+    (dogType as SelectOptions) ?? "all",
   );
   const [unauthorizedError, setUnauthorizedError] = useState(false);
   const [page, setPage] = useState<number>(1);
@@ -118,7 +118,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     return response?.results.reduce(
       (
         result: { foundDogs: DogResult[]; lostDogs: DogResult[] },
-        dog: DogResult
+        dog: DogResult,
       ) => {
         // @ts-expect-error
         const { images, id, type } = dog;
@@ -132,7 +132,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
         }
         return result;
       },
-      initValue
+      initValue,
     );
   };
 
@@ -155,7 +155,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
 
   const handlePagination = (
     event: React.ChangeEvent<unknown> | SelectChangeEvent<any>,
-    value: number | string
+    value: number | string,
   ) => {
     const newValue = typeof value === "number" ? value : 1;
     setPage(newValue);

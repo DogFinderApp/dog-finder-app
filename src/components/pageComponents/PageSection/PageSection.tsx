@@ -25,7 +25,11 @@ const usePageSectionStyles = createStyleHook((theme) => {
   };
 });
 
-export const PageSection: FC<PageSectionProps> = ({ title, children, hasDivider }) => {
+export const PageSection: FC<PageSectionProps> = ({
+  title,
+  children,
+  hasDivider,
+}) => {
   const styles = usePageSectionStyles();
   return (
     <Box sx={styles.section}>

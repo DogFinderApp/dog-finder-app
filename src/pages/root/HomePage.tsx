@@ -83,9 +83,9 @@ export const HomePage = () => {
     <PageContainer>
       <Box sx={styles.root}>
         <Player
-          autoplay={true}
+          autoplay
           src={dogAnim}
-          loop={true}
+          loop
           style={{ width: innerWidth >= 800 ? "400px" : "300px" }}
         />
         {isLoading || isAuthenticated ? (

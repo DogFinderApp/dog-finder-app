@@ -7,5 +7,5 @@ interface PageImageProps extends BoxProps {
 }
 
 export const PageImage: FC<PageImageProps> = (props) => {
-  return <Box {...props} component={"img"} />;
+  return <Box {...props} component="img" />;
 };

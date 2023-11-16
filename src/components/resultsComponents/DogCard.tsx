@@ -57,7 +57,7 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
       AppRoutes.dogs.dogPage
         .replace(":dog_id", dog.dogId)
         .replace(":lastReportedId?", lastReportedId ?? ""),
-      { state: { dogType, lastReportedId } }
+      { state: { dogType, lastReportedId } },
     );
   };
 

@@ -14,9 +14,9 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { IconSend } from "@tabler/icons-react";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
-import { DogType, ReportDogPayload } from "../../facades/payload.types";
+import { DogType, ReportDogPayload, DogSex } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
-import { DogSex } from "../../facades/payload.types";
+
 import { cleanImage } from "../../utils/imageUtils";
 import { dateToString } from "../../utils/datesFormatter";
 import { encryptData } from "../../utils/encryptionUtils";
@@ -63,7 +63,7 @@ const useReportDogPageStyles = createStyleHook(
         ".MuiAlert-icon": { fontSize: 24 },
       },
     };
-  }
+  },
 );
 
 interface ReportDogPageProps {
@@ -135,7 +135,7 @@ export const ReportDogPage = withAuthenticationRequired(
 
       // Validate all mandatory fields were filled
       const inputValidation = Object.values(inputs).map((input) =>
-        input.validateInput()
+        input.validateInput(),
       );
       const hasInvalidInputs = inputValidation.some((res) => !res);
       const showError = hasInvalidInputs || isMissingImage;
@@ -314,7 +314,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 required
                 multiline
                 type="text"
-                margin={"normal"}
+                margin="normal"
                 value={inputs.contactName.value}
                 onChange={inputs.contactName.onTextChange}
                 error={!inputs.contactName.isTextValid}
@@ -326,7 +326,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 required
                 multiline
                 type="tel"
-                margin={"normal"}
+                margin="normal"
                 value={inputs.contactPhone.value}
                 onChange={inputs.contactPhone.onPhoneChange}
                 error={!inputs.contactPhone.isPhoneValid}
@@ -340,7 +340,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 required
                 multiline
                 type="text"
-                margin={"normal"}
+                margin="normal"
                 value={inputs.contactEmail.value}
                 onChange={inputs.contactEmail.onEmailChange}
                 error={!inputs.contactEmail.isEmailValid}
@@ -352,7 +352,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 fullWidth
                 multiline
                 type="text"
-                margin={"normal"}
+                margin="normal"
                 value={inputs.contactAddress.value}
                 onChange={inputs.contactAddress.onTextChange}
                 error={!inputs.contactAddress.isTextValid}
@@ -363,7 +363,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 fullWidth
                 multiline
                 type="text"
-                margin={"normal"}
+                margin="normal"
                 value={inputs.extraDetails.value}
                 onChange={inputs.extraDetails.onTextChange}
                 error={!inputs.extraDetails.isTextValid}
@@ -389,5 +389,5 @@ export const ReportDogPage = withAuthenticationRequired(
         </Box>
       </PageContainer>
     );
-  }
+  },
 );

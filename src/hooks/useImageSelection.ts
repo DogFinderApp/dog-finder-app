@@ -42,9 +42,9 @@ export const useImageSelection = () => {
   }, [selectedImage]);
 
   return {
-    onSelectImage: onSelectImage,
+    onSelectImage,
     selectedImageUrl: imageURL,
     selectedImageFile: selectedImage,
-    clearSelection: clearSelection,
+    clearSelection,
   };
 };

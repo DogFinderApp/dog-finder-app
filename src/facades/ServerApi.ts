@@ -9,13 +9,16 @@ const build_endpoint = (path: string) => {
 };
 
 class ServerApi {
-  constructor(private token: string, private baseUrl: string) {}
+  constructor(
+    private token: string,
+    private baseUrl: string,
+  ) {}
 
   async fetch(
     url: RequestInfo,
-    init?: Omit<RequestInit, "signal"> & { timeoutMs?: number }
+    init?: Omit<RequestInit, "signal"> & { timeoutMs?: number },
   ) {
-    const token = this.token;
+    const { token } = this;
 
     let signal;
     let abortTimeout;
@@ -43,10 +46,10 @@ class ServerApi {
     data: { [key: string]: any },
     method: string,
     headers?: HeadersInit,
-    listAttributes?: Array<string> | undefined
+    listAttributes?: Array<string> | undefined,
   ) {
     const formData = new FormData();
-    const token = this.token;
+    const { token } = this;
 
     if (listAttributes) {
       listAttributes.forEach((listAttributeName) => {
@@ -64,7 +67,7 @@ class ServerApi {
     }
 
     const response = await fetch(url, {
-      method: method,
+      method,
       body: formData,
       headers: {
         ...headers,
@@ -90,7 +93,7 @@ class ServerApi {
   }
 
   async report_dog(payload: ReportDogPayload) {
-    let url = build_endpoint("add_document");
+    const url = build_endpoint("add_document");
 
     return this.fetch(url, {
       method: "POST",
@@ -106,7 +109,7 @@ class ServerApi {
     dogId: number;
     possibleMatchId: number;
   }) {
-    let url = build_endpoint("add_possible_dog_match");
+    const url = build_endpoint("add_possible_dog_match");
     return this.fetch(url, {
       method: "POST",
       headers: {
@@ -118,7 +121,7 @@ class ServerApi {
   }
 
   async getDogDetails(dogId: number) {
-    let url = build_endpoint(`get_dog_by_id?dogId=${dogId}`);
+    const url = build_endpoint(`get_dog_by_id?dogId=${dogId}`);
     return this.fetch(url);
   }
 
@@ -135,7 +138,7 @@ class ServerApi {
     const url = new URL(build_endpoint("dogs"));
     const stringKeys = Object.keys(payload) as Array<keyof typeof payload>;
     stringKeys.forEach((key) =>
-      url.searchParams.append(key, payload[key]?.toString()!)
+      url.searchParams.append(key, payload[key]?.toString()!),
     );
     return this.fetch(url.toString());
   }
@@ -145,7 +148,7 @@ export const useGetServerApi = () => {
   const { getAccessTokenSilently } = useAuth0();
   return useCallback(
     async () => new ServerApi(await getAccessTokenSilently(), API_URL),
-    [getAccessTokenSilently]
+    [getAccessTokenSilently],
   );
 };
 

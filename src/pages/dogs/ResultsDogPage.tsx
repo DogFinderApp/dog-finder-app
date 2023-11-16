@@ -31,7 +31,7 @@ const usePageStyles = createStyleHook(() => {
 
 const fetcher = async (
   payload: { base64Image: string; type: DogType },
-  getServerApi: Function
+  getServerApi: Function,
 ) => {
   const serverApi = await getServerApi();
   const response = await serverApi.searchDog({
@@ -41,9 +41,8 @@ const fetcher = async (
   if (response?.ok) {
     const json = await response.json();
     return json?.data?.results || [];
-  } else {
-    throw new Error("Failed to fetch results");
   }
+  throw new Error("Failed to fetch results");
 };
 
 export const ResultsDogPage = () => {
@@ -57,7 +56,7 @@ export const ResultsDogPage = () => {
     error,
     isLoading,
     mutate,
-  } = useSWR([payload], async () => await fetcher(payload, getServerApi), {
+  } = useSWR([payload], async () => fetcher(payload, getServerApi), {
     keepPreviousData: false,
     revalidateOnFocus: false,
   });
@@ -68,7 +67,7 @@ export const ResultsDogPage = () => {
   usePageTitle(
     noResults
       ? AppTexts.resultsPage.noResults.title
-      : AppTexts.resultsPage.title
+      : AppTexts.resultsPage.title,
   );
 
   return (

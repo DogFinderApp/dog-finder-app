@@ -1,8 +1,8 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { Box, Typography } from "@mui/material";
 import { LoginButton } from "../LoginButton/LoginButton";
 import { LogoutButton } from "../LogoutButton/LogoutButton";
 import { createStyleHook } from "../../../hooks/styleHooks";
-import { Box, Typography } from "@mui/material";
 import { PageImage } from "../PageImage/PageImage";
 
 const useUserComponentStyles = createStyleHook(() => {
@@ -37,7 +37,9 @@ const UserComponent = () => {
 
   return (
     <Box sx={styles.root}>
-      {user.picture && <PageImage src={user.picture} alt={user?.name ?? "user-photo"} />}
+      {user.picture && (
+        <PageImage src={user.picture} alt={user?.name ?? "user-photo"} />
+      )}
       <Typography variant="body2">{user.name}</Typography>
       <LogoutButton />
     </Box>

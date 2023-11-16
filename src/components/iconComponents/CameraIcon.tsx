@@ -2,7 +2,14 @@ import { SvgIconProps, SvgIcon } from "@mui/material";
 
 export const CameraIcon = (props: SvgIconProps) => {
   return (
-    <SvgIcon {...props} width="24" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <SvgIcon
+      {...props}
+      width="24"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M24.0007 20C24.0007 19.4477 23.553 19 23.0007 19C19.6912 19 17 21.691 17 25.0004C17 25.5527 17.4477 26.0004 18 26.0004C18.5523 26.0004 19 25.5527 19 25.0004C19 22.7956 20.7957 21 23.0007 21C23.553 21 24.0007 20.5523 24.0007 20Z"
         fill={props.color}

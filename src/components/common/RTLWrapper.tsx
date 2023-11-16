@@ -14,7 +14,7 @@ export const RTLWrapper = ({
   const wrapperStyles = {
     width: withMaxWidth && "100%",
     display: "flex",
-    justifyContent: !!notCentered ? "unset" : "center",
+    justifyContent: notCentered ? "unset" : "center",
   };
 
   return (

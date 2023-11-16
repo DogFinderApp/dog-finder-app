@@ -49,7 +49,7 @@ const useSelectInputStyles = createStyleHook(
         },
       },
     };
-  }
+  },
 );
 interface SelectInputProps extends SelectProps {
   options: { [key: string]: string };
@@ -74,7 +74,7 @@ export const SelectInputField = ({
       <MenuItem key={`menu_${itemValue}-${index}`} value={itemValue} dir="rtl">
         {options[itemValue]}
       </MenuItem>
-    )
+    ),
   );
 
   return (
