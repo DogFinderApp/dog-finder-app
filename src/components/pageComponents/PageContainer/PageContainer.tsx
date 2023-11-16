@@ -1,7 +1,6 @@
+import { FC, ReactNode } from "react";
 import { Box, Fade } from "@mui/material";
-import React, { FC, ReactNode } from "react";
 import { createStyleHook } from "../../../hooks/styleHooks";
-import { PageToolbar } from "../PageToolbar/PageToolbar";
 
 interface IPageContainerProps {
   children: ReactNode;
@@ -12,14 +11,13 @@ const usePageContainerStyles = createStyleHook((theme) => {
     root: {
       width: "100%",
       height: "100%",
-      overflowY: "scroll",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "flex-start",
     },
     content: {
-      width: "100%",
+      width: { sm: "100%", xs: "90%" },
       height: "100%",
       display: "flex",
       flexDirection: "column",
@@ -33,7 +31,6 @@ export const PageContainer: FC<IPageContainerProps> = ({ children }) => {
 
   return (
     <Box sx={styles.root}>
-      <PageToolbar />
       <Fade in timeout={350}>
         <Box sx={styles.content}>{children}</Box>
       </Fade>

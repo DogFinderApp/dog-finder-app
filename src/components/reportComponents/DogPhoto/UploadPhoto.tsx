@@ -12,33 +12,39 @@ interface UploadPhotoProps {
   isError: boolean;
 }
 
-const useUploadPhotoStyles = createStyleHook((theme, props: { isError: boolean }) => {
-  return {
-    root: {
-      width: "100%",
-      maxWidth: "500px",
-      display: "flex",
-      justifyContent: "center",
-      boxShadow: AppShadows.toolbarShadow,
-    },
-    uploadButon: {
-      width: "100%",
-      maxWidth: "500px",
-      height: "188px",
-      backgroundColor: "white",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      cursor: "pointer",
-      borderRadius: "8px",
-      border: props.isError ? `4px solid ${theme.palette.error.main}` : "",
-      transition: "all 200ms ease-in-out",
-    },
-  };
-});
+const useUploadPhotoStyles = createStyleHook(
+  (theme, props: { isError: boolean }) => {
+    return {
+      root: {
+        width: "100%",
+        maxWidth: "500px",
+        display: "flex",
+        justifyContent: "center",
+        boxShadow: AppShadows.toolbarShadow,
+      },
+      uploadButon: {
+        width: "100%",
+        maxWidth: "500px",
+        height: "188px",
+        backgroundColor: "white",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+        borderRadius: "8px",
+        border: props.isError ? `4px solid ${theme.palette.error.main}` : "",
+        transition: "all 200ms ease-in-out",
+      },
+    };
+  }
+);
 
-export const UploadPhoto: FC<UploadPhotoProps> = ({ onSelectImage, selectedImageUrl, isError }) => {
+export const UploadPhoto: FC<UploadPhotoProps> = ({
+  onSelectImage,
+  selectedImageUrl,
+  isError,
+}) => {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const styles = useUploadPhotoStyles({ isError });
   const theme = useTheme();
@@ -53,8 +59,12 @@ export const UploadPhoto: FC<UploadPhotoProps> = ({ onSelectImage, selectedImage
     [onSelectImage]
   );
 
-  const uploadText = isError ? AppTexts.reportPage.photo.ctaError : AppTexts.reportPage.photo.cta;
-  const buttonColors = isError ? theme.palette.error.light : theme.palette.primary.dark;
+  const uploadText = isError
+    ? AppTexts.reportPage.photo.ctaError
+    : AppTexts.reportPage.photo.cta;
+  const buttonColors = isError
+    ? theme.palette.error.light
+    : theme.palette.primary.dark;
 
   return (
     <Box sx={styles.root}>
@@ -67,9 +77,26 @@ export const UploadPhoto: FC<UploadPhotoProps> = ({ onSelectImage, selectedImage
         hidden
         style={{ display: "none" }}
       />
-      <Box sx={styles.uploadButon} onClick={() => imageInputRef?.current?.click()}>
-        <IconCameraUp style={{ marginBottom: "8px" }} size={"60px"} strokeWidth={1} color={buttonColors} />
-        <Typography color={buttonColors}>{uploadText}</Typography>
+      <Box
+        sx={styles.uploadButon}
+        onClick={() => imageInputRef?.current?.click()}
+      >
+        <IconCameraUp
+          style={{ marginBottom: "8px" }}
+          size={"60px"}
+          strokeWidth={1}
+          color={buttonColors}
+        />
+        <Typography
+          color={buttonColors}
+          textAlign={"center"}
+          sx={{ textWrap: "balance" }}
+        >
+          {uploadText}
+        </Typography>
+        <Typography color={buttonColors} textAlign={"center"}>
+          {AppTexts.reportPage.photo.ctaNote}
+        </Typography>
       </Box>
     </Box>
   );

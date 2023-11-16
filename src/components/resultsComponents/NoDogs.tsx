@@ -1,65 +1,112 @@
+import { Box, Button, Typography, useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { createStyleHook } from "../../hooks/styleHooks";
+import { useWindowSize } from "../../hooks/useWindowSize";
+import { DogType } from "../../facades/payload.types";
 import { AppRoutes } from "../../consts/routes";
 import { AppTexts } from "../../consts/texts";
-import { Box, Button, Typography, useTheme } from "@mui/material";
-import { createStyleHook } from "../../hooks/styleHooks";
-import { useNavigate } from "react-router-dom";
-import { DogType } from "../../facades/payload.types";
 
-const useNoResultsStyles = createStyleHook((theme) => { 
+const useNoResultsStyles = createStyleHook((theme) => {
   return {
-    button: {
-      width: "200px"
-    },
     content: {
+      height: "100%",
+      width: { sm: "100%", xs: "90%" },
+      position: "absolute",
+      top: 0,
       display: "flex",
       flexDirection: "column",
-      alignItems: "center", 
+      alignItems: "center",
       justifyContent: "center",
-      gap: "20px"
-    }
+      gap: 8,
+      zIndex: 1,
+    },
+    textWrapper: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 4,
+    },
+    text: { direction: "rtl", textAlign: "center" },
+    buttonsWrapper: {
+      display: "flex",
+      flexDirection: { sm: "row", xs: "column-reverse" },
+      gap: { sm: 4, xs: 2.5 },
+    },
+    button: {
+      display: "flex",
+      gap: 2,
+    },
   };
 });
 
-interface NoDogsProps {
-  dogType: DogType
-};
-
-
-export const NoDogs = (props: NoDogsProps) => {
+export const NoDogs = ({ dogType }: { dogType: DogType }) => {
   const theme = useTheme();
   const styles = useNoResultsStyles();
   const navigate = useNavigate();
-  const { dogType } = props;
+  const { innerWidth } = useWindowSize();
 
+  const newReportText =
+    dogType === DogType.FOUND
+      ? AppTexts.resultsPage.noResults.reportDogFound
+      : AppTexts.resultsPage.noResults.reportMissingDog;
 
-  const getButtonText = () => {
-    if (dogType === DogType.FOUND) {
-      return AppTexts.resultsPage.noResults.reportDogFound;
-    }
+  const newReportRoute =
+    dogType === DogType.FOUND
+      ? AppRoutes.dogs.reportFound
+      : AppRoutes.dogs.reportLost;
 
-    return AppTexts.resultsPage.noResults.reportMissingDog;
-  };
+  const tryAgainRoute =
+    dogType === DogType.FOUND
+      ? AppRoutes.dogs.searchFoundDog
+      : AppRoutes.dogs.searchLostDog;
 
-  // TODO: this code is duplicated. Clean this up
-  const getButtonNavigationRoute = () => {
-    if (dogType === DogType.FOUND) {
-      return AppRoutes.dogs.reportFound;
-    }
-
-    return AppRoutes.dogs.reportLost;
-  };
-
+  const buttonsData = [
+    {
+      text: newReportText,
+      navigationRoute: newReportRoute,
+      icon: IconPlus,
+    },
+    {
+      text: AppTexts.resultsPage.noResults.tryAgain,
+      navigationRoute: tryAgainRoute,
+      icon: IconSearch,
+    },
+  ];
 
   return (
     <Box sx={styles.content}>
-      <Box>
-        <Typography variant="h5" color={theme.palette.text.primary}>
+      <Box sx={styles.textWrapper}>
+        <Typography
+          variant="h3"
+          color={theme.palette.text.primary}
+          fontSize={40}
+        >
           {AppTexts.resultsPage.noResults.title}
         </Typography>
+        <Typography
+          variant="h5"
+          color={theme.palette.text.primary}
+          sx={styles.text}
+        >
+          {AppTexts.resultsPage.noResults.infoText1}{" "}
+          {innerWidth >= 600 && <br />}
+          {AppTexts.resultsPage.noResults.infoText2}
+        </Typography>
       </Box>
-      <Button size="large" variant="contained" sx={styles.button} onClick={() => navigate(getButtonNavigationRoute())}>
-          {getButtonText()}
-      </Button> 
+      <Box sx={styles.buttonsWrapper}>
+        {buttonsData.map((button) => (
+          <Button
+            key={button.text}
+            size="large"
+            variant="contained"
+            sx={styles.button}
+            onClick={() => navigate(button.navigationRoute)}
+          >
+            <button.icon size={20} /> {button.text}
+          </Button>
+        ))}
+      </Box>
     </Box>
   );
 };

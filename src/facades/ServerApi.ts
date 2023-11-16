@@ -1,12 +1,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback } from "react";
-import { DogType, QueryPayload, ReportDogPayload } from "./payload.types";
+import { QueryPayload, ReportDogPayload } from "./payload.types";
 
 const API_URL = process.env.REACT_APP_API_URL || "";
 
 const build_endpoint = (path: string) => {
-  return `${API_URL}${path}`
-}
+  return `${API_URL}/dogfinder/${path}`;
+};
 
 class ServerApi {
   constructor(private token: string, private baseUrl: string) {}
@@ -38,52 +38,106 @@ class ServerApi {
     return response;
   }
 
-  async sendData(url: RequestInfo, data: { [key: string]: any }, method: string, headers?: HeadersInit) {
-    const formData  = new FormData();
+  async sendData(
+    url: RequestInfo,
+    data: { [key: string]: any },
+    method: string,
+    headers?: HeadersInit,
+    listAttributes?: Array<string> | undefined
+  ) {
+    const formData = new FormData();
     const token = this.token;
-        
-    for(const value in data) {
+
+    if (listAttributes) {
+      listAttributes.forEach((listAttributeName) => {
+        const values = data[listAttributeName];
+        values.forEach((value: any) => {
+          formData.append(listAttributeName, value);
+        });
+
+        delete data[listAttributeName];
+      });
+    }
+
+    for (const value in data) {
       formData.append(value, data[value]);
     }
-  
+
     const response = await fetch(url, {
       method: method,
       body: formData,
       headers: {
         ...headers,
         Authorization: `Bearer ${token}`,
-      }
+      },
     });
-  
-    return response
-  }
 
-  // enter endpoint
-  async query(payload: QueryPayload) {
-    let url = build_endpoint("/dogfinder/query/");
-    
-    return this.sendData(url, payload, "POST");
+    return response;
   }
 
   async searchDog(payload: QueryPayload) {
-    const dogType = payload.type;
-    const newPayload = {
-      img: payload.img
-    }
-    let url = build_endpoint("/dogfinder/search_found_dogs/");
-    if (dogType === DogType.FOUND) {
-      url = build_endpoint("/dogfinder/search_lost_dogs/")
-    }
-    
-    
-    return this.sendData(url, newPayload, "POST");
+    const { dogType, ...newPayload } = payload;
+    const url = build_endpoint(`search_in_${dogType}_dogs`);
+
+    return this.fetch(url, {
+      method: "POST",
+      body: JSON.stringify(newPayload),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
   }
 
-
   async report_dog(payload: ReportDogPayload) {
-    let url = build_endpoint("/dogfinder/add_document");
+    let url = build_endpoint("add_document");
 
-    return this.sendData(url, payload, "POST");
+    return this.fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async addPossibleDogMatch(payload: {
+    dogId: number;
+    possibleMatchId: number;
+  }) {
+    let url = build_endpoint("add_possible_dog_match");
+    return this.fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getDogDetails(dogId: number) {
+    let url = build_endpoint(`get_dog_by_id?dogId=${dogId}`);
+    return this.fetch(url);
+  }
+
+  async getFullDogDetails(dogId: number) {
+    const url = build_endpoint(`get_dog_by_id?dogId=${dogId}`);
+    return this.fetch(url);
+  }
+
+  async getAllReportedDogs(payload: {
+    page: number;
+    page_size: number;
+    type?: String;
+  }) {
+    const url = new URL(build_endpoint("dogs"));
+    const stringKeys = Object.keys(payload) as Array<keyof typeof payload>;
+    stringKeys.forEach((key) =>
+      url.searchParams.append(key, payload[key]?.toString()!)
+    );
+    return this.fetch(url.toString());
   }
 }
 

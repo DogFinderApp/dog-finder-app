@@ -1,15 +1,12 @@
 import { TextField, TextFieldProps, alpha } from "@mui/material";
-import React, { FC, ReactNode } from "react";
 import { createStyleHook } from "../../../hooks/styleHooks";
+import { RTLWrapper } from "../../common/RTLWrapper";
 
-const RTLWrapper: FC<{ children: ReactNode }> = ({ children }) => {
-  return <div dir="rtl">{children}</div>;
-};
-
-const useRTLTextFieldStyles = createStyleHook((theme) => {
+export const useRTLTextFieldStyles = createStyleHook((theme) => {
   return {
     root: {
-      width: "500px",
+      width: "100%",
+      maxWidth: "500px",
       marginBottom: "8px",
       "& label": {
         left: "unset",
@@ -29,21 +26,20 @@ const useRTLTextFieldStyles = createStyleHook((theme) => {
           borderColor: alpha(theme.palette.primary.main, 0.6),
         },
       },
-      "@media (max-width: 500px)": {
-        width: "375px",
-      },
-      "@media (max-width: 400px)": {
-        width: "300px",
-      },
+      "& .MuiFormHelperText-root": { textAlign: "right" },
     },
   };
 });
 
-export const RTLTextField: FC<TextFieldProps> = (props) => {
+type RTLTextFieldProps = {
+  helperText?: string;
+} & TextFieldProps;
+
+export const RTLTextField = (props: RTLTextFieldProps) => {
   const styles = useRTLTextFieldStyles();
   return (
-    <RTLWrapper>
-      <TextField {...props} sx={styles.root} />
+    <RTLWrapper withMaxWidth>
+      <TextField {...props} sx={styles.root} helperText={props.helperText} />
     </RTLWrapper>
   );
 };

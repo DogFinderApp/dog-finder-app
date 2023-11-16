@@ -1,67 +1,96 @@
-import { SelectProps, alpha, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import { FC, ReactNode } from "react";
+import { ReactElement } from "react";
+import {
+  SelectProps,
+  alpha,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import { createStyleHook } from "../../../hooks/styleHooks";
-import { AppTexts } from "../../../consts/texts";
-import { DogType } from "../../../facades/payload.types";
+import { RTLWrapper } from "../../common/RTLWrapper";
 
-const RTLWrapper: FC<{ children: ReactNode }> = ({ children }) => {
-  return <div dir="rtl">{children}</div>;
-};
+const useSelectInputStyles = createStyleHook(
+  (theme, props: { error: boolean }) => {
+    const inputColor = {
+      color: props.error
+        ? theme.palette.error.main
+        : theme.palette.primary.contrastText,
+    };
 
-// note: don't use any any paddings/margins in this component,
-// better add a wrapper like <Box mt={3} mb={1}><SelectInputField/></Box> instead.
-
-const useSelectInputStyles = createStyleHook((theme) => {
-  return {
-    root: {
-      '& .MuiFormLabel-root': {
-        left: "unset",
-        right: "1.75rem",
-        transformOrigin: "right",
-        fontSize: "0.8rem",
+    return {
+      root: {
+        width: "100%",
+        maxWidth: "500px",
+        margin: "1rem 0 0.5rem",
+        "& .MuiFormLabel-root": {
+          left: "unset",
+          right: "1.75rem",
+          transformOrigin: "right",
+          fontSize: "0.8rem",
+        },
+        "& .MuiSvgIcon-root": {
+          color: inputColor,
+          left: "7px",
+          right: "unset",
+        },
+        "& .MuiSelect-select": {
+          paddingLeft: "32px",
+          paddingRight: "14px !important",
+        },
+        "& legend": { textAlign: "right", fontSize: "0.6rem" },
+        "& .MuiInputLabel-root": { color: inputColor },
       },
-      '& .MuiSvgIcon-root': {
-        color: theme.palette.primary.contrastText,
-        left: '7px',
-        right: 'unset',
-      },
-      '& .MuiSelect-select': {
-        paddingLeft: '32px',
-        paddingRight: '14px !important',
-      },
-      '& legend': {
-        textAlign: "right",
-        fontSize: "0.6rem",
-      }
-    },
-    select: {
-        width: "500px",
+      select: {
         borderColor: alpha(theme.palette.primary.main, 0.6),
         color: "#FFFFFF",
-        '& .MuiOutlinedInput-notchedOutline': {
+        "& .MuiOutlinedInput-notchedOutline": {
           borderColor: alpha(theme.palette.primary.main, 0.6),
         },
-        "@media (max-width: 500px)": {
-          width: "375px",
-        },
-        "@media (max-width: 400px)": {
-          width: "300px",
-        },
-      }
-  };
-});
+      },
+    };
+  }
+);
+interface SelectInputProps extends SelectProps {
+  options: { [key: string]: string };
+  label: string;
+  value: string;
+  error?: boolean;
+  notCentered?: boolean;
+}
 
-export const SelectInputField: FC<SelectProps> = (props) => {
-  const styles = useSelectInputStyles();
+export const SelectInputField = ({
+  options,
+  label,
+  value,
+  error,
+  notCentered,
+  ...selectProps
+}: SelectInputProps) => {
+  const styles = useSelectInputStyles({ error: !!error });
+
+  const menuItems: Array<ReactElement> = Object.keys(options).map(
+    (itemValue, index) => (
+      <MenuItem key={`menu_${itemValue}-${index}`} value={itemValue} dir="rtl">
+        {options[itemValue]}
+      </MenuItem>
+    )
+  );
+
   return (
-    <RTLWrapper>
+    <RTLWrapper withMaxWidth notCentered={notCentered}>
       <FormControl sx={styles.root}>
-        <InputLabel>{AppTexts.reportPage.dogType.label}</InputLabel>
-        <Select {...props} sx={styles.select}>
-            <MenuItem value={DogType.LOST} dir="rtl">{AppTexts.reportPage.dogType.lost}</MenuItem>
-            <MenuItem value={DogType.FOUND} dir="rtl">{AppTexts.reportPage.dogType.found}</MenuItem>
+        <InputLabel>{label}</InputLabel>
+        <Select
+          {...selectProps}
+          sx={styles.select}
+          value={value}
+          error={error}
+          label={label}
+        >
+          {menuItems}
         </Select>
       </FormControl>
-      </RTLWrapper>
+    </RTLWrapper>
   );
 };
