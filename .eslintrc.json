@@ -16,18 +16,18 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "import/prefer-default-export": ["off"],
     "@typescript-eslint/quotes": ["error", "double", { "avoidEscape": true }],
+    "import/prefer-default-export": ["off"],
+    "jsx-a11y/click-events-have-key-events": ["off"],
     "react/jsx-uses-react": ["off"],
     "react/react-in-jsx-scope": ["off"],
     "react/jsx-props-no-spreading": ["off"],
     "react/function-component-definition": ["off"],
-    "no-underscore-dangle": ["off"],
     "react/no-array-index-key": ["warn"],
     "react/require-default-props": ["off"],
-    "jsx-a11y/click-events-have-key-events": ["off"],
+    "no-underscore-dangle": ["off"],
     "no-use-before-define": ["error", { "functions": false, "classes": false }],
     "no-promise-executor-return": ["off"],
     "no-nested-ternary": ["off"]

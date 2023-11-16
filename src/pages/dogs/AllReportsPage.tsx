@@ -90,17 +90,20 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     const serverApi = await getServerApi();
     const type = ["found", "lost"].includes(selectedType) ? selectedType : "";
     // we need to send the payload without the type in order to fetch all reports
-    const payload = type
-      ? { type, page, page_size: 12 }
-      : { page, page_size: 12 };
-    const response = await serverApi.getAllReportedDogs(payload);
-    if (response.status === 403) return setUnauthorizedError(true);
-    if (!response?.ok) throw new Error("Failed to fetch reports");
-    const json = await response.json();
-    return {
-      results: json?.data?.results || [],
-      pagination: json?.data?.pagination,
-    };
+    const page_size = 12; // eslint-disable-line
+    const payload = type ? { type, page, page_size } : { page, page_size };
+    try {
+      const response = await serverApi.getAllReportedDogs(payload);
+      if (response.status === 403) return setUnauthorizedError(true);
+      const json = await response.json();
+      return {
+        results: json?.data?.results || [],
+        pagination: json?.data?.pagination,
+      };
+    } catch (error) {
+      console.error(error); // eslint-disable-line
+      throw new Error("Failed to fetch reports");
+    }
   };
 
   const {
@@ -108,7 +111,10 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     error,
     isLoading,
     mutate,
-  } = useSWR(["get-all-reports"], fetcher, { revalidateOnFocus: false });
+  } = useSWR([`${selectedType}-reports-page-${page}`], fetcher, {
+    revalidateOnFocus: false,
+    keepPreviousData: true,
+  });
 
   const sortResults = () => {
     const initValue = { foundDogs: [], lostDogs: [] };
@@ -148,9 +154,8 @@ export const AllReportsPage = withAuthenticationRequired(() => {
   const filteredReports: DogResult[] = getFilteredReports();
   const itemsPerPage = response?.pagination?.page_size ?? 12;
   const paginatedReports = usePagination(filteredReports, itemsPerPage);
-  const count: number = Math.ceil(
-    response?.pagination?.total ?? 0 / itemsPerPage,
-  );
+  const pagesCount: number =
+    Math.ceil((response?.pagination?.total as number) / itemsPerPage) ?? 0;
 
   const handlePagination = (
     event: React.ChangeEvent<unknown> | SelectChangeEvent<any>,
@@ -204,7 +209,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
           {filteredReports.length && (
             <Box sx={styles.paginationContainer}>
               <Pagination
-                count={count}
+                count={pagesCount}
                 page={page}
                 onChange={handlePagination}
                 color="primary"

@@ -87,7 +87,7 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
           color={theme.palette.text.primary}
           sx={styles.text}
         >
-          {AppTexts.resultsPage.noResults.infoText1}{" "}
+          {AppTexts.resultsPage.noResults.infoText1}
           {innerWidth >= 600 && <br />}
           {AppTexts.resultsPage.noResults.infoText2}
         </Typography>
@@ -101,7 +101,8 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
             sx={styles.button}
             onClick={() => navigate(button.navigationRoute)}
           >
-            <button.icon size={20} /> {button.text}
+            <button.icon size={20} />
+            {button.text}
           </Button>
         ))}
       </Box>

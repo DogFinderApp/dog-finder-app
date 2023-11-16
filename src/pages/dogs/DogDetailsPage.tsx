@@ -171,10 +171,14 @@ const fetcher = async (
   getServerApi: Function,
 ): Promise<DogDetailsReturnType> => {
   const serverApi = await getServerApi();
-  const response = await serverApi.getDogDetails(payload.dogId);
-  if (!response?.ok) throw new Error("Failed to fetch results");
-  const json = await response.json();
-  return json?.data?.results || [];
+  try {
+    const response = await serverApi.getDogDetails(payload.dogId);
+    const json = await response.json();
+    return json?.data?.results || [];
+  } catch (error) {
+    console.error(error); // eslint-disable-line
+    throw new Error("Failed to fetch results");
+  }
 };
 
 const reportPossibleMatch = async (
@@ -189,8 +193,9 @@ const reportPossibleMatch = async (
   if (
     lastReportedId &&
     (!memorizedDogId || (memorizedDogId && lastReportedId !== memorizedDogId))
-  )
+  ) {
     encryptData("lastReportedDogId", lastReportedId);
+  }
 
   const serverApi = await getServerApi();
   const response = await serverApi.addPossibleDogMatch({

@@ -123,6 +123,20 @@ export const ReportDogPage = withAuthenticationRequired(
 
     const handleCloseError = () => setRequestStatus("");
 
+    const navigateToResultsPage = ({
+      lastReportedId,
+      base64Image,
+    }: {
+      lastReportedId: string;
+      base64Image: string;
+    }) => {
+      const dogTypeToSearch = dogType === "found" ? "lost" : "found";
+      const url = AppRoutes.dogs.results
+        .replace(":dogType", dogTypeToSearch)
+        .replace(":lastReportedId", lastReportedId);
+      navigate(url, { state: { type: dogTypeToSearch, base64Image } });
+    };
+
     const handleSubmitForm = async () => {
       // get server api
       const serverApi = await getServerApi();
@@ -147,7 +161,9 @@ export const ReportDogPage = withAuthenticationRequired(
         contactPhone: inputs.contactPhone.value,
         contactEmail: inputs.contactEmail.value,
         location: inputs.location.value,
-        dogFoundOn: dateToString(inputs.date.dateInput!),
+        dogFoundOn: inputs.date.dateInput
+          ? dateToString(inputs.date.dateInput)
+          : null,
         breed: inputs.dogBreed.value,
         color: inputs.dogColor.value,
         size: inputs.dogSize.value,
@@ -161,28 +177,24 @@ export const ReportDogPage = withAuthenticationRequired(
       };
 
       setIsLoading(true);
-      const response = await serverApi.report_dog(payload);
-      if (response.status !== 200) {
+      try {
+        const response = await serverApi.report_dog(payload);
+        const json = await response.json();
+        const lastReportedId = json.data.id;
+
+        setRequestStatus("success");
+        setIsLoading(false);
+        clearInputs();
+        encryptData("lastReportedDogId", lastReportedId);
+        setTimeout(() => {
+          // wait before navigating to results page in order to show the success/error toast
+          navigateToResultsPage({ base64Image, lastReportedId });
+        }, 2000);
+      } catch (error) {
         setRequestStatus("error");
         setIsLoading(false);
-        return;
+        console.error(error); // eslint-disable-line
       }
-
-      const json = await response.json();
-      const lastReportedId = json.data.id;
-
-      setRequestStatus("success");
-      setIsLoading(false);
-      clearInputs();
-      encryptData("lastReportedDogId", lastReportedId);
-      setTimeout(() => {
-        // wait before navigating to results page in order to show the success/error toast
-        const dogTypeToSearch = dogType === "found" ? "lost" : "found";
-        const url = AppRoutes.dogs.results
-          .replace(":dogType", dogTypeToSearch)
-          .replace(":lastReportedId", lastReportedId);
-        navigate(url, { state: { type: dogTypeToSearch, base64Image } });
-      }, 2000);
     };
 
     const successMessage =

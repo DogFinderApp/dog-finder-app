@@ -32,15 +32,17 @@ const fetcher = async (
   getServerApi: Function,
 ) => {
   const serverApi = await getServerApi();
-  const response = await serverApi.searchDog({
-    ...payload,
-    dogType: payload.type,
-  });
-  if (response?.ok) {
+  try {
+    const response = await serverApi.searchDog({
+      ...payload,
+      dogType: payload.type,
+    });
     const json = await response.json();
     return json?.data?.results || [];
+  } catch (error) {
+    console.error(error); // eslint-disable-line
+    throw new Error("Failed to fetch results");
   }
-  throw new Error("Failed to fetch results");
 };
 
 export const ResultsDogPage = () => {
