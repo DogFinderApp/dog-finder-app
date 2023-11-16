@@ -115,15 +115,15 @@ export const DogDetailsPage = () => {
       : data?.contactPhone
   }`.replace(/-/g, "");
 
-  const getContactMessage = (status: "lost" | "found") => {
+  const getWhatsappMessage = (status: "lost" | "found") => {
     const messages = {
-      lost: `היי, זה {השם שלך} והגעתי אליך דרך פלטפורמת Dog Finder. ייתכן והכלב/ה שלי נמצא אצלך?\n\n${window.location.href}`,
-      found: `היי, זה {השם שלך} והגעתי אליך דרך פלטפורמת Dog Finder. מצאתי כלב/ה שדומה לשלך, שנבדוק?\n\n${window.location.href}`,
+      lost: `${AppTexts.dogDetails.whatsappLinks.lost}%0A%0A${window.location.href}`,
+      found: `${AppTexts.dogDetails.whatsappLinks.found}%0A%0A${window.location.href}`,
     };
     return messages[status];
   };
 
-  const whatsappLink = `https://wa.me/${contactNumber}/?text=${getContactMessage(
+  const whatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
     data?.type ?? "found"
   )}`;
 

@@ -93,8 +93,8 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     const type = ["found", "lost"].includes(selectedType) ? selectedType : "";
     // we need to send the payload without the type in order to fetch all reports
     const payload = type
-      ? { type, page, page_size: 1 }
-      : { page, page_size: 1 };
+      ? { type, page, page_size: 12 }
+      : { page, page_size: 12 };
     const response = await serverApi.getAllReportedDogs(payload);
     if (response.status === 403) return setUnauthorizedError(true);
     if (!response?.ok) throw new Error("Failed to fetch reports");
@@ -155,7 +155,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
 
   const handlePagination = (
     event: React.ChangeEvent<unknown> | SelectChangeEvent<any>,
-    value: number
+    value: number | string
   ) => {
     const newValue = typeof value === "number" ? value : 1;
     setPage(newValue);
@@ -190,7 +190,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
         <ErrorLoadingDogs refresh={mutate} />
       )}
       {unauthorizedError && (
-        <ErrorLoadingDogs text="אין למשתמש זה גישה למאגר הכלבים המלא" />
+        <ErrorLoadingDogs text={AppTexts.allReportsPage.unauthorized} />
       )}
       {!isLoading && !error && !unauthorizedError && (
         <Box sx={styles.responseContainer}>

@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { createStyleHook } from "../hooks/styleHooks";
+import usePageTitle from "../hooks/usePageTitle";
 import { PageContainer } from "../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../components/pageComponents/PageTitle/PageTitle";
 import { StartFlowButtons } from "../components/StartFlowButtons/StartFlowButtons";
@@ -24,8 +25,8 @@ const useAboutUsStyles = createStyleHook(() => {
 
 export const AboutUsPage = () => {
   const styles = useAboutUsStyles();
-
-  const pageTitle = AppTexts.aboutUsTitle;
+  const pageTitle = AppTexts.navigation.aboutUs;
+  usePageTitle(pageTitle);
   const texts = [
     "החל מ-7 באוקטובר 2023, עשרות כלבים וחתולי בית ברחבי הארץ, בעיקר באזור הדרום והצפון, אזורים שתושביהם נאלצו לנטוש בחיפזון עקב המצב הביטחוני, אבדו או ננטשו בבהלה שנוצרה מאזעקות.",
     `בעקבות המצב, התגייסו אזרחים רבים בניסיון לסייע לבעלי החיים שאבדו. הוקמו חמ"לים מאולתרים בפייסבוק ובקבוצות וואטסאפ לאיתור חיות המחמד. זוהי יוזמה מבורכת, אולם התצורה הזו אינה יעילה ודורשת משאבי זמן וכוח אדם רבים.`,

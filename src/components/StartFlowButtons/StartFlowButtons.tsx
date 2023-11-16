@@ -13,7 +13,7 @@ export const StartFlowButtons = ({ alignRight }: { alignRight?: boolean }) => {
     return {
       content: {
         display: "flex",
-        flexDirection: { xs: "column", sm: "row" },
+        flexDirection: { xs: "column-reverse", sm: "row" },
         alignItems: "center",
         justifyContent: alignRight ? "flex-end" : "center",
         gap: 2,
@@ -53,13 +53,13 @@ export const StartFlowButtons = ({ alignRight }: { alignRight?: boolean }) => {
       <Link to={AppRoutes.dogs.reportLost} style={linkStyles}>
         <Button {...commonButtonProps}>
           <IconSearch {...commonIconProps} />
-          {AppTexts.homePage.cta.lostDog}
+          {AppTexts.navigation.reportLost}
         </Button>
       </Link>
       <Link to={AppRoutes.dogs.reportFound} style={linkStyles}>
         <Button {...commonButtonProps}>
           <IconPaw {...commonIconProps} />
-          {AppTexts.homePage.cta.foundDog}
+          {AppTexts.navigation.reportFound}
         </Button>
       </Link>
     </Box>
