@@ -105,7 +105,7 @@ export const PageToolbar = () => {
       </IconButton>
       <Menu open={isMenuOpen} onClose={handleCloseMenu} anchorEl={anchorEl}>
         {linksToRender.map((link, index) => (
-          <>
+          <div key={link.text}>
             <Link
               key={link.text}
               to={link.href}
@@ -122,7 +122,7 @@ export const PageToolbar = () => {
             {index === 4 && isHamalUser && (
               <Divider variant="middle" sx={styles.divider} />
             )}
-          </>
+          </div>
         ))}
       </Menu>
     </Box>
