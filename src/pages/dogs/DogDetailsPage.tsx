@@ -332,12 +332,12 @@ export const DogDetailsPage = () => {
                   {DogTypeTranslateEnum[data.type] ?? ""}
                 </span>
               </Box>
-                <Box sx={detailRowStyle}>
-                  <span style={detailHeaderStyle}>מין: </span>
-                  <span style={detailContentStyle}>
-                    {DogGenderEnum[data.sex] ?? "לא ידוע"}
-                  </span>
-                </Box>
+              <Box sx={detailRowStyle}>
+                <span style={detailHeaderStyle}>מין: </span>
+                <span style={detailContentStyle}>
+                  {DogGenderEnum[data.sex] ?? "לא ידוע"}
+                </span>
+              </Box>
               <Box sx={detailRowStyle}>
                 <span style={detailHeaderStyle}>איזור גיל: </span>
                 <span style={detailContentStyle}>
@@ -369,10 +369,12 @@ export const DogDetailsPage = () => {
                 <span style={detailHeaderStyle}>צבע: </span>
                 <span style={detailContentStyle}>{data.color ?? ""}</span>
               </Box>
-                <Box sx={detailRowStyle}>
-                  <span style={detailHeaderStyle}>מספר שבב: </span>
-                  <span style={detailContentStyle}>{data.chipNumber ?? "לא ידוע"}</span>
-                </Box>
+              <Box sx={detailRowStyle}>
+                <span style={detailHeaderStyle}>מספר שבב: </span>
+                <span style={detailContentStyle}>
+                  {data.chipNumber ?? "לא ידוע"}
+                </span>
+              </Box>
             </Box>
           </Box>
         </Box>
