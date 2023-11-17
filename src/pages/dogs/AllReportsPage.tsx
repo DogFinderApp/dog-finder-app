@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import {
@@ -153,7 +153,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
 
   const filteredReports: DogResult[] = getFilteredReports();
   const itemsPerPage = response?.pagination?.page_size ?? 12;
-  const paginatedReports = usePagination(filteredReports, itemsPerPage);
+  const paginatedReports = usePagination(filteredReports ?? [], itemsPerPage);
   const pagesCount: number =
     Math.ceil((response?.pagination?.total as number) / itemsPerPage) ?? 0;
 
@@ -165,10 +165,18 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     setPage(newValue);
     paginatedReports.jump(newValue);
     window.scroll({ top: 0 });
+  };
+
+  useEffect(() => {
+    const pathName = window.location.pathname;
+    const urlParts = pathName.split("/");
+    const typeFromUrl = urlParts[urlParts.length - 1];
+    const newSelectedType = typeFromUrl === "all-reports" ? "all" : typeFromUrl;
+    setSelectedType(newSelectedType as SelectOptions);
     setTimeout(() => {
       mutate();
     }, 0);
-  };
+  }, [window.location.pathname, mutate]); // eslint-disable-line
 
   const changeSelectedReports = (event: SelectChangeEvent<any>) => {
     const { value } = event.target;
