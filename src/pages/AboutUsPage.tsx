@@ -6,22 +6,20 @@ import { PageTitle } from "../components/pageComponents/PageTitle/PageTitle";
 import { StartFlowButtons } from "../components/StartFlowButtons/StartFlowButtons";
 import { AppTexts } from "../consts/texts";
 
-const useAboutUsStyles = createStyleHook(() => {
-  return {
-    textContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 4,
-      my: 4,
-    },
-    typography: {
-      color: "white",
-      textAlign: "right",
-      direction: "rtl",
-      fontSize: 20,
-    },
-  };
-});
+const useAboutUsStyles = createStyleHook(() => ({
+  textContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+    my: 4,
+  },
+  typography: {
+    color: "white",
+    textAlign: "right",
+    direction: "rtl",
+    fontSize: 20,
+  },
+}));
 
 export const AboutUsPage = () => {
   const styles = useAboutUsStyles();
@@ -29,7 +27,7 @@ export const AboutUsPage = () => {
   usePageTitle(pageTitle);
   const texts = [
     "החל מ-7 באוקטובר 2023, עשרות כלבים וחתולי בית ברחבי הארץ, בעיקר באזור הדרום והצפון, אזורים שתושביהם נאלצו לנטוש בחיפזון עקב המצב הביטחוני, אבדו או ננטשו בבהלה שנוצרה מאזעקות.",
-    `בעקבות המצב, התגייסו אזרחים רבים בניסיון לסייע לבעלי החיים שאבדו. הוקמו חמ"לים מאולתרים בפייסבוק ובקבוצות וואטסאפ לאיתור חיות המחמד. זוהי יוזמה מבורכת, אולם התצורה הזו אינה יעילה ודורשת משאבי זמן וכוח אדם רבים.`,
+    'בעקבות המצב, התגייסו אזרחים רבים בניסיון לסייע לבעלי החיים שאבדו. הוקמו חמ"לים מאולתרים בפייסבוק ובקבוצות וואטסאפ לאיתור חיות המחמד. זוהי יוזמה מבורכת, אולם התצורה הזו אינה יעילה ודורשת משאבי זמן וכוח אדם רבים.',
     "לאור המצב, הקמנו את מיזם Dog Finder. מטרתנו היא לאפשר איתור יעיל ומהיר של כלבים אבודים והשבתם לבעליהם המצפים להם.",
     "המערכת שפיתחנו מבוססת על אלגוריתמי בינה מלאכותית המסוגלים לזהות דמיון בין תמונות של כלבים אבודים לבין אלה של כלבים שדווחו כנעדרים. המערכת יעילה גם כאשר התמונות מזוויות שונות או כשמראה הכלב השתנה.",
     "אם איבדתם את הכלב שלכם או מצאתם כלב תועה, נא פנו אלינו ונסייע באיתור הבעלים או הכלב הנעדר. נשמח לסייע לכם להתאחד מחדש 🙂",

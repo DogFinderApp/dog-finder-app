@@ -6,25 +6,23 @@ interface IPageContainerProps {
   children: ReactNode;
 }
 
-const usePageContainerStyles = createStyleHook((theme) => {
-  return {
-    root: {
-      width: "100%",
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "flex-start",
-    },
-    content: {
-      width: { sm: "100%", xs: "90%" },
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-      marginTop: "80px",
-    },
-  };
-});
+const usePageContainerStyles = createStyleHook(() => ({
+  root: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  content: {
+    width: { sm: "100%", xs: "90%" },
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    marginTop: "80px",
+  },
+}));
 
 export const PageContainer: FC<IPageContainerProps> = ({ children }) => {
   const styles = usePageContainerStyles();

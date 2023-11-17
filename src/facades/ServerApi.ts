@@ -4,18 +4,19 @@ import { QueryPayload, ReportDogPayload } from "./payload.types";
 
 const API_URL = process.env.REACT_APP_API_URL || "";
 
-const build_endpoint = (path: string) => {
-  return `${API_URL}/dogfinder/${path}`;
-};
+const buildEndpoint = (path: string) => `${API_URL}/dogfinder/${path}`;
 
 class ServerApi {
-  constructor(private token: string, private baseUrl: string) {}
+  constructor(
+    private token: string,
+    private baseUrl: string,
+  ) {}
 
   async fetch(
     url: RequestInfo,
-    init?: Omit<RequestInit, "signal"> & { timeoutMs?: number }
+    init?: Omit<RequestInit, "signal"> & { timeoutMs?: number },
   ) {
-    const token = this.token;
+    const { token } = this;
 
     let signal;
     let abortTimeout;
@@ -43,10 +44,10 @@ class ServerApi {
     data: { [key: string]: any },
     method: string,
     headers?: HeadersInit,
-    listAttributes?: Array<string> | undefined
+    listAttributes?: Array<string> | undefined,
   ) {
     const formData = new FormData();
-    const token = this.token;
+    const { token } = this;
 
     if (listAttributes) {
       listAttributes.forEach((listAttributeName) => {
@@ -55,16 +56,18 @@ class ServerApi {
           formData.append(listAttributeName, value);
         });
 
-        delete data[listAttributeName];
+        delete data[listAttributeName]; // eslint-disable-line
       });
     }
 
-    for (const value in data) {
-      formData.append(value, data[value]);
-    }
+    Object.keys(data).forEach((key) => {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        formData.append(key, data[key]);
+      }
+    });
 
     const response = await fetch(url, {
-      method: method,
+      method,
       body: formData,
       headers: {
         ...headers,
@@ -77,7 +80,7 @@ class ServerApi {
 
   async searchDog(payload: QueryPayload) {
     const { dogType, ...newPayload } = payload;
-    const url = build_endpoint(`search_in_${dogType}_dogs`);
+    const url = buildEndpoint(`search_in_${dogType}_dogs`);
 
     return this.fetch(url, {
       method: "POST",
@@ -90,7 +93,7 @@ class ServerApi {
   }
 
   async report_dog(payload: ReportDogPayload) {
-    let url = build_endpoint("add_document");
+    const url = buildEndpoint("add_document");
 
     return this.fetch(url, {
       method: "POST",
@@ -106,7 +109,7 @@ class ServerApi {
     dogId: number;
     possibleMatchId: number;
   }) {
-    let url = build_endpoint("add_possible_dog_match");
+    const url = buildEndpoint("add_possible_dog_match");
     return this.fetch(url, {
       method: "POST",
       headers: {
@@ -118,12 +121,12 @@ class ServerApi {
   }
 
   async getDogDetails(dogId: number) {
-    let url = build_endpoint(`get_dog_by_id?dogId=${dogId}`);
+    const url = buildEndpoint(`get_dog_by_id?dogId=${dogId}`);
     return this.fetch(url);
   }
 
   async getFullDogDetails(dogId: number) {
-    const url = build_endpoint(`get_dog_by_id?dogId=${dogId}`);
+    const url = buildEndpoint(`get_dog_by_id?dogId=${dogId}`);
     return this.fetch(url);
   }
 
@@ -132,10 +135,10 @@ class ServerApi {
     page_size: number;
     type?: String;
   }) {
-    const url = new URL(build_endpoint("dogs"));
+    const url = new URL(buildEndpoint("dogs"));
     const stringKeys = Object.keys(payload) as Array<keyof typeof payload>;
     stringKeys.forEach((key) =>
-      url.searchParams.append(key, payload[key]?.toString()!)
+      url.searchParams.append(key, payload[key]?.toString()!),
     );
     return this.fetch(url.toString());
   }
@@ -145,7 +148,7 @@ export const useGetServerApi = () => {
   const { getAccessTokenSilently } = useAuth0();
   return useCallback(
     async () => new ServerApi(await getAccessTokenSilently(), API_URL),
-    [getAccessTokenSilently]
+    [getAccessTokenSilently],
   );
 };
 

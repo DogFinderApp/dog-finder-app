@@ -6,23 +6,21 @@ import { useWindowSize } from "../hooks/useWindowSize";
 import { PageTitle } from "../components/pageComponents/PageTitle/PageTitle";
 import NotFoundImage from "../assets/svg/404.svg";
 
-const useNotFoundStyles = createStyleHook(() => {
-  return {
-    pageContainer: {
-      height: "100vh",
-      width: { sm: "100vw", xs: "90vw" },
-      position: "absolute",
-      inset: 0,
-      mx: "auto",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      overflow: "hidden",
-    },
-    button: { width: 150, fontSize: 18, my: 2.5 },
-  };
-});
+const useNotFoundStyles = createStyleHook(() => ({
+  pageContainer: {
+    height: "100vh",
+    width: { sm: "100vw", xs: "90vw" },
+    position: "absolute",
+    inset: 0,
+    mx: "auto",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  button: { width: 150, fontSize: 18, my: 2.5 },
+}));
 
 export const NotFound = () => {
   const styles = useNotFoundStyles();

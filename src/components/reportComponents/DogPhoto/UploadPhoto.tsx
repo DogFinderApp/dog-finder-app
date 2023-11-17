@@ -1,48 +1,44 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import { AppTexts } from "../../../consts/texts";
 import { IconCameraUp } from "@tabler/icons-react";
 import { ChangeEvent, FC, useCallback, useRef } from "react";
+import { AppTexts } from "../../../consts/texts";
 import { acceptableFormats } from "../../../consts/formats";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { AppShadows } from "../../../consts/shadows";
 
 interface UploadPhotoProps {
   onSelectImage: (file: File) => Promise<void>;
-  selectedImageUrl?: string;
   isError: boolean;
 }
 
 const useUploadPhotoStyles = createStyleHook(
-  (theme, props: { isError: boolean }) => {
-    return {
-      root: {
-        width: "100%",
-        maxWidth: "500px",
-        display: "flex",
-        justifyContent: "center",
-        boxShadow: AppShadows.toolbarShadow,
-      },
-      uploadButon: {
-        width: "100%",
-        maxWidth: "500px",
-        height: "188px",
-        backgroundColor: "white",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        cursor: "pointer",
-        borderRadius: "8px",
-        border: props.isError ? `4px solid ${theme.palette.error.main}` : "",
-        transition: "all 200ms ease-in-out",
-      },
-    };
-  }
+  (theme, props: { isError: boolean }) => ({
+    root: {
+      width: "100%",
+      maxWidth: "500px",
+      display: "flex",
+      justifyContent: "center",
+      boxShadow: AppShadows.toolbarShadow,
+    },
+    uploadButon: {
+      width: "100%",
+      maxWidth: "500px",
+      height: "188px",
+      backgroundColor: "white",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "pointer",
+      borderRadius: "8px",
+      border: props.isError ? `4px solid ${theme.palette.error.main}` : "",
+      transition: "all 200ms ease-in-out",
+    },
+  }),
 );
 
 export const UploadPhoto: FC<UploadPhotoProps> = ({
   onSelectImage,
-  selectedImageUrl,
   isError,
 }) => {
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -56,7 +52,7 @@ export const UploadPhoto: FC<UploadPhotoProps> = ({
 
       onSelectImage(file);
     },
-    [onSelectImage]
+    [onSelectImage],
   );
 
   const uploadText = isError
@@ -83,18 +79,18 @@ export const UploadPhoto: FC<UploadPhotoProps> = ({
       >
         <IconCameraUp
           style={{ marginBottom: "8px" }}
-          size={"60px"}
+          size="60px"
           strokeWidth={1}
           color={buttonColors}
         />
         <Typography
           color={buttonColors}
-          textAlign={"center"}
+          textAlign="center"
           sx={{ textWrap: "balance" }}
         >
           {uploadText}
         </Typography>
-        <Typography color={buttonColors} textAlign={"center"}>
+        <Typography color={buttonColors} textAlign="center">
           {AppTexts.reportPage.photo.ctaNote}
         </Typography>
       </Box>

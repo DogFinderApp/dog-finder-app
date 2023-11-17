@@ -9,23 +9,25 @@ interface PageSectionProps {
   hasDivider: boolean;
 }
 
-const usePageSectionStyles = createStyleHook((theme) => {
-  return {
-    section: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "80%",
-    },
-    sectionTitle: {
-      color: theme.palette.text.primary,
-      marginBottom: "16px",
-    },
-  };
-});
+const usePageSectionStyles = createStyleHook((theme) => ({
+  section: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%",
+  },
+  sectionTitle: {
+    color: theme.palette.text.primary,
+    marginBottom: "16px",
+  },
+}));
 
-export const PageSection: FC<PageSectionProps> = ({ title, children, hasDivider }) => {
+export const PageSection: FC<PageSectionProps> = ({
+  title,
+  children,
+  hasDivider,
+}) => {
   const styles = usePageSectionStyles();
   return (
     <Box sx={styles.section}>

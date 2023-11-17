@@ -20,59 +20,57 @@ import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
 
-const usePageStyles = createStyleHook(() => {
-  return {
-    pageWrapper: {
-      height: "100%",
-      width: "90%",
-      maxWidth: 1400,
-      margin: "0 auto",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      px: { sm: 4 },
-      mt: 10,
+const usePageStyles = createStyleHook(() => ({
+  pageWrapper: {
+    height: "100%",
+    width: "90%",
+    maxWidth: 1400,
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    px: { sm: 4 },
+    mt: 10,
+  },
+  loadingContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 2,
+    textWrap: "balance",
+  },
+  loadingText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 26,
+  },
+  responseContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 5,
+    width: "100%",
+  },
+  paginationContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "2rem",
+    position: "sticky",
+  },
+  pagination: {
+    "& .MuiPaginationItem-previousNext": {
+      transform: "rotate(180deg) !important",
     },
-    loadingContainer: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 2,
-      textWrap: "balance",
-    },
-    loadingText: {
-      color: "white",
-      textAlign: "center",
-      fontSize: 26,
-    },
-    responseContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 5,
-      width: "100%",
-    },
-    paginationContainer: {
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      marginBottom: "2rem",
-      position: "sticky",
-    },
-    pagination: {
-      "& .MuiPaginationItem-previousNext": {
-        transform: "rotate(180deg) !important",
-      },
-      "@media (max-width: 600px)": {
-        "& .MuiPaginationItem-root": {
-          padding: "0 !important",
-          margin: "0 !important",
-          minWidth: "35px !important",
-          height: "35px !important",
-        },
+    "@media (max-width: 600px)": {
+      "& .MuiPaginationItem-root": {
+        padding: "0 !important",
+        margin: "0 !important",
+        minWidth: "35px !important",
+        height: "35px !important",
       },
     },
-  };
-});
+  },
+}));
 
 export const AllReportsPage = withAuthenticationRequired(() => {
   usePageTitle(AppTexts.allReportsPage.title);
@@ -83,7 +81,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
 
   type SelectOptions = "found" | "lost" | "all";
   const [selectedType, setSelectedType] = useState<SelectOptions>(
-    (dogType as SelectOptions) ?? "all"
+    (dogType as SelectOptions) ?? "all",
   );
   const [unauthorizedError, setUnauthorizedError] = useState(false);
   const [page, setPage] = useState<number>(1);
@@ -92,17 +90,20 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     const serverApi = await getServerApi();
     const type = ["found", "lost"].includes(selectedType) ? selectedType : "";
     // we need to send the payload without the type in order to fetch all reports
-    const payload = type
-      ? { type, page, page_size: 12 }
-      : { page, page_size: 12 };
-    const response = await serverApi.getAllReportedDogs(payload);
-    if (response.status === 403) return setUnauthorizedError(true);
-    if (!response?.ok) throw new Error("Failed to fetch reports");
-    const json = await response.json();
-    return {
-      results: json?.data?.results || [],
-      pagination: json?.data?.pagination,
-    };
+    const page_size = 12; // eslint-disable-line
+    const payload = type ? { type, page, page_size } : { page, page_size };
+    try {
+      const response = await serverApi.getAllReportedDogs(payload);
+      if (response.status === 403) return setUnauthorizedError(true);
+      const json = await response.json();
+      return {
+        results: json?.data?.results || [],
+        pagination: json?.data?.pagination,
+      };
+    } catch (error) {
+      console.error(error); // eslint-disable-line
+      throw new Error("Failed to fetch reports");
+    }
   };
 
   const {
@@ -110,7 +111,10 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     error,
     isLoading,
     mutate,
-  } = useSWR(["get-all-reports"], fetcher, { revalidateOnFocus: false });
+  } = useSWR([`${selectedType}-reports-page-${page}`], fetcher, {
+    revalidateOnFocus: false,
+    keepPreviousData: true,
+  });
 
   const sortResults = () => {
     const initValue = { foundDogs: [], lostDogs: [] };
@@ -118,7 +122,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     return response?.results.reduce(
       (
         result: { foundDogs: DogResult[]; lostDogs: DogResult[] },
-        dog: DogResult
+        dog: DogResult,
       ) => {
         // @ts-expect-error
         const { images, id, type } = dog;
@@ -132,7 +136,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
         }
         return result;
       },
-      initValue
+      initValue,
     );
   };
 
@@ -150,12 +154,12 @@ export const AllReportsPage = withAuthenticationRequired(() => {
   const filteredReports: DogResult[] = getFilteredReports();
   const itemsPerPage = response?.pagination?.page_size ?? 12;
   const paginatedReports = usePagination(filteredReports, itemsPerPage);
-  const count: number =
-    Math.ceil(response?.pagination?.total / itemsPerPage) ?? 0;
+  const pagesCount: number =
+    Math.ceil((response?.pagination?.total as number) / itemsPerPage) ?? 0;
 
   const handlePagination = (
     event: React.ChangeEvent<unknown> | SelectChangeEvent<any>,
-    value: number | string
+    value: number | string,
   ) => {
     const newValue = typeof value === "number" ? value : 1;
     setPage(newValue);
@@ -205,7 +209,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
           {filteredReports.length && (
             <Box sx={styles.paginationContainer}>
               <Pagination
-                count={count}
+                count={pagesCount}
                 page={page}
                 onChange={handlePagination}
                 color="primary"

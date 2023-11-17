@@ -1,6 +1,6 @@
 import { Alert, Button, Typography } from "@mui/material";
-import { AppTexts } from "../../consts/texts";
 import { KeyedMutator } from "swr";
+import { AppTexts } from "../../consts/texts";
 
 interface ErrorLoadingProps {
   refresh?: KeyedMutator<any>;

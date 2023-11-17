@@ -7,38 +7,36 @@ import { DogType } from "../../facades/payload.types";
 import { AppRoutes } from "../../consts/routes";
 import { AppTexts } from "../../consts/texts";
 
-const useNoResultsStyles = createStyleHook((theme) => {
-  return {
-    content: {
-      height: "100%",
-      width: { sm: "100%", xs: "90%" },
-      position: "absolute",
-      top: 0,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 8,
-      zIndex: 1,
-    },
-    textWrapper: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 4,
-    },
-    text: { direction: "rtl", textAlign: "center" },
-    buttonsWrapper: {
-      display: "flex",
-      flexDirection: { sm: "row", xs: "column-reverse" },
-      gap: { sm: 4, xs: 2.5 },
-    },
-    button: {
-      display: "flex",
-      gap: 2,
-    },
-  };
-});
+const useNoResultsStyles = createStyleHook(() => ({
+  content: {
+    height: "100%",
+    width: { sm: "100%", xs: "90%" },
+    position: "absolute",
+    top: 0,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    zIndex: 1,
+  },
+  textWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 4,
+  },
+  text: { direction: "rtl", textAlign: "center" },
+  buttonsWrapper: {
+    display: "flex",
+    flexDirection: { sm: "row", xs: "column-reverse" },
+    gap: { sm: 4, xs: 2.5 },
+  },
+  button: {
+    display: "flex",
+    gap: 2,
+  },
+}));
 
 export const NoDogs = ({ dogType }: { dogType: DogType }) => {
   const theme = useTheme();
@@ -89,7 +87,7 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
           color={theme.palette.text.primary}
           sx={styles.text}
         >
-          {AppTexts.resultsPage.noResults.infoText1}{" "}
+          {AppTexts.resultsPage.noResults.infoText1}
           {innerWidth >= 600 && <br />}
           {AppTexts.resultsPage.noResults.infoText2}
         </Typography>
@@ -103,7 +101,8 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
             sx={styles.button}
             onClick={() => navigate(button.navigationRoute)}
           >
-            <button.icon size={20} /> {button.text}
+            <button.icon size={20} />
+            {button.text}
           </Button>
         ))}
       </Box>

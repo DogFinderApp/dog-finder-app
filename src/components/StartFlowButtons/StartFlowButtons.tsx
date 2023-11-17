@@ -1,29 +1,25 @@
 import { Box, Button, ButtonOwnProps } from "@mui/material";
 import { Link } from "react-router-dom";
-import { IconPaw } from "@tabler/icons-react";
-import { IconSearch } from "@tabler/icons-react";
-import { TablerIconsProps } from "@tabler/icons-react";
+import { IconPaw, IconSearch, TablerIconsProps } from "@tabler/icons-react";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import { AppRoutes } from "../../consts/routes";
 import { AppTexts } from "../../consts/texts";
 
 export const StartFlowButtons = ({ alignRight }: { alignRight?: boolean }) => {
-  const useStartFlowButtonsStyles = createStyleHook(() => {
-    return {
-      content: {
-        display: "flex",
-        flexDirection: { xs: "column-reverse", sm: "row" },
-        alignItems: "center",
-        justifyContent: alignRight ? "flex-end" : "center",
-        gap: 2,
-      },
-      button: {
-        width: 240,
-        height: 45,
-      },
-    };
-  });
+  const useStartFlowButtonsStyles = createStyleHook(() => ({
+    content: {
+      display: "flex",
+      flexDirection: { xs: "column-reverse", sm: "row" },
+      alignItems: "center",
+      justifyContent: alignRight ? "flex-end" : "center",
+      gap: 2,
+    },
+    button: {
+      width: 240,
+      height: 45,
+    },
+  }));
 
   const styles = useStartFlowButtonsStyles();
   const { innerWidth } = useWindowSize();

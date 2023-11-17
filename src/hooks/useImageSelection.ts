@@ -7,7 +7,7 @@ export const useImageSelection = () => {
 
   const onSelectImage = async (file: File) => {
     if (!file.type.match(imageMimeType)) {
-      console.warn("Image mime type is not valid");
+      console.warn("Image mime type is not valid"); // eslint-disable-line
       return;
     }
 
@@ -42,9 +42,9 @@ export const useImageSelection = () => {
   }, [selectedImage]);
 
   return {
-    onSelectImage: onSelectImage,
+    onSelectImage,
     selectedImageUrl: imageURL,
     selectedImageFile: selectedImage,
-    clearSelection: clearSelection,
+    clearSelection,
   };
 };

@@ -16,7 +16,7 @@ export const PageTitle = ({
 }: PageTitleProps) => {
   const theme = useTheme();
   return (
-    <Box marginY={"20px"} position="relative" zIndex={10}>
+    <Box marginY="20px" position="relative" zIndex={10}>
       <RTLWrapper notCentered={notCentered}>
         <Typography
           variant="h3"

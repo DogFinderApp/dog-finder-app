@@ -14,9 +14,8 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { IconSend } from "@tabler/icons-react";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
-import { DogType, ReportDogPayload } from "../../facades/payload.types";
+import { DogType, ReportDogPayload, DogSex } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
-import { DogSex } from "../../facades/payload.types";
 import { cleanImage } from "../../utils/imageUtils";
 import { dateToString } from "../../utils/datesFormatter";
 import { encryptData } from "../../utils/encryptionUtils";
@@ -36,34 +35,32 @@ import DatePicker from "../../components/DatePicker/DatePicker";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 
 const useReportDogPageStyles = createStyleHook(
-  (theme, props: { isError: boolean }) => {
-    return {
-      root: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100%",
-        width: "100%",
-      },
-      button: {
-        marginTop: "24px",
-        marginBottom: "24px",
-      },
-      error: {
-        opacity: props.isError ? "100%" : "0%",
-      },
-      alert: {
-        width: "100%",
-        fontSize: { sm: 22, xs: 20 },
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        textAlign: "right",
-        ".MuiAlert-action": { ml: "unset" },
-        ".MuiAlert-icon": { fontSize: 24 },
-      },
-    };
-  }
+  (theme, props: { isError: boolean }) => ({
+    root: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      height: "100%",
+      width: "100%",
+    },
+    button: {
+      marginTop: "24px",
+      marginBottom: "24px",
+    },
+    error: {
+      opacity: props.isError ? "100%" : "0%",
+    },
+    alert: {
+      width: "100%",
+      fontSize: { sm: 22, xs: 20 },
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      textAlign: "right",
+      ".MuiAlert-action": { ml: "unset" },
+      ".MuiAlert-icon": { fontSize: 24 },
+    },
+  }),
 );
 
 interface ReportDogPageProps {
@@ -126,19 +123,33 @@ export const ReportDogPage = withAuthenticationRequired(
 
     const handleCloseError = () => setRequestStatus("");
 
+    const navigateToResultsPage = ({
+      lastReportedId,
+      base64Image,
+    }: {
+      lastReportedId: string;
+      base64Image: string;
+    }) => {
+      const dogTypeToSearch = dogType === "found" ? "lost" : "found";
+      const url = AppRoutes.dogs.results
+        .replace(":dogType", dogTypeToSearch)
+        .replace(":lastReportedId", lastReportedId);
+      navigate(url, { state: { type: dogTypeToSearch, base64Image } });
+    };
+
     const handleSubmitForm = async () => {
       // get server api
       const serverApi = await getServerApi();
       // Validate image upload
-      const isMissingImage = !selectedImageUrl;
-      setIsMissingImage(isMissingImage);
+      const noSelectedImage = !selectedImageUrl;
+      setIsMissingImage(noSelectedImage);
 
       // Validate all mandatory fields were filled
       const inputValidation = Object.values(inputs).map((input) =>
-        input.validateInput()
+        input.validateInput(),
       );
       const hasInvalidInputs = inputValidation.some((res) => !res);
-      const showError = hasInvalidInputs || isMissingImage;
+      const showError = hasInvalidInputs || noSelectedImage;
       setShowErrorMessage(showError);
       if (showError) return;
 
@@ -150,7 +161,9 @@ export const ReportDogPage = withAuthenticationRequired(
         contactPhone: inputs.contactPhone.value,
         contactEmail: inputs.contactEmail.value,
         location: inputs.location.value,
-        dogFoundOn: dateToString(inputs.date.dateInput!),
+        dogFoundOn: inputs.date.dateInput
+          ? dateToString(inputs.date.dateInput)
+          : null,
         breed: inputs.dogBreed.value,
         color: inputs.dogColor.value,
         size: inputs.dogSize.value,
@@ -158,34 +171,30 @@ export const ReportDogPage = withAuthenticationRequired(
           ? inputs.chipNumber.value
           : "לא ידוע",
         extraDetails: inputs.extraDetails.value,
-        sex: inputs.dogSex.value,
+        sex: inputs.dogSex.value.length ? inputs.dogSex.value : null,
         ageGroup: inputs.ageGroup.value,
         base64Images: [base64Image],
       };
 
       setIsLoading(true);
-      const response = await serverApi.report_dog(payload);
-      if (response.status !== 200) {
+      try {
+        const response = await serverApi.report_dog(payload);
+        const json = await response.json();
+        const lastReportedId = json.data.id;
+
+        setRequestStatus("success");
+        setIsLoading(false);
+        clearInputs();
+        encryptData("lastReportedDogId", lastReportedId);
+        setTimeout(() => {
+          // wait before navigating to results page in order to show the success/error toast
+          navigateToResultsPage({ base64Image, lastReportedId });
+        }, 2000);
+      } catch (error) {
         setRequestStatus("error");
         setIsLoading(false);
-        return;
+        console.error(error); // eslint-disable-line
       }
-
-      const json = await response.json();
-      const lastReportedId = json.data.id;
-
-      setRequestStatus("success");
-      setIsLoading(false);
-      clearInputs();
-      encryptData("lastReportedDogId", lastReportedId);
-      setTimeout(() => {
-        // wait before navigating to results page in order to show the success/error toast
-        const dogTypeToSearch = dogType === "found" ? "lost" : "found";
-        const url = AppRoutes.dogs.results
-          .replace(":dogType", dogTypeToSearch)
-          .replace(":lastReportedId", lastReportedId);
-        navigate(url, { state: { type: dogTypeToSearch, base64Image } });
-      }, 2000);
     };
 
     const successMessage =
@@ -314,7 +323,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 required
                 multiline
                 type="text"
-                margin={"normal"}
+                margin="normal"
                 value={inputs.contactName.value}
                 onChange={inputs.contactName.onTextChange}
                 error={!inputs.contactName.isTextValid}
@@ -326,7 +335,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 required
                 multiline
                 type="tel"
-                margin={"normal"}
+                margin="normal"
                 value={inputs.contactPhone.value}
                 onChange={inputs.contactPhone.onPhoneChange}
                 error={!inputs.contactPhone.isPhoneValid}
@@ -340,7 +349,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 required
                 multiline
                 type="text"
-                margin={"normal"}
+                margin="normal"
                 value={inputs.contactEmail.value}
                 onChange={inputs.contactEmail.onEmailChange}
                 error={!inputs.contactEmail.isEmailValid}
@@ -352,7 +361,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 fullWidth
                 multiline
                 type="text"
-                margin={"normal"}
+                margin="normal"
                 value={inputs.contactAddress.value}
                 onChange={inputs.contactAddress.onTextChange}
                 error={!inputs.contactAddress.isTextValid}
@@ -363,7 +372,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 fullWidth
                 multiline
                 type="text"
-                margin={"normal"}
+                margin="normal"
                 value={inputs.extraDetails.value}
                 onChange={inputs.extraDetails.onTextChange}
                 error={!inputs.extraDetails.isTextValid}
@@ -389,5 +398,5 @@ export const ReportDogPage = withAuthenticationRequired(
         </Box>
       </PageContainer>
     );
-  }
+  },
 );

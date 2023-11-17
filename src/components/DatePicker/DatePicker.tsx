@@ -25,17 +25,15 @@ const DatePicker = ({
 }: DatePickerProps) => {
   const basicInputStyles = useRTLTextFieldStyles();
 
-  const useDatePickerStyles = createStyleHook((theme) => {
-    return {
-      root: {
-        ...basicInputStyles.root,
-        margin: "1rem 0 0.5rem",
-        ".MuiIconButton-root": {
-          color: error ? theme.palette.error.dark : theme.palette.primary.main,
-        },
+  const useDatePickerStyles = createStyleHook((theme) => ({
+    root: {
+      ...basicInputStyles.root,
+      margin: "1rem 0 0.5rem",
+      ".MuiIconButton-root": {
+        color: error ? theme.palette.error.dark : theme.palette.primary.main,
       },
-    };
-  });
+    },
+  }));
 
   const styles = useDatePickerStyles();
 

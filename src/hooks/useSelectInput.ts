@@ -1,13 +1,19 @@
 import { useCallback, useState } from "react";
 
-// TODO: make this DRYER. @galzo don't kill me. we're at war
-export const useSelectInput = (props: { isMandatoryInput: boolean, possibleValues: Array<any> }) => {
+interface UseSelectInput {
+  isMandatoryInput: boolean;
+  possibleValues: Array<any>;
+}
+export const useSelectInput = ({
+  isMandatoryInput,
+  possibleValues,
+}: UseSelectInput) => {
   const [valueInput, setValueInput] = useState("");
   const [isInputValid, setIsInputValid] = useState(true);
 
   const clearInput = useCallback(() => {
     setValueInput("");
-  }, [])
+  }, []);
 
   const handleValueChange = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,21 +25,23 @@ export const useSelectInput = (props: { isMandatoryInput: boolean, possibleValue
       const newValue = event.target.value as string;
       setValueInput(newValue);
     },
-    []
+    [],
   );
 
   const validateInput = useCallback(() => {
-    const isValid = (!props.isMandatoryInput && !valueInput) || (Boolean(valueInput) && props.possibleValues.includes(valueInput));
+    const isValid =
+      (!isMandatoryInput && !valueInput) ||
+      (Boolean(valueInput) && possibleValues.includes(valueInput));
     setIsInputValid(isValid);
 
     return isValid;
-  }, [props.isMandatoryInput, valueInput]);
+  }, [isMandatoryInput, valueInput, possibleValues]);
 
   return {
     value: valueInput,
     onSelectChange: handleValueChange,
     isValueValid: isInputValid,
-    validateInput: validateInput,
-    clearInput: clearInput,
+    validateInput,
+    clearInput,
   };
 };

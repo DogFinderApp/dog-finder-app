@@ -11,59 +11,57 @@ import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
 import dogAnim from "../../assets/animations/dogAnim.json";
 
-const useHomePageStyles = createStyleHook((theme) => {
-  return {
-    root: {
-      display: "flex",
-      height: "100%",
-      alignItems: "center",
-      justifyContent: { xs: "center", sm: "flex-start" },
-      flexDirection: "column",
-    },
-    content: {
-      display: "flex",
-      flexDirection: { xs: "column", sm: "row" },
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 2,
-    },
-    noUser: {
-      // the svg container is taking a lot of space (twice the size of the actual svg),
-      // so we display this section with absolute position and overlap the container
-      position: "absolute",
-      top: { sm: "25rem", xs: "20rem" },
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 8,
-    },
-    pushRight: {
-      marginRight: 3,
-    },
-    pushLeft: {
-      marginLeft: 3,
-    },
-    button: {
-      width: 240,
-      height: 45,
-    },
-    typography: {
-      color: "white",
-      textAlign: "center",
-    },
-    footer: {
-      position: "absolute",
-      bottom: "2rem",
-      width: "90%",
-      direction: "rtl",
-      color: "white",
-      opacity: 0.7,
-      textAlign: "center",
-      fontSize: 14,
-      textWrap: "balance",
-    },
-  };
-});
+const useHomePageStyles = createStyleHook(() => ({
+  root: {
+    display: "flex",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: { xs: "center", sm: "flex-start" },
+    flexDirection: "column",
+  },
+  content: {
+    display: "flex",
+    flexDirection: { xs: "column", sm: "row" },
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 2,
+  },
+  noUser: {
+    // the svg container is taking a lot of space (twice the size of the actual svg),
+    // so we display this section with absolute position and overlap the container
+    position: "absolute",
+    top: { sm: "25rem", xs: "20rem" },
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 8,
+  },
+  pushRight: {
+    marginRight: 3,
+  },
+  pushLeft: {
+    marginLeft: 3,
+  },
+  button: {
+    width: 240,
+    height: 45,
+  },
+  typography: {
+    color: "white",
+    textAlign: "center",
+  },
+  footer: {
+    position: "absolute",
+    bottom: "2rem",
+    width: "90%",
+    direction: "rtl",
+    color: "white",
+    opacity: 0.7,
+    textAlign: "center",
+    fontSize: 14,
+    textWrap: "balance",
+  },
+}));
 
 export const HomePage = () => {
   const styles = useHomePageStyles();
@@ -83,9 +81,9 @@ export const HomePage = () => {
     <PageContainer>
       <Box sx={styles.root}>
         <Player
-          autoplay={true}
+          autoplay
           src={dogAnim}
-          loop={true}
+          loop
           style={{ width: innerWidth >= 800 ? "400px" : "300px" }}
         />
         {isLoading || isAuthenticated ? (

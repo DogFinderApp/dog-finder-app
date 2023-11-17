@@ -8,37 +8,35 @@ import { AppRoutes } from "../../../consts/routes";
 import { AppShadows } from "../../../consts/shadows";
 import { links } from "./links";
 
-const usePageToolbarStyles = createStyleHook((theme) => {
-  return {
-    root: {
-      width: "100%",
-      height: "70px",
-      backgroundColor: theme.palette.background.paper,
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      boxShadow: AppShadows.toolbarShadow,
-      position: "fixed",
-      zIndex: 20,
+const usePageToolbarStyles = createStyleHook((theme) => ({
+  root: {
+    width: "100%",
+    height: "70px",
+    backgroundColor: theme.palette.background.paper,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: AppShadows.toolbarShadow,
+    position: "fixed",
+    zIndex: 20,
+  },
+  menuButton: {
+    position: "absolute",
+    left: 20,
+    borderRadius: 0,
+    "&:hover, &.Mui-focusVisible": {
+      backgroundColor: theme.palette.primary.light,
     },
-    menuButton: {
-      position: "absolute",
-      left: 20,
-      borderRadius: 0,
-      "&:hover, &.Mui-focusVisible": {
-        backgroundColor: theme.palette.primary.light,
-      },
+  },
+  menuItem: {
+    backgroundColor: theme.palette.background.paper,
+    width: 135,
+    "&:hover, &.Mui-focusVisible": {
+      backgroundColor: theme.palette.primary.light,
     },
-    menuItem: {
-      backgroundColor: theme.palette.background.paper,
-      width: 135,
-      "&:hover, &.Mui-focusVisible": {
-        backgroundColor: theme.palette.primary.light,
-      },
-    },
-  };
-});
+  },
+}));
 
 export const PageToolbar = () => {
   const styles = usePageToolbarStyles();

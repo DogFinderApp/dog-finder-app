@@ -27,7 +27,7 @@ export interface ReportDogPayload {
   breed?: string;
   color?: string;
   size?: string;
-  sex?: string;
+  sex?: string | null;
   chipNumber: string;
   extraDetails?: string;
   ageGroup?: string;

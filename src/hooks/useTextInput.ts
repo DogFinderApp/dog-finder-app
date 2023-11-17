@@ -15,15 +15,16 @@ export const useTextInput = (props: { isMandatoryInput: boolean }) => {
       const newText = event.target.value as string;
       setTextInput(newText);
     },
-    []
+    [],
   );
 
   const clearInput = useCallback(() => {
     setTextInput("");
-  }, [])
+  }, []);
 
   const validateInput = useCallback(() => {
-    const isValid = !props.isMandatoryInput || (Boolean(textInput) && textInput.length > 0);
+    const isValid =
+      !props.isMandatoryInput || (Boolean(textInput) && textInput.length > 0);
     setIsInputValid(isValid);
 
     return isValid;
@@ -33,7 +34,7 @@ export const useTextInput = (props: { isMandatoryInput: boolean }) => {
     value: textInput,
     onTextChange: handleTextChange,
     isTextValid: isInputValid,
-    validateInput: validateInput,
-    clearInput: clearInput,
+    validateInput,
+    clearInput,
   };
 };

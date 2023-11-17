@@ -5,27 +5,25 @@ import { PageContainer } from "../../components/pageComponents/PageContainer/Pag
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { privacyPolicyText } from "./privacyPolicyText";
 
-const usePrivacyPolicyStyles = createStyleHook(() => {
-  return {
-    sectionsContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 4,
-      my: 4,
-    },
-    section: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 2,
-    },
-    typography: {
-      color: "white",
-      textAlign: "right",
-      direction: "rtl",
-      fontSize: { sm: 18, xs: 16 },
-    },
-  };
-});
+const usePrivacyPolicyStyles = createStyleHook(() => ({
+  sectionsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+    my: 4,
+  },
+  section: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+  },
+  typography: {
+    color: "white",
+    textAlign: "right",
+    direction: "rtl",
+    fontSize: { sm: 18, xs: 16 },
+  },
+}));
 
 export const PrivacyPolicy = () => {
   const { description, lastUpdate, tabTitle, pageTitle, sections } =

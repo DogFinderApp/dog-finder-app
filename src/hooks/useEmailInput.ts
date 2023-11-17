@@ -1,14 +1,14 @@
 import { useCallback, useState } from "react";
-import validator from 'validator';
+import validator from "validator";
 
 // TODO: make this DRYER. @galzo don't kill me. we're at war
 export const useEmailInput = (props: { isMandatoryInput: boolean }) => {
   const [emailInput, setEmailInput] = useState("");
   const [isInputValid, setIsInputValid] = useState(true);
-  
+
   const clearInput = useCallback(() => {
     setEmailInput("");
-  }, [])
+  }, []);
 
   const handleEmailChange = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,11 +20,13 @@ export const useEmailInput = (props: { isMandatoryInput: boolean }) => {
       const newEmail = event.target.value as string;
       setEmailInput(newEmail.trim());
     },
-    []
+    [],
   );
 
   const validateInput = useCallback(() => {
-    const isValid = (!props.isMandatoryInput && !emailInput) || (Boolean(emailInput) && validator.isEmail(emailInput));
+    const isValid =
+      (!props.isMandatoryInput && !emailInput) ||
+      (Boolean(emailInput) && validator.isEmail(emailInput));
     setIsInputValid(isValid);
 
     return isValid;
@@ -34,7 +36,7 @@ export const useEmailInput = (props: { isMandatoryInput: boolean }) => {
     value: emailInput,
     onEmailChange: handleEmailChange,
     isEmailValid: isInputValid,
-    validateInput: validateInput,
-    clearInput: clearInput
+    validateInput,
+    clearInput,
   };
 };
