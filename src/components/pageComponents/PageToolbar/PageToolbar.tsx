@@ -75,16 +75,16 @@ export const PageToolbar = () => {
     setIsMenuOpen(false);
   };
 
-  const checkUserRole = async () => {
-    const serverApi = await getServerApi();
-    setIsHamalUser(serverApi.isHamalUser());
-  };
-
   useEffect(() => {
+    const checkUserRole = async () => {
+      const serverApi = await getServerApi();
+      setIsHamalUser(serverApi.isHamalUser());
+    };
+
     if (isAuthenticated && isHamalUser === null) {
       checkUserRole();
     }
-  }, [isAuthenticated, isHamalUser, checkUserRole]);
+  }, [isAuthenticated, isHamalUser, getServerApi]);
 
   const linksToRender = isHamalUser ? [...links, ...hamalLinks] : links;
 
