@@ -67,9 +67,11 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
     <IconGenderFemale color="#ef11ff" />
   );
 
-  const genderText = isMaleGender
-    ? AppTexts.reportPage.dogSex.male
-    : AppTexts.reportPage.dogSex.female;
+  const genderText = dog.sex
+    ? isMaleGender
+      ? AppTexts.reportPage.dogSex.male
+      : AppTexts.reportPage.dogSex.female
+    : "לא ידוע";
 
   const reportType =
     dogType === "found"

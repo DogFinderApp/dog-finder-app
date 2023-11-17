@@ -171,7 +171,7 @@ export const ReportDogPage = withAuthenticationRequired(
           ? inputs.chipNumber.value
           : "לא ידוע",
         extraDetails: inputs.extraDetails.value,
-        sex: inputs.dogSex.value,
+        sex: inputs.dogSex.value.length ? inputs.dogSex.value : null,
         ageGroup: inputs.ageGroup.value,
         base64Images: [base64Image],
       };

@@ -327,28 +327,28 @@ export const DogDetailsPage = () => {
                 </Box>
               )}
               <Box sx={detailRowStyle}>
-                <span style={detailHeaderStyle}>מין: </span>
+                <span style={detailHeaderStyle}>סטטוס: </span>
                 <span style={detailContentStyle}>
-                  {DogGenderEnum[data.sex] || ""}
+                  {DogTypeTranslateEnum[data.type] ?? ""}
                 </span>
               </Box>
+                <Box sx={detailRowStyle}>
+                  <span style={detailHeaderStyle}>מין: </span>
+                  <span style={detailContentStyle}>
+                    {DogGenderEnum[data.sex] ?? "לא ידוע"}
+                  </span>
+                </Box>
               <Box sx={detailRowStyle}>
                 <span style={detailHeaderStyle}>איזור גיל: </span>
                 <span style={detailContentStyle}>
-                  {AppTexts.reportPage.dogAge[data.ageGroup] || ""}
-                </span>
-              </Box>
-              <Box sx={detailRowStyle}>
-                <span style={detailHeaderStyle}>סטטוס: </span>
-                <span style={detailContentStyle}>
-                  {DogTypeTranslateEnum[data.type] || ""}
+                  {AppTexts.reportPage.dogAge[data.ageGroup] ?? ""}
                 </span>
               </Box>
               <Box sx={detailRowStyle}>
                 <span style={detailHeaderStyle}>
                   {data.type === DogType.FOUND ? "נמצא באיזור:" : "אבד באיזור:"}
                 </span>
-                <span style={detailContentStyle}>{data.location || ""}</span>
+                <span style={detailContentStyle}>{data.location ?? ""}</span>
               </Box>
               <Box sx={detailRowStyle}>
                 <span style={detailHeaderStyle}>
@@ -362,22 +362,17 @@ export const DogDetailsPage = () => {
               {data.breed && (
                 <Box sx={detailRowStyle}>
                   <span style={detailHeaderStyle}>גזע: </span>
-                  <span style={detailContentStyle}>{data.breed || ""}</span>
+                  <span style={detailContentStyle}>{data.breed ?? ""}</span>
                 </Box>
               )}
               <Box sx={detailRowStyle}>
                 <span style={detailHeaderStyle}>צבע: </span>
-                <span style={detailContentStyle}>{data.color || ""}</span>
+                <span style={detailContentStyle}>{data.color ?? ""}</span>
               </Box>
-              <Box sx={detailRowStyle}>
-                <span style={detailHeaderStyle}>מספר שבב: </span>
-                <span style={detailContentStyle}>
-                  {data.chipNumber || "לא ידוע"}
-                </span>
-              </Box>
-              <Box
-                sx={{ display: { xs: "block", md: "none" }, height: "5vh" }}
-              />
+                <Box sx={detailRowStyle}>
+                  <span style={detailHeaderStyle}>מספר שבב: </span>
+                  <span style={detailContentStyle}>{data.chipNumber ?? "לא ידוע"}</span>
+                </Box>
             </Box>
           </Box>
         </Box>
