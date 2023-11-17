@@ -1,6 +1,18 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback } from "react";
+import { jwtDecode } from "jwt-decode";
 import { QueryPayload, ReportDogPayload } from "./payload.types";
+
+interface DecodedUserData {
+  iss: string;
+  sub: string;
+  aud: [string, string];
+  iat: number;
+  exp: number;
+  azp: string;
+  scope: string;
+  permissions: string[];
+}
 
 const API_URL = process.env.REACT_APP_API_URL || "";
 
@@ -76,6 +88,15 @@ class ServerApi {
     });
 
     return response;
+  }
+
+  getDecodedUserData(): DecodedUserData {
+    return jwtDecode(this.token) as DecodedUserData;
+  }
+
+  isHamalUser(): boolean {
+    const user = this.getDecodedUserData();
+    return user.permissions.includes("read:dogs");
   }
 
   async searchDog(payload: QueryPayload) {
