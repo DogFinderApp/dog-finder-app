@@ -102,7 +102,7 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
       <CardActions sx={{ ...styles.CardActions, pr: 2, pt: 2 }}>
         {cardInfo.map((sectionText, index) => (
           <Typography key={sectionText} sx={styles.Typography}>
-            {sectionText} {index === 1 && genderIcon}
+            {sectionText} {index === 1 && dog.sex && genderIcon}
           </Typography>
         ))}
       </CardActions>

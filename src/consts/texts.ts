@@ -128,6 +128,8 @@ export const AppTexts = {
     reportLost: "איבדתי כלב",
     searchFoundDog: "חיפוש כלב במאגר הנעדרים",
     privacyPolicy: "תנאי השימוש",
+    allFound: "כל הכלבים שנמצאו",
+    allLost: "כל הכלבים שנאבדו",
   },
   dogDetails: {
     title: "פרטי הכלב",
