@@ -1,13 +1,5 @@
-import {
-  Dispatch,
-  FC,
-  ReactNode,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
-import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
+import { FC, ReactNode, useEffect, useState } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import {
   Box,
   Button,
@@ -21,13 +13,15 @@ import { formatDateString } from "../../utils/datesFormatter";
 import { decryptData, encryptData } from "../../utils/encryptionUtils";
 import { DogType } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
-import usePageTitle from "../../hooks/usePageTitle";
-import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { AppTexts } from "../../consts/texts";
+import usePageTitle from "../../hooks/usePageTitle";
+import { useWindowSize } from "../../hooks/useWindowSize";
+import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
+import { LoadingSpinnerWithText } from "../../components/common/LoadingSpinnerWithText";
 import WhatsappIcon from "../../assets/svg/whatsapp.svg";
 
 const backdropStyles = {
-  width: "inherit",
+  width: "100%",
   height: "inherit",
   display: "flex",
   justifyContent: "center",
@@ -168,7 +162,6 @@ enum DogTypeTranslateEnum {
 const fetcher = async (
   payload: { dogId: number },
   getServerApi: Function,
-  setError: Dispatch<SetStateAction<string | null>>,
 ): Promise<DogDetailsReturnType | void> => {
   const serverApi = await getServerApi();
   try {
@@ -177,7 +170,6 @@ const fetcher = async (
     return json?.data?.results?.id ? json?.data?.results : null;
   } catch (error) {
     console.error(error); // eslint-disable-line
-    setError(JSON.stringify(error));
   }
 };
 
@@ -210,42 +202,25 @@ const reportPossibleMatch = async (
 
 export const DogDetailsPage = () => {
   usePageTitle(AppTexts.dogDetails.title);
-  const { state: payload } = useLocation();
   const getServerApi = useGetServerApi();
   const { dog_id, lastReportedId } = useParams(); // eslint-disable-line
   const navigate = useNavigate();
   const theme = useTheme();
-  const { isAuthenticated } = useAuth0();
+  const { innerWidth } = useWindowSize();
+  const isMobile = innerWidth < 600;
 
-  const [isHamalUser, setIsHamalUser] = useState<boolean | null>(null);
   const [data, setData] = useState<DogDetailsReturnType | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean | null>(null);
 
   useEffect(() => {
     const getDogData = async () => {
       setIsLoading(true);
-      const data = await fetcher(
-        { dogId: Number(dog_id) },
-        getServerApi,
-        setError,
-      );
+      const data = await fetcher({ dogId: Number(dog_id) }, getServerApi);
       if (data) setData(data);
       setIsLoading(false);
     };
     getDogData();
   }, []);
-
-  useEffect(() => {
-    const checkUserRole = async () => {
-      const serverApi = await getServerApi();
-      setIsHamalUser(serverApi.isHamalUser());
-    };
-
-    if (isAuthenticated && isHamalUser === null) {
-      checkUserRole();
-    }
-  }, [isAuthenticated, isHamalUser, getServerApi]);
 
   const image = data?.images
     ? `data:${data?.images[0].imageContentType};base64, ${data?.images[0].base64Image}`
@@ -258,6 +233,12 @@ export const DogDetailsPage = () => {
           : data?.contactPhone
       }`.replace(/-/g, "")
     : "";
+
+  const handleCTAButton = (data: DogDetailsReturnType) =>
+    reportPossibleMatch(
+      { lastReportedId, possibleMatchId: data.id },
+      getServerApi,
+    );
 
   const getWhatsappMessage = (status: "lost" | "found") => {
     const memorizedDogId: string | null = decryptData("lastReportedDogId");
@@ -285,30 +266,22 @@ export const DogDetailsPage = () => {
   const whatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
     data?.type ?? "found",
   )}`;
-  const googleFormsLink = "https://forms.gle/tgTNG5UJUUGi1ViZ7";
 
-  const { hamalButton, normalUserButton } = AppTexts.dogDetails;
-  const ctaButtonText = isHamalUser ? hamalButton : normalUserButton;
-  const ctaButtonLink = isHamalUser ? googleFormsLink : whatsappLink;
+  const unknownText: string = AppTexts.dogDetails.unknown;
 
   if (isLoading) {
     return (
-      <BackdropComp>
-        <span>{AppTexts.dogDetails.loading}</span>
-      </BackdropComp>
-    );
-  }
-  if (error) {
-    return (
-      <BackdropComp>
-        <span>{error.toString()}</span>
-      </BackdropComp>
+      <LoadingSpinnerWithText
+        title={AppTexts.dogDetails.loading}
+        fontSize={isMobile ? 26 : 48}
+        marginTop={10}
+      />
     );
   }
   if (!data) {
     return (
       <BackdropComp>
-        <span>לא קיים מידע</span>
+        <span>{AppTexts.dogDetails.error}</span>
       </BackdropComp>
     );
   }
@@ -334,24 +307,19 @@ export const DogDetailsPage = () => {
               <IconArrowLeft {...commonIconProps} />
               {AppTexts.dogDetails.backButton}
             </Button>
-            <Link to={ctaButtonLink} target="_blank" rel="noopener noreferrer">
+            <Link to={whatsappLink} target="_blank" rel="noopener noreferrer">
               <Button
                 size="large"
                 variant="contained"
                 sx={contactBtnStyle(theme)}
-                onClick={() =>
-                  reportPossibleMatch(
-                    { lastReportedId, possibleMatchId: data.id },
-                    getServerApi,
-                  )
-                }
+                onClick={() => handleCTAButton(data)}
               >
                 <img
                   src={WhatsappIcon}
                   alt="Chat on Whatsapp"
                   style={{ marginRight: "4px" }}
                 />
-                {ctaButtonText}
+                {AppTexts.dogDetails.whatsappButton}
               </Button>
             </Link>
           </Box>
@@ -381,11 +349,13 @@ export const DogDetailsPage = () => {
               <Box sx={detailRowStyle}>
                 <span style={boldText}>מין: </span>
                 <span style={thinText}>
-                  {DogGenderEnum[data.sex] ?? "לא ידוע"}
+                  {DogGenderEnum[data.sex] ?? unknownText}
                 </span>
               </Box>
               <Box sx={detailRowStyle}>
-                <span style={boldText}>איזור גיל: </span>
+                <span style={boldText}>
+                  {AppTexts.reportPage.dogDetails.dogAge}:
+                </span>
                 <span style={thinText}>
                   {AppTexts.reportPage.dogAge[data.ageGroup] ?? ""}
                 </span>
@@ -417,7 +387,7 @@ export const DogDetailsPage = () => {
               </Box>
               <Box sx={detailRowStyle}>
                 <span style={boldText}>מספר שבב: </span>
-                <span style={thinText}>{data.chipNumber ?? "לא ידוע"}</span>
+                <span style={thinText}>{data.chipNumber ?? unknownText}</span>
               </Box>
             </Box>
           </Box>

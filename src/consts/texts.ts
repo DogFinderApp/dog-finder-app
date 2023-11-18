@@ -133,11 +133,11 @@ export const AppTexts = {
   },
   dogDetails: {
     title: "פרטי הכלב",
-    normalUserButton: "שלח הודעת וואטסאפ",
-    hamalButton: "מלא טופס",
+    whatsappButton: "שליחת הודעת וואטסאפ",
     backButton: "חזרה אחורה",
-    markAsReturndButton: "סמן כהושב לבעליו",
-    loading: "...דף בטעינה",
+    loading: "טוען את פרטי הכלב",
+    error: "לא קיים מידע",
+    unknown: "לא ידוע",
     whatsappLinks: {
       lost: "היי, הגעתי אליך דרך פלטפורמת Dog Finder. ייתכן והכלב/ה שלי נמצא אצלך?",
       lost2: "זה הדיווח של הכלב שאיבדתי:",

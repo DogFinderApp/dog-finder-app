@@ -3,10 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import {
   Box,
-  CircularProgress,
   Pagination,
   SelectChangeEvent,
-  Typography,
 } from "@mui/material";
 import useSWR from "swr";
 import usePageTitle from "../../hooks/usePageTitle";
@@ -19,6 +17,7 @@ import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
+import { LoadingSpinnerWithText } from "../../components/common/LoadingSpinnerWithText";
 
 const usePageStyles = createStyleHook(() => ({
   pageWrapper: {
@@ -31,18 +30,6 @@ const usePageStyles = createStyleHook(() => ({
     alignItems: "center",
     px: { sm: 4 },
     mt: 10,
-  },
-  loadingContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 2,
-    textWrap: "balance",
-  },
-  loadingText: {
-    color: "white",
-    textAlign: "center",
-    fontSize: 26,
   },
   responseContainer: {
     display: "flex",
@@ -189,12 +176,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     <Box sx={styles.pageWrapper}>
       <PageTitle text={AppTexts.allReportsPage.title} />
       {isLoading && (
-        <Box sx={styles.loadingContainer}>
-          <Typography sx={styles.loadingText}>
-            {AppTexts.allReportsPage.loading}
-          </Typography>
-          <CircularProgress size={60} sx={{ my: 2 }} />
-        </Box>
+        <LoadingSpinnerWithText title={AppTexts.allReportsPage.loading}/>
       )}
       {!isLoading && error && !unauthorizedError && (
         <ErrorLoadingDogs refresh={mutate} />
