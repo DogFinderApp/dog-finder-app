@@ -1,6 +1,7 @@
 import { Box, Divider, Typography } from "@mui/material";
 import { CrewMemberType } from "./crewMembers";
 import { createStyleHook } from "../../hooks/styleHooks";
+import { useProgressiveImg } from "../../hooks/useProgressiveImg";
 import LinkedinSVG from "../../assets/svg/linkedin.svg";
 import GithubSVG from "../../assets/svg/github.svg";
 
@@ -36,19 +37,21 @@ interface CrewMemberProps {
 }
 export const CrewMember = ({ member }: CrewMemberProps) => {
   const styles = useCrewMemberStyles();
-  const { name, image, role, links } = member;
+  const { name, image, imageLowQuality, role, links } = member;
+  const { src, blur } = useProgressiveImg(image, imageLowQuality);
 
   const imageStyles = {
     width: "170px",
     height: "170px",
     borderRadius: "100%",
     boxShadow: "0 0 15px 8px rgba(255,255,255,0.1)",
+    filter: blur ? "blur(10px)" : "none",
   };
 
   return (
     <Box sx={styles.container}>
       <img
-        src={image}
+        src={src}
         alt={name}
         style={{ ...imageStyles, objectFit: "cover" }}
       />
