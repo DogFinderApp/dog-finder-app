@@ -73,6 +73,7 @@ export const PageToolbar = () => {
   const handleCloseMenu = () => {
     setAnchorEl(null);
     setIsMenuOpen(false);
+    window.scroll({ top: 0 });
   };
 
   useEffect(() => {

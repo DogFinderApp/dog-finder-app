@@ -1,5 +1,7 @@
-import AnonymousSVG from "../../assets/crewMembers/anonymous.jpeg";
-import AnonymousSVGLow from "../../assets/crewMembers/reduced/anonymous.jpeg";
+import AnonymousMaleSVG from "../../assets/crewMembers/AnonymousMale.jpg";
+import AnonymousMaleSVGLow from "../../assets/crewMembers/reduced/AnonymousMale.jpg";
+import AnonymousFemaleSVG from "../../assets/crewMembers/AnonymousFemale.jpg";
+import AnonymousFemaleSVGLow from "../../assets/crewMembers/reduced/AnonymousFemale.jpg";
 import EdenGotlib from "../../assets/crewMembers/Eden_Gotlib.jpg";
 import EdenGotlibLow from "../../assets/crewMembers/reduced/Eden_Gotlib.jpg";
 import MaryDaniel from "../../assets/crewMembers/Mary_Daniel.jpg";
@@ -26,21 +28,21 @@ export const crewMembers: CrewMemberType[] = [
     name: "ניר דיאמנט",
     image: NirDiamant,
     imageLowQuality: NirDiamantLow,
-    role: "Founder And Project Manager, AI Team Leader",
+    role: "Founder, CEO And Head Of AI",
     links: ["https://www.linkedin.com/in/nir-diamant-759323134/"],
   },
   {
     name: "יניב דוד",
     image: YanivDavid,
     imageLowQuality: YanivDavidLow,
-    role: "Backend Leader",
+    role: "AI And Backend Leader",
     links: ["https://www.linkedin.com/in/yanivdavid"],
   },
   {
     name: "צליל שני",
     image: TzlilShani,
     imageLowQuality: TzlilShaniLow,
-    role: "Backend Developer",
+    role: "Full Stack Developer",
     links: ["https://www.linkedin.com/in/tslil-shani-2b9695188"],
   },
   {
@@ -55,9 +57,15 @@ export const crewMembers: CrewMemberType[] = [
   },
   {
     name: "אסף בלומנטל",
-    image: "",
-    imageLowQuality: "",
+    image: AnonymousMaleSVG,
+    imageLowQuality: AnonymousMaleSVGLow,
     role: "Full Stack Developer",
+  },
+  {
+    name: "גל זוהר",
+    image: AnonymousMaleSVG,
+    imageLowQuality: AnonymousMaleSVGLow,
+    role: "Front End Developer",
   },
   {
     name: "עדן גוטליב",
@@ -66,15 +74,27 @@ export const crewMembers: CrewMemberType[] = [
     role: "Full Stack Developer",
   },
   {
-    name: "גלעד גורביץ'",
-    image: AnonymousSVG,
-    imageLowQuality: AnonymousSVGLow,
+    name: "ליאור הבר",
+    image: AnonymousMaleSVG,
+    imageLowQuality: AnonymousMaleSVGLow,
+    role: "Front End Developer",
+  },
+  {
+    name: "טל רייזפלד",
+    image: AnonymousFemaleSVG,
+    imageLowQuality: AnonymousFemaleSVGLow,
+    role: "Algorithms Engineer",
+  },
+  {
+    name: "גלעד גורביץ",
+    image: AnonymousMaleSVG,
+    imageLowQuality: AnonymousMaleSVGLow,
     role: "Devops Engineer",
   },
   {
     name: "זיו גוסטינסקי",
-    image: AnonymousSVG,
-    imageLowQuality: AnonymousSVGLow,
+    image: AnonymousMaleSVG,
+    imageLowQuality: AnonymousMaleSVGLow,
     role: "Data Analyst",
     links: ["https://www.linkedin.com/in/ziv-gostinski"],
   },
@@ -89,8 +109,8 @@ export const crewMembers: CrewMemberType[] = [
   },
   {
     name: "גל שוורץ",
-    image: "",
-    imageLowQuality: "",
+    image: AnonymousFemaleSVG,
+    imageLowQuality: AnonymousFemaleSVGLow,
     role: "QA Engineer",
   },
 ];

@@ -5,7 +5,7 @@ import { useProgressiveImg } from "../../hooks/useProgressiveImg";
 import LinkedinSVG from "../../assets/svg/linkedin.svg";
 import GithubSVG from "../../assets/svg/github.svg";
 
-const useCrewMemberStyles = createStyleHook((theme) => ({
+const useCrewMemberStyles = createStyleHook(() => ({
   container: {
     display: "flex",
     flexDirection: "column",
@@ -65,12 +65,7 @@ export const CrewMember = ({ member }: CrewMemberProps) => {
         >
           {name}
         </Typography>
-        <Typography
-          sx={{
-            ...styles.typography,
-            fontSize: 16,
-          }}
-        >
+        <Typography sx={{ ...styles.typography, fontSize: 16 }}>
           {role}
         </Typography>
         {links && (

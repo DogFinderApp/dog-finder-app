@@ -162,6 +162,7 @@ enum DogTypeTranslateEnum {
 const fetcher = async (
   payload: { dogId: number },
   getServerApi: Function,
+  // eslint-disable-next-line
 ): Promise<DogDetailsReturnType | void> => {
   const serverApi = await getServerApi();
   try {
@@ -182,7 +183,7 @@ const reportPossibleMatch = async (
   const memorizedDogId: string | null = decryptData("lastReportedDogId");
   // eslint-disable-next-line
   if (!lastReportedId && !memorizedDogId)
-    return console.error("No memorized dog id in both URL and localStorage");
+    return console.error("No memorized dog id in both URL and localStorage"); // eslint-disable-line
 
   if (
     lastReportedId &&
@@ -201,7 +202,9 @@ const reportPossibleMatch = async (
 };
 
 export const DogDetailsPage = () => {
-  usePageTitle(AppTexts.dogDetails.title);
+  const { title, whatsappButton, backButton, loading, error, unknown } =
+    AppTexts.dogDetails;
+  usePageTitle(title);
   const getServerApi = useGetServerApi();
   const { dog_id, lastReportedId } = useParams(); // eslint-disable-line
   const navigate = useNavigate();
@@ -215,12 +218,12 @@ export const DogDetailsPage = () => {
   useEffect(() => {
     const getDogData = async () => {
       setIsLoading(true);
-      const data = await fetcher({ dogId: Number(dog_id) }, getServerApi);
-      if (data) setData(data);
+      const response = await fetcher({ dogId: Number(dog_id) }, getServerApi);
+      if (response) setData(data);
       setIsLoading(false);
     };
     getDogData();
-  }, []);
+  }, []); // eslint-disable-line
 
   const image = data?.images
     ? `data:${data?.images[0].imageContentType};base64, ${data?.images[0].base64Image}`
@@ -234,11 +237,8 @@ export const DogDetailsPage = () => {
       }`.replace(/-/g, "")
     : "";
 
-  const handleCTAButton = (data: DogDetailsReturnType) =>
-    reportPossibleMatch(
-      { lastReportedId, possibleMatchId: data.id },
-      getServerApi,
-    );
+  const handleCTAButton = (possibleMatchId: number) =>
+    reportPossibleMatch({ lastReportedId, possibleMatchId }, getServerApi);
 
   const getWhatsappMessage = (status: "lost" | "found") => {
     const memorizedDogId: string | null = decryptData("lastReportedDogId");
@@ -267,12 +267,10 @@ export const DogDetailsPage = () => {
     data?.type ?? "found",
   )}`;
 
-  const unknownText: string = AppTexts.dogDetails.unknown;
-
   if (isLoading) {
     return (
       <LoadingSpinnerWithText
-        title={AppTexts.dogDetails.loading}
+        title={loading}
         fontSize={isMobile ? 26 : 48}
         marginTop={10}
       />
@@ -281,7 +279,7 @@ export const DogDetailsPage = () => {
   if (!data) {
     return (
       <BackdropComp>
-        <span>{AppTexts.dogDetails.error}</span>
+        <span>{error}</span>
       </BackdropComp>
     );
   }
@@ -294,7 +292,7 @@ export const DogDetailsPage = () => {
               sx={{ fontSize: { xs: "2rem", md: "3rem" } }}
               color={theme.palette.text.primary}
             >
-              {AppTexts.dogDetails.title}
+              {title}
             </Typography>
           </Box>
           <Box sx={actionBtnWrapper}>
@@ -305,21 +303,21 @@ export const DogDetailsPage = () => {
               onClick={() => navigate(-1)}
             >
               <IconArrowLeft {...commonIconProps} />
-              {AppTexts.dogDetails.backButton}
+              {backButton}
             </Button>
             <Link to={whatsappLink} target="_blank" rel="noopener noreferrer">
               <Button
                 size="large"
                 variant="contained"
                 sx={contactBtnStyle(theme)}
-                onClick={() => handleCTAButton(data)}
+                onClick={() => handleCTAButton(data.id)}
               >
                 <img
                   src={WhatsappIcon}
                   alt="Chat on Whatsapp"
                   style={{ marginRight: "4px" }}
                 />
-                {AppTexts.dogDetails.whatsappButton}
+                {whatsappButton}
               </Button>
             </Link>
           </Box>
@@ -349,7 +347,7 @@ export const DogDetailsPage = () => {
               <Box sx={detailRowStyle}>
                 <span style={boldText}>מין: </span>
                 <span style={thinText}>
-                  {DogGenderEnum[data.sex] ?? unknownText}
+                  {DogGenderEnum[data.sex] ?? unknown}
                 </span>
               </Box>
               <Box sx={detailRowStyle}>
@@ -387,7 +385,7 @@ export const DogDetailsPage = () => {
               </Box>
               <Box sx={detailRowStyle}>
                 <span style={boldText}>מספר שבב: </span>
-                <span style={thinText}>{data.chipNumber ?? unknownText}</span>
+                <span style={thinText}>{data.chipNumber ?? unknown}</span>
               </Box>
             </Box>
           </Box>

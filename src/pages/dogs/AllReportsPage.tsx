@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import {
-  Box,
-  Pagination,
-  SelectChangeEvent,
-} from "@mui/material";
+import { Box, Pagination, SelectChangeEvent } from "@mui/material";
 import useSWR from "swr";
 import usePageTitle from "../../hooks/usePageTitle";
 import usePagination from "../../hooks/usePagination";
@@ -176,7 +172,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     <Box sx={styles.pageWrapper}>
       <PageTitle text={AppTexts.allReportsPage.title} />
       {isLoading && (
-        <LoadingSpinnerWithText title={AppTexts.allReportsPage.loading}/>
+        <LoadingSpinnerWithText title={AppTexts.allReportsPage.loading} />
       )}
       {!isLoading && error && !unauthorizedError && (
         <ErrorLoadingDogs refresh={mutate} />
