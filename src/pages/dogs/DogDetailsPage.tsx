@@ -11,6 +11,7 @@ import {
 import { TablerIconsProps, IconArrowLeft } from "@tabler/icons-react";
 import { formatDateString } from "../../utils/datesFormatter";
 import { decryptData, encryptData } from "../../utils/encryptionUtils";
+import { useHamalContext } from "../../context/useHamalContext";
 import { DogType } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { AppTexts } from "../../consts/texts";
@@ -136,7 +137,7 @@ interface DogDetailsReturnType {
   sex: "male" | "female";
   ageGroup: "puppy" | "adult" | "senior";
   extraDetails: string;
-  chipNumber: number;
+  chipNumber?: number; // returns only for Hamal users
   location: string;
   dogFoundOn: string;
   contactPhone: string;
@@ -160,13 +161,13 @@ enum DogTypeTranslateEnum {
 }
 
 const fetcher = async (
-  payload: { dogId: number },
+  payload: { dogId: number; isHamalUser: boolean },
   getServerApi: Function,
   // eslint-disable-next-line
 ): Promise<DogDetailsReturnType | void> => {
   const serverApi = await getServerApi();
   try {
-    const response = await serverApi.getDogDetails(payload.dogId);
+    const response = await serverApi.getDogDetails(payload);
     const json = await response.json();
     return json?.data?.results?.id ? json?.data?.results : null;
   } catch (error) {
@@ -211,6 +212,9 @@ export const DogDetailsPage = () => {
   const theme = useTheme();
   const { innerWidth } = useWindowSize();
   const isMobile = innerWidth < 600;
+  const {
+    state: { isHamalUser },
+  } = useHamalContext();
 
   const [data, setData] = useState<DogDetailsReturnType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean | null>(null);
@@ -218,8 +222,11 @@ export const DogDetailsPage = () => {
   useEffect(() => {
     const getDogData = async () => {
       setIsLoading(true);
-      const response = await fetcher({ dogId: Number(dog_id) }, getServerApi);
-      if (response) setData(data);
+      const response = await fetcher(
+        { dogId: Number(dog_id), isHamalUser: !!isHamalUser },
+        getServerApi,
+      );
+      if (response) setData(response);
       setIsLoading(false);
     };
     getDogData();
@@ -276,7 +283,7 @@ export const DogDetailsPage = () => {
       />
     );
   }
-  if (!data) {
+  if (!data && !isLoading) {
     return (
       <BackdropComp>
         <span>{error}</span>
@@ -310,7 +317,7 @@ export const DogDetailsPage = () => {
                 size="large"
                 variant="contained"
                 sx={contactBtnStyle(theme)}
-                onClick={() => handleCTAButton(data.id)}
+                onClick={() => data?.id && handleCTAButton(data.id)}
               >
                 <img
                   src={WhatsappIcon}
@@ -332,61 +339,69 @@ export const DogDetailsPage = () => {
           />
           <Box component="div" sx={detailsStyle}>
             <Box sx={detailsListStyle}>
-              {data.extraDetails && (
+              {data?.extraDetails && (
                 <Box sx={advancedDetailsRowStyle}>
                   <span style={boldText}>פרטים נוספים: </span>
-                  <span style={thinText}>{data.extraDetails || ""}</span>
+                  <span style={thinText}>{data?.extraDetails || ""}</span>
                 </Box>
               )}
               <Box sx={detailRowStyle}>
                 <span style={boldText}>סטטוס: </span>
                 <span style={thinText}>
-                  {DogTypeTranslateEnum[data.type] ?? ""}
+                  {data?.type ? DogTypeTranslateEnum[data.type] : ""}
                 </span>
               </Box>
               <Box sx={detailRowStyle}>
                 <span style={boldText}>מין: </span>
                 <span style={thinText}>
-                  {DogGenderEnum[data.sex] ?? unknown}
+                  {data?.sex ? DogGenderEnum[data.sex] : unknown}
                 </span>
               </Box>
+              {data?.ageGroup && (
+                <Box sx={detailRowStyle}>
+                  <span style={boldText}>
+                    {AppTexts.reportPage.dogDetails.dogAge}:
+                  </span>
+                  <span style={thinText}>
+                    {AppTexts.reportPage.dogAge[data.ageGroup] ?? ""}
+                  </span>
+                </Box>
+              )}
               <Box sx={detailRowStyle}>
                 <span style={boldText}>
-                  {AppTexts.reportPage.dogDetails.dogAge}:
+                  {data?.type === DogType.FOUND
+                    ? "נמצא באיזור:"
+                    : "אבד באיזור:"}
                 </span>
-                <span style={thinText}>
-                  {AppTexts.reportPage.dogAge[data.ageGroup] ?? ""}
-                </span>
-              </Box>
-              <Box sx={detailRowStyle}>
-                <span style={boldText}>
-                  {data.type === DogType.FOUND ? "נמצא באיזור:" : "אבד באיזור:"}
-                </span>
-                <span style={thinText}>{data.location ?? ""}</span>
+                <span style={thinText}>{data?.location ?? ""}</span>
               </Box>
               <Box sx={detailRowStyle}>
                 <span style={boldText}>
                   {" "}
-                  {data.type === DogType.FOUND ? "נמצא בתאריך:" : "אבד בתאריך:"}
+                  {data?.type === DogType.FOUND
+                    ? "נמצא בתאריך:"
+                    : "אבד בתאריך:"}
                 </span>
                 <span style={thinText}>
                   {formatDateString(data?.dogFoundOn ?? "")}
                 </span>
               </Box>
-              {data.breed && (
+              {data?.breed && (
                 <Box sx={detailRowStyle}>
                   <span style={boldText}>גזע: </span>
-                  <span style={thinText}>{data.breed ?? ""}</span>
+                  <span style={thinText}>{data?.breed ?? ""}</span>
                 </Box>
               )}
               <Box sx={detailRowStyle}>
                 <span style={boldText}>צבע: </span>
-                <span style={thinText}>{data.color ?? ""}</span>
+                <span style={thinText}>{data?.color ?? ""}</span>
               </Box>
-              <Box sx={detailRowStyle}>
-                <span style={boldText}>מספר שבב: </span>
-                <span style={thinText}>{data.chipNumber ?? unknown}</span>
-              </Box>
+              {data?.chipNumber && isHamalUser && (
+                <Box sx={detailRowStyle}>
+                  <span style={boldText}>מספר שבב: </span>
+                  <span style={thinText}>{data.chipNumber}</span>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>

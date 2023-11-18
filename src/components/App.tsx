@@ -1,6 +1,7 @@
 import { Box, ThemeProvider } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createStyleHook } from "../hooks/styleHooks";
+import { HamalContextProvider } from "../context/HamalContext";
 import { theme } from "../theme/theme";
 import { routesWithElements } from "../consts/RoutesWithElements";
 import { PageToolbar } from "./pageComponents/PageToolbar/PageToolbar";
@@ -18,21 +19,23 @@ export const App = () => {
   const styles = useAppStyles();
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={styles.root}>
-        <BrowserRouter>
-          <PageToolbar />
-          <Routes>
-            {routesWithElements.map((route) => (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={<route.element {...route.props} />}
-              />
-            ))}
-          </Routes>
-        </BrowserRouter>
-      </Box>
-    </ThemeProvider>
+    <HamalContextProvider>
+      <ThemeProvider theme={theme}>
+        <Box sx={styles.root}>
+          <BrowserRouter>
+            <PageToolbar />
+            <Routes>
+              {routesWithElements.map((route) => (
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={<route.element {...route.props} />}
+                />
+              ))}
+            </Routes>
+          </BrowserRouter>
+        </Box>
+      </ThemeProvider>
+    </HamalContextProvider>
   );
 };

@@ -2,6 +2,10 @@ import AnonymousMaleSVG from "../../assets/crewMembers/AnonymousMale.jpg";
 import AnonymousMaleSVGLow from "../../assets/crewMembers/reduced/AnonymousMale.jpg";
 import AnonymousFemaleSVG from "../../assets/crewMembers/AnonymousFemale.jpg";
 import AnonymousFemaleSVGLow from "../../assets/crewMembers/reduced/AnonymousFemale.jpg";
+import Gal_Schwarts from "../../assets/crewMembers/Gal_Schwarts.jpg";
+import Gal_SchwartsLow from "../../assets/crewMembers/reduced/Gal_Schwarts.jpg";
+import Gal_Zohar from "../../assets/crewMembers/Gal_Zohar.jpg";
+import Gal_ZoharLow from "../../assets/crewMembers/reduced/Gal_Zohar.jpg";
 import EdenGotlib from "../../assets/crewMembers/Eden_Gotlib.jpg";
 import EdenGotlibLow from "../../assets/crewMembers/reduced/Eden_Gotlib.jpg";
 import MaryDaniel from "../../assets/crewMembers/Mary_Daniel.jpg";
@@ -63,9 +67,10 @@ export const crewMembers: CrewMemberType[] = [
   },
   {
     name: "גל זוהר",
-    image: AnonymousMaleSVG,
-    imageLowQuality: AnonymousMaleSVGLow,
+    image: Gal_Zohar,
+    imageLowQuality: Gal_ZoharLow,
     role: "Front End Developer",
+    links: ["https://www.linkedin.com/in/galzo", "https://github.com/galzo"],
   },
   {
     name: "עדן גוטליב",
@@ -109,8 +114,8 @@ export const crewMembers: CrewMemberType[] = [
   },
   {
     name: "גל שוורץ",
-    image: AnonymousFemaleSVG,
-    imageLowQuality: AnonymousFemaleSVGLow,
+    image: Gal_Schwarts,
+    imageLowQuality: Gal_SchwartsLow,
     role: "QA Engineer",
     links: ["http://linkedin.com/in/galrtz"],
   },
