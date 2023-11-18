@@ -141,8 +141,17 @@ class ServerApi {
     });
   }
 
-  async getDogDetails(dogId: number) {
-    const url = buildEndpoint(`get_dog_by_id?dogId=${dogId}`);
+  async getDogDetails({
+    dogId,
+    isHamalUser,
+  }: {
+    dogId: number;
+    isHamalUser: boolean;
+  }) {
+    const urlByUserRole = isHamalUser
+      ? "get_dog_by_id_full_details"
+      : "get_dog_by_id";
+    const url = buildEndpoint(`${urlByUserRole}?dogId=${dogId}`);
     return this.fetch(url);
   }
 

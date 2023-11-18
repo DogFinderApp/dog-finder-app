@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { IconGridDots, IconPaw } from "@tabler/icons-react";
 import { createStyleHook } from "../../../hooks/styleHooks";
+import { useHamalContext } from "../../../context/useHamalContext";
 import { useGetServerApi } from "../../../facades/ServerApi";
 import UserComponent from "../UserComponent/UserComponent";
 import { AppRoutes } from "../../../consts/routes";
@@ -60,10 +61,13 @@ export const PageToolbar = () => {
   const theme = useTheme();
   const getServerApi = useGetServerApi();
   const { isAuthenticated } = useAuth0();
+  const {
+    dispatch,
+    state: { isHamalUser },
+  } = useHamalContext();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [isHamalUser, setIsHamalUser] = useState<boolean | null>(null);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -79,13 +83,13 @@ export const PageToolbar = () => {
   useEffect(() => {
     const checkUserRole = async () => {
       const serverApi = await getServerApi();
-      setIsHamalUser(serverApi.isHamalUser());
+      dispatch({ type: "SET_IS_HAMAL_USER", payload: serverApi.isHamalUser() });
     };
 
-    if (isAuthenticated && isHamalUser === null) {
+    if (isAuthenticated) {
       checkUserRole();
     }
-  }, [isAuthenticated, isHamalUser, getServerApi]);
+  }, [isAuthenticated, getServerApi, dispatch]);
 
   const linksToRender = isHamalUser ? [...links, ...hamalLinks] : links;
 
