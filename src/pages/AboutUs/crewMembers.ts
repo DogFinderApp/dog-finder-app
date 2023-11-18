@@ -112,5 +112,6 @@ export const crewMembers: CrewMemberType[] = [
     image: AnonymousFemaleSVG,
     imageLowQuality: AnonymousFemaleSVGLow,
     role: "QA Engineer",
+    links: ["http://linkedin.com/in/galrtz"],
   },
 ];
