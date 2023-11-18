@@ -20,7 +20,7 @@ interface DogCardProps {
 
 export const DogCard = ({ dog, dogType }: DogCardProps) => {
   const useCardStyles = createStyleHook(() => ({
-    CardMedia: { height: 400, objectFit: "fill" },
+    CardMedia: { height: 400, objectFit: "contain" },
     CardActions: {
       display: "flex",
       flexDirection: "column",

@@ -133,14 +133,19 @@ export const AppTexts = {
   },
   dogDetails: {
     title: "פרטי הכלב",
-    hamalButton: "שלח הודעת וואטסאפ",
+    whatsappButton: "שליחת הודעת וואטסאפ",
     backButton: "חזרה אחורה",
-    markAsReturndButton: "סמן כהושב לבעליו",
-    loading: "...דף בטעינה",
+    loading: "טוען את פרטי הכלב",
+    error: "לא קיים מידע",
+    unknown: "לא ידוע",
     whatsappLinks: {
-      lost: "היי, זה {השם שלך} והגעתי אליך דרך פלטפורמת Dog Finder. ייתכן והכלב/ה שלי נמצא אצלך?",
+      lost: "היי, הגעתי אליך דרך פלטפורמת Dog Finder. ייתכן והכלב/ה שלי נמצא אצלך?",
+      lost2: "זה הדיווח של הכלב שאיבדתי:",
+      lost3: "וזה הדיווח של הכלב שמצאת שאולי יכול להתאים:",
       found:
-        "היי, זה {השם שלך} והגעתי אליך דרך פלטפורמת Dog Finder. מצאתי כלב/ה שדומה לשלך, שנבדוק?",
+        "היי, הגעתי אליך דרך פלטפורמת Dog Finder. מצאתי כלב/ה שדומה לשלך, שנבדוק? :)",
+      found2: "זה הדיווח של הכלב שאיבדת:",
+      found3: "וזה הדיווח של הכלב שמצאתי שאולי יכול להתאים:",
     },
   },
   dogCard: {
@@ -149,5 +154,22 @@ export const AppTexts = {
     sexText: "מין",
     foundDate: "נמצא בתאריך",
     lostDate: "אבד בתאריך",
+  },
+  aboutPage: {
+    texts: {
+      text1:
+        "החל מ-7 באוקטובר 2023, עשרות כלבים וחתולי בית ברחבי הארץ, בעיקר באזור הדרום והצפון, אזורים שתושביהם נאלצו לנטוש בחיפזון עקב המצב הביטחוני, אבדו או ננטשו בבהלה שנוצרה מאזעקות.",
+      text2:
+        'בעקבות המצב, התגייסו אזרחים רבים בניסיון לסייע לבעלי החיים שאבדו. הוקמו חמ"לים מאולתרים בפייסבוק ובקבוצות וואטסאפ לאיתור חיות המחמד. זוהי יוזמה מבורכת, אולם התצורה הזו אינה יעילה ודורשת משאבי זמן וכוח אדם רבים.',
+      text3:
+        "לאור המצב, הקמנו את מיזם Dog Finder. מטרתנו היא לאפשר איתור יעיל ומהיר של כלבים אבודים והשבתם לבעליהם המצפים להם.",
+      text4:
+        "המערכת שפיתחנו מבוססת על אלגוריתמי בינה מלאכותית המסוגלים לזהות דמיון בין תמונות של כלבים אבודים לבין אלה של כלבים שדווחו כנעדרים. המערכת יעילה גם כאשר התמונות מזוויות שונות או כשמראה הכלב השתנה.",
+      text5:
+        "אם איבדתם את הכלב שלכם או מצאתם כלב תועה, נא פנו אלינו ונסייע באיתור הבעלים או הכלב הנעדר. נשמח לסייע לכם להתאחד מחדש 🙂",
+    },
+    moreInfo: "למידע נוסף או שאלות על המיזם אנא פנו אלינו במייל",
+    mail: "dogfinderinitiative@gmail.com",
+    ourPeople: "האנשים מאחורי המיזם",
   },
 };

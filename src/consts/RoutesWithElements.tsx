@@ -2,7 +2,7 @@ import { FC } from "react";
 import { DogType } from "../facades/payload.types";
 import { HomePage } from "../pages/root/HomePage";
 import { PrivacyPolicy } from "../pages/PrivacyPolicy/PrivacyPolicy";
-import { AboutUsPage } from "../pages/AboutUsPage";
+import { AboutUsPage } from "../pages/AboutUs/AboutUsPage";
 import { ReportDogPage } from "../pages/dogs/ReportDogPage";
 import { SearchDogPage } from "../pages/dogs/SearchDogPage";
 import { ResultsDogPage } from "../pages/dogs/ResultsDogPage";

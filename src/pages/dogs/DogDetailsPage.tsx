@@ -1,6 +1,5 @@
-import { FC, ReactNode } from "react";
-import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
-import useSWR from "swr";
+import { FC, ReactNode, useEffect, useState } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import {
   Box,
   Button,
@@ -14,13 +13,15 @@ import { formatDateString } from "../../utils/datesFormatter";
 import { decryptData, encryptData } from "../../utils/encryptionUtils";
 import { DogType } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
-import usePageTitle from "../../hooks/usePageTitle";
-import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { AppTexts } from "../../consts/texts";
+import usePageTitle from "../../hooks/usePageTitle";
+import { useWindowSize } from "../../hooks/useWindowSize";
+import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
+import { LoadingSpinnerWithText } from "../../components/common/LoadingSpinnerWithText";
 import WhatsappIcon from "../../assets/svg/whatsapp.svg";
 
 const backdropStyles = {
-  width: "inherit",
+  width: "100%",
   height: "inherit",
   display: "flex",
   justifyContent: "center",
@@ -86,6 +87,8 @@ const fetchedDataContainer = {
   width: "85vw",
 };
 
+const cardMediaStyle = { height: "inherit", width: { xs: "100%", md: "auto" } };
+
 const detailsListStyle = {
   height: "100%",
   maxWidth: { xs: "85vw", md: "45vw" },
@@ -104,19 +107,9 @@ const detailsStyle = {
   direction: "rtl",
 };
 
-const detailRowStyle = {
-  display: "flex",
-  flexDirection: "row",
-  gap: "1rem",
-};
-
-const detailHeaderStyle = {
-  fontWeight: "600",
-};
-
-const detailContentStyle = {
-  fontWeight: "400",
-};
+const detailRowStyle = { display: "flex", flexDirection: "row", gap: "1rem" };
+const boldText = { fontWeight: "600" };
+const thinText = { fontWeight: "400" };
 
 const advancedDetailsRowStyle = {
   display: "flex",
@@ -169,26 +162,28 @@ enum DogTypeTranslateEnum {
 const fetcher = async (
   payload: { dogId: number },
   getServerApi: Function,
-): Promise<DogDetailsReturnType> => {
+  // eslint-disable-next-line
+): Promise<DogDetailsReturnType | void> => {
   const serverApi = await getServerApi();
   try {
     const response = await serverApi.getDogDetails(payload.dogId);
     const json = await response.json();
-    return json?.data?.results || [];
+    return json?.data?.results?.id ? json?.data?.results : null;
   } catch (error) {
     console.error(error); // eslint-disable-line
-    throw new Error("Failed to fetch results");
   }
 };
 
 const reportPossibleMatch = async (
   payload: { lastReportedId: string | undefined; possibleMatchId: number },
   getServerApi: Function,
-): Promise<void> => { // eslint-disable-line
+  // eslint-disable-next-line
+): Promise<void> => {
   const { lastReportedId, possibleMatchId } = payload;
   const memorizedDogId: string | null = decryptData("lastReportedDogId");
   // eslint-disable-next-line
-  if (!lastReportedId && !memorizedDogId) return console.error("No memorized dog id in both URL and localStorage");
+  if (!lastReportedId && !memorizedDogId)
+    return console.error("No memorized dog id in both URL and localStorage"); // eslint-disable-line
 
   if (
     lastReportedId &&
@@ -207,34 +202,63 @@ const reportPossibleMatch = async (
 };
 
 export const DogDetailsPage = () => {
-  usePageTitle(AppTexts.dogDetails.title);
-  const { state: payload } = useLocation();
+  const { title, whatsappButton, backButton, loading, error, unknown } =
+    AppTexts.dogDetails;
+  usePageTitle(title);
   const getServerApi = useGetServerApi();
   const { dog_id, lastReportedId } = useParams(); // eslint-disable-line
   const navigate = useNavigate();
   const theme = useTheme();
+  const { innerWidth } = useWindowSize();
+  const isMobile = innerWidth < 600;
 
-  const { data, error, isLoading } = useSWR(
-    [payload],
-    async () => fetcher({ dogId: Number(dog_id) }, getServerApi),
-    {
-      keepPreviousData: false,
-      revalidateOnFocus: false,
-    },
-  );
+  const [data, setData] = useState<DogDetailsReturnType | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean | null>(null);
 
-  const image = `data:${data?.images[0].imageContentType};base64, ${data?.images[0].base64Image}`;
+  useEffect(() => {
+    const getDogData = async () => {
+      setIsLoading(true);
+      const response = await fetcher({ dogId: Number(dog_id) }, getServerApi);
+      if (response) setData(data);
+      setIsLoading(false);
+    };
+    getDogData();
+  }, []); // eslint-disable-line
 
-  const contactNumber = `${
-    data?.contactPhone[0] === "0"
-      ? `+972${data?.contactPhone.slice(1)}`
-      : data?.contactPhone
-  }`.replace(/-/g, "");
+  const image = data?.images
+    ? `data:${data?.images[0].imageContentType};base64, ${data?.images[0].base64Image}`
+    : "";
+
+  const contactNumber = data?.contactPhone
+    ? `${
+        data?.contactPhone[0] === "0"
+          ? `+972${data?.contactPhone.slice(1)}`
+          : data?.contactPhone
+      }`.replace(/-/g, "")
+    : "";
+
+  const handleCTAButton = (possibleMatchId: number) =>
+    reportPossibleMatch({ lastReportedId, possibleMatchId }, getServerApi);
 
   const getWhatsappMessage = (status: "lost" | "found") => {
+    const memorizedDogId: string | null = decryptData("lastReportedDogId");
+    const lastReportedDogId = lastReportedId ?? memorizedDogId; // get id from param or localStorage
+    // Split the URL and keep only the IDs
+    const dogIds = window.location.href
+      .split("/")
+      .filter((segment) => segment !== "" && Number(segment));
+    const dogPage: string = `${window.location.origin}/${dogIds[0]}`;
+    const lastReportedDogPage: string | null =
+      dogIds[1] || lastReportedDogId
+        ? `${window.location.origin}/${dogIds[1] ?? lastReportedDogId}`
+        : null;
+
+    const whatsappTexts = AppTexts.dogDetails.whatsappLinks;
+    const { lost, lost2, lost3, found, found2, found3 } = whatsappTexts;
+
     const messages = {
-      lost: `${AppTexts.dogDetails.whatsappLinks.lost}%0A%0A${window.location.href}`,
-      found: `${AppTexts.dogDetails.whatsappLinks.found}%0A%0A${window.location.href}`,
+      lost: `${lost}%0A%0A${lost2}%0A${lastReportedDogPage}%0A%0A${lost3}%0A${dogPage}`,
+      found: `${found}%0A%0A${found2}%0A${dogPage}%0A%0A${found3}%0A${lastReportedDogPage}`,
     };
     return messages[status];
   };
@@ -245,22 +269,17 @@ export const DogDetailsPage = () => {
 
   if (isLoading) {
     return (
-      <BackdropComp>
-        <span>{AppTexts.dogDetails.loading}</span>
-      </BackdropComp>
-    );
-  }
-  if (error) {
-    return (
-      <BackdropComp>
-        <span>{error.toString()}</span>
-      </BackdropComp>
+      <LoadingSpinnerWithText
+        title={loading}
+        fontSize={isMobile ? 26 : 48}
+        marginTop={10}
+      />
     );
   }
   if (!data) {
     return (
       <BackdropComp>
-        <span>לא קיים מידע</span>
+        <span>{error}</span>
       </BackdropComp>
     );
   }
@@ -273,7 +292,7 @@ export const DogDetailsPage = () => {
               sx={{ fontSize: { xs: "2rem", md: "3rem" } }}
               color={theme.palette.text.primary}
             >
-              {AppTexts.dogDetails.title}
+              {title}
             </Typography>
           </Box>
           <Box sx={actionBtnWrapper}>
@@ -284,26 +303,21 @@ export const DogDetailsPage = () => {
               onClick={() => navigate(-1)}
             >
               <IconArrowLeft {...commonIconProps} />
-              {AppTexts.dogDetails.backButton}
+              {backButton}
             </Button>
             <Link to={whatsappLink} target="_blank" rel="noopener noreferrer">
               <Button
                 size="large"
                 variant="contained"
                 sx={contactBtnStyle(theme)}
-                onClick={() =>
-                  reportPossibleMatch(
-                    { lastReportedId, possibleMatchId: data.id },
-                    getServerApi,
-                  )
-                }
+                onClick={() => handleCTAButton(data.id)}
               >
                 <img
                   src={WhatsappIcon}
                   alt="Chat on Whatsapp"
                   style={{ marginRight: "4px" }}
                 />
-                {AppTexts.dogDetails.hamalButton}
+                {whatsappButton}
               </Button>
             </Link>
           </Box>
@@ -314,66 +328,64 @@ export const DogDetailsPage = () => {
             component="img"
             style={{ objectFit: "contain" }}
             title="Dog Image"
-            sx={{ height: "inherit", width: { xs: "100%", md: "auto" } }}
+            sx={cardMediaStyle}
           />
           <Box component="div" sx={detailsStyle}>
             <Box sx={detailsListStyle}>
               {data.extraDetails && (
                 <Box sx={advancedDetailsRowStyle}>
-                  <span style={detailHeaderStyle}>פרטים נוספים: </span>
-                  <span style={detailContentStyle}>
-                    {data.extraDetails || ""}
-                  </span>
+                  <span style={boldText}>פרטים נוספים: </span>
+                  <span style={thinText}>{data.extraDetails || ""}</span>
                 </Box>
               )}
               <Box sx={detailRowStyle}>
-                <span style={detailHeaderStyle}>סטטוס: </span>
-                <span style={detailContentStyle}>
+                <span style={boldText}>סטטוס: </span>
+                <span style={thinText}>
                   {DogTypeTranslateEnum[data.type] ?? ""}
                 </span>
               </Box>
               <Box sx={detailRowStyle}>
-                <span style={detailHeaderStyle}>מין: </span>
-                <span style={detailContentStyle}>
-                  {DogGenderEnum[data.sex] ?? "לא ידוע"}
+                <span style={boldText}>מין: </span>
+                <span style={thinText}>
+                  {DogGenderEnum[data.sex] ?? unknown}
                 </span>
               </Box>
               <Box sx={detailRowStyle}>
-                <span style={detailHeaderStyle}>איזור גיל: </span>
-                <span style={detailContentStyle}>
+                <span style={boldText}>
+                  {AppTexts.reportPage.dogDetails.dogAge}:
+                </span>
+                <span style={thinText}>
                   {AppTexts.reportPage.dogAge[data.ageGroup] ?? ""}
                 </span>
               </Box>
               <Box sx={detailRowStyle}>
-                <span style={detailHeaderStyle}>
+                <span style={boldText}>
                   {data.type === DogType.FOUND ? "נמצא באיזור:" : "אבד באיזור:"}
                 </span>
-                <span style={detailContentStyle}>{data.location ?? ""}</span>
+                <span style={thinText}>{data.location ?? ""}</span>
               </Box>
               <Box sx={detailRowStyle}>
-                <span style={detailHeaderStyle}>
+                <span style={boldText}>
                   {" "}
                   {data.type === DogType.FOUND ? "נמצא בתאריך:" : "אבד בתאריך:"}
                 </span>
-                <span style={detailContentStyle}>
+                <span style={thinText}>
                   {formatDateString(data?.dogFoundOn ?? "")}
                 </span>
               </Box>
               {data.breed && (
                 <Box sx={detailRowStyle}>
-                  <span style={detailHeaderStyle}>גזע: </span>
-                  <span style={detailContentStyle}>{data.breed ?? ""}</span>
+                  <span style={boldText}>גזע: </span>
+                  <span style={thinText}>{data.breed ?? ""}</span>
                 </Box>
               )}
               <Box sx={detailRowStyle}>
-                <span style={detailHeaderStyle}>צבע: </span>
-                <span style={detailContentStyle}>{data.color ?? ""}</span>
+                <span style={boldText}>צבע: </span>
+                <span style={thinText}>{data.color ?? ""}</span>
               </Box>
               <Box sx={detailRowStyle}>
-                <span style={detailHeaderStyle}>מספר שבב: </span>
-                <span style={detailContentStyle}>
-                  {data.chipNumber ?? "לא ידוע"}
-                </span>
+                <span style={boldText}>מספר שבב: </span>
+                <span style={thinText}>{data.chipNumber ?? unknown}</span>
               </Box>
             </Box>
           </Box>
