@@ -173,9 +173,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     const typeFromUrl = urlParts[urlParts.length - 1];
     const newSelectedType = typeFromUrl === "all-reports" ? "all" : typeFromUrl;
     setSelectedType(newSelectedType as SelectOptions);
-    setTimeout(() => {
-      mutate();
-    }, 0);
+    setTimeout(mutate, 0); // setTimeout is used to make sure we mutate only after selectedType has changed
   }, [window.location.pathname, mutate]); // eslint-disable-line
 
   const changeSelectedReports = (event: SelectChangeEvent<any>) => {

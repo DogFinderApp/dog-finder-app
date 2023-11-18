@@ -1,10 +1,12 @@
-import { Box, Typography } from "@mui/material";
-import { createStyleHook } from "../hooks/styleHooks";
-import usePageTitle from "../hooks/usePageTitle";
-import { PageContainer } from "../components/pageComponents/PageContainer/PageContainer";
-import { PageTitle } from "../components/pageComponents/PageTitle/PageTitle";
-import { StartFlowButtons } from "../components/StartFlowButtons/StartFlowButtons";
-import { AppTexts } from "../consts/texts";
+import { Box, Grid, Typography } from "@mui/material";
+import { createStyleHook } from "../../hooks/styleHooks";
+import usePageTitle from "../../hooks/usePageTitle";
+import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
+import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
+import { StartFlowButtons } from "../../components/StartFlowButtons/StartFlowButtons";
+import { AppTexts } from "../../consts/texts";
+import { crewMembers } from "./crewMembers";
+import { CrewMember } from "./CrewMember";
 
 const useAboutUsStyles = createStyleHook(() => ({
   textContainer: {
@@ -57,6 +59,15 @@ export const AboutUsPage = () => {
             </a>
           </Typography>
         </Box>
+
+        <PageTitle text={"האנשים מאחורי המיזם"} fontWeight={500} notCentered />
+        <Grid container spacing={4} dir="rtl" sx={{ marginY: 2.5 }}>
+          {crewMembers.map((member) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={member.name}>
+              <CrewMember member={member} />
+            </Grid>
+          ))}
+        </Grid>
       </Box>
     </PageContainer>
   );
