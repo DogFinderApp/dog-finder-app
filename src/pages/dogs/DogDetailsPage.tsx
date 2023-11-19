@@ -9,6 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { TablerIconsProps, IconArrowLeft } from "@tabler/icons-react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { formatDateString } from "../../utils/datesFormatter";
 import { decryptData, encryptData } from "../../utils/encryptionUtils";
 import { useHamalContext } from "../../context/useHamalContext";
@@ -206,10 +207,11 @@ export const DogDetailsPage = () => {
   const { title, whatsappButton, backButton, loading, error, unknown } =
     AppTexts.dogDetails;
   usePageTitle(title);
+  const theme = useTheme();
+  const { isAuthenticated, isLoading } = useAuth0();
   const getServerApi = useGetServerApi();
   const { dog_id, lastReportedId } = useParams(); // eslint-disable-line
   const navigate = useNavigate();
-  const theme = useTheme();
   const { innerWidth } = useWindowSize();
   const isMobile = innerWidth < 600;
   const {
@@ -217,20 +219,20 @@ export const DogDetailsPage = () => {
   } = useHamalContext();
 
   const [data, setData] = useState<DogDetailsReturnType | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean | null>(null);
+  const [isFetching, setIsFetching] = useState<boolean | null>(null);
 
   useEffect(() => {
     const getDogData = async () => {
-      setIsLoading(true);
+      setIsFetching(true);
       const response = await fetcher(
         { dogId: Number(dog_id), isHamalUser: !!isHamalUser },
         getServerApi,
       );
       if (response) setData(response);
-      setIsLoading(false);
+      setIsFetching(false);
     };
-    getDogData();
-  }, []); // eslint-disable-line
+    if (isAuthenticated && !isLoading) getDogData();
+  }, [isHamalUser]); // eslint-disable-line
 
   const image = data?.images
     ? `data:${data?.images[0].imageContentType};base64, ${data?.images[0].base64Image}`
@@ -254,10 +256,10 @@ export const DogDetailsPage = () => {
     const dogIds = window.location.href
       .split("/")
       .filter((segment) => segment !== "" && Number(segment));
-    const dogPage: string = `${window.location.origin}/${dogIds[0]}`;
+    const dogPage: string = `${window.location.origin}/dogs/${dogIds[0]}`;
     const lastReportedDogPage: string | null =
       dogIds[1] || lastReportedDogId
-        ? `${window.location.origin}/${dogIds[1] ?? lastReportedDogId}`
+        ? `${window.location.origin}/dogs/${dogIds[1] ?? lastReportedDogId}`
         : null;
 
     const whatsappTexts = AppTexts.dogDetails.whatsappLinks;
@@ -273,8 +275,7 @@ export const DogDetailsPage = () => {
   const whatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
     data?.type ?? "found",
   )}`;
-
-  if (isLoading) {
+  if (isFetching || isLoading) {
     return (
       <LoadingSpinnerWithText
         title={loading}
@@ -283,7 +284,7 @@ export const DogDetailsPage = () => {
       />
     );
   }
-  if (!data && !isLoading) {
+  if (!data && !isFetching && !isLoading) {
     return (
       <BackdropComp>
         <span>{error}</span>
@@ -392,10 +393,12 @@ export const DogDetailsPage = () => {
                   <span style={thinText}>{data?.breed ?? ""}</span>
                 </Box>
               )}
-              <Box sx={detailRowStyle}>
-                <span style={boldText}>צבע: </span>
-                <span style={thinText}>{data?.color ?? ""}</span>
-              </Box>
+              {data?.color && (
+                <Box sx={detailRowStyle}>
+                  <span style={boldText}>צבע: </span>
+                  <span style={thinText}>{data?.color ?? ""}</span>
+                </Box>
+              )}
               {data?.chipNumber && isHamalUser && (
                 <Box sx={detailRowStyle}>
                   <span style={boldText}>מספר שבב: </span>

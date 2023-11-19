@@ -25,6 +25,7 @@ const useNoResultsStyles = createStyleHook(() => ({
     flexDirection: "column",
     alignItems: "center",
     gap: 4,
+    mt: 4,
   },
   text: { direction: "rtl", textAlign: "center" },
   buttonsWrapper: {
