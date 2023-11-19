@@ -162,13 +162,28 @@ enum DogTypeTranslateEnum {
 }
 
 const fetcher = async (
-  payload: { dogId: number; isHamalUser: boolean },
+  payload: { dogId: number; isHamalUser: boolean | null },
   getServerApi: Function,
   // eslint-disable-next-line
 ): Promise<DogDetailsReturnType | void> => {
-  const serverApi = await getServerApi();
+  const { dogId, isHamalUser } = payload;
   try {
-    const response = await serverApi.getDogDetails(payload);
+    // we can't place this fetch request inside ServerApi because this page should be
+    // accessible to everyone, and ServerApi requires to be authenticated
+    const API_URL = process.env.REACT_APP_API_URL || "";
+    const urlByUserRole = isHamalUser
+      ? "get_dog_by_id_full_details"
+      : "get_dog_by_id";
+    const url = `${API_URL}/dogfinder/${urlByUserRole}?dogId=${dogId}`;
+
+    let headers = {};
+    if (isHamalUser) {
+      const serverApi = await getServerApi();
+      headers = {
+        Authorization: `Bearer ${await serverApi.getUndecodedUserData()}`,
+      };
+    }
+    const response = await fetch(url, { headers });
     const json = await response.json();
     return json?.data?.results?.id ? json?.data?.results : null;
   } catch (error) {
@@ -208,7 +223,7 @@ export const DogDetailsPage = () => {
     AppTexts.dogDetails;
   usePageTitle(title);
   const theme = useTheme();
-  const { isAuthenticated, isLoading } = useAuth0();
+  const { isLoading } = useAuth0();
   const getServerApi = useGetServerApi();
   const { dog_id, lastReportedId } = useParams(); // eslint-disable-line
   const navigate = useNavigate();
@@ -225,14 +240,14 @@ export const DogDetailsPage = () => {
     const getDogData = async () => {
       setIsFetching(true);
       const response = await fetcher(
-        { dogId: Number(dog_id), isHamalUser: !!isHamalUser },
+        { dogId: Number(dog_id), isHamalUser },
         getServerApi,
       );
       if (response) setData(response);
       setIsFetching(false);
     };
-    if (isAuthenticated && !isLoading) getDogData();
-  }, [isHamalUser]); // eslint-disable-line
+    if (!isLoading) getDogData();
+  }, [isLoading, isHamalUser]); // eslint-disable-line
 
   const image = data?.images
     ? `data:${data?.images[0].imageContentType};base64, ${data?.images[0].base64Image}`
@@ -266,8 +281,12 @@ export const DogDetailsPage = () => {
     const { lost, lost2, lost3, found, found2, found3 } = whatsappTexts;
 
     const messages = {
-      lost: `${lost}%0A%0A${lost2}%0A${lastReportedDogPage}%0A%0A${lost3}%0A${dogPage}`,
-      found: `${found}%0A%0A${found2}%0A${dogPage}%0A%0A${found3}%0A${lastReportedDogPage}`,
+      lost: `${lost}${
+        !lastReportedDogPage ? "" : `%0A%0A${lost2}%0A${lastReportedDogPage}`
+      }%0A%0A${lost3}%0A${dogPage}`,
+      found: `${found}%0A%0A${found2}%0A${dogPage}${
+        !lastReportedDogPage ? "" : `%0A%0A${found3}%0A${lastReportedDogPage}`
+      }`,
     };
     return messages[status];
   };
@@ -275,6 +294,7 @@ export const DogDetailsPage = () => {
   const whatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
     data?.type ?? "found",
   )}`;
+
   if (isFetching || isLoading) {
     return (
       <LoadingSpinnerWithText
@@ -284,6 +304,7 @@ export const DogDetailsPage = () => {
       />
     );
   }
+
   if (!data && !isFetching && !isLoading) {
     return (
       <BackdropComp>
@@ -291,6 +312,7 @@ export const DogDetailsPage = () => {
       </BackdropComp>
     );
   }
+
   return (
     <PageContainer>
       <Box sx={pageContainer}>
