@@ -90,13 +90,17 @@ class ServerApi {
     return response;
   }
 
-  getDecodedUserData(): DecodedUserData {
-    return jwtDecode(this.token) as DecodedUserData;
+  getUndecodedUserData(): string | null {
+    return this.token ?? null;
   }
 
-  isHamalUser(): boolean {
+  getDecodedUserData(): DecodedUserData | null {
+    return (jwtDecode(this.token) as DecodedUserData) ?? null;
+  }
+
+  isHamalUser(): boolean | null {
     const user = this.getDecodedUserData();
-    return user.permissions.includes("read:dogs");
+    return user ? user.permissions.includes("read:dogs") : null;
   }
 
   async searchDog(payload: QueryPayload) {
@@ -139,20 +143,6 @@ class ServerApi {
       },
       body: JSON.stringify(payload),
     });
-  }
-
-  async getDogDetails({
-    dogId,
-    isHamalUser,
-  }: {
-    dogId: number;
-    isHamalUser: boolean;
-  }) {
-    const urlByUserRole = isHamalUser
-      ? "get_dog_by_id_full_details"
-      : "get_dog_by_id";
-    const url = buildEndpoint(`${urlByUserRole}?dogId=${dogId}`);
-    return this.fetch(url);
   }
 
   async getFullDogDetails(dogId: number) {
