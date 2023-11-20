@@ -18,36 +18,19 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <>
-    <head>
-      <link rel="icon" href="/favicon.ico" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta
-        property="og:image"
-        content="https://lh3.googleusercontent.com/pw/ADCreHerQpnxPcwHMIhuG2siH-ZgRT7FRDEY2lffJseOCuHbJVoaUZxcSoZlsZmhdAABl16xQw1TWW1QtlQ-2LBANB1vPdaEr0aXQekg-H8MB5gY1eJMgQ=w2400"
-      />
-      <meta property="og:title" content="Fluffy-Finder" />
-      <meta property="og:image:type" content="image/png" />
-      <meta
-        name="twitter:card"
-        content="https://lh3.googleusercontent.com/pw/ADCreHdzzwSSrfQCrEbgyXU3l6EFPW_GqPflx_9Bd6jTrWcq1Vg8ex7U9ewd3EICr_6x08ii7TocGU0GPF4tQIXwZYbEkcfaJrucSVpYAXbL-SsO0tR5AQ=w2400"
-      />
-    </head>
-    <Auth0Provider
-      domain={authDomain}
-      clientId={authClient}
-      authorizationParams={{
-        redirect_uri: window.location.origin,
-        audience: auth0Audience,
-        scope: "read:dogs",
-      }}
-    >
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </Auth0Provider>
-    ,
-  </>,
+  <Auth0Provider
+    domain={authDomain}
+    clientId={authClient}
+    authorizationParams={{
+      redirect_uri: window.location.origin,
+      audience: auth0Audience,
+      scope: "read:dogs",
+    }}
+  >
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </Auth0Provider>,
 );
 
 // If you want to start measuring performance in your app, pass a function
