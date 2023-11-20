@@ -1,4 +1,4 @@
-# Dog Finder
+# Fluffy Finder
 
 This Project contains the UI For a WIP system to make cross matches
 between dogs missing, and lost dogs found

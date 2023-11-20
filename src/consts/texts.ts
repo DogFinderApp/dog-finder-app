@@ -75,13 +75,13 @@ export const AppTexts = {
       reportPage: "דיווח על כלב",
     },
     noUser: {
-      title: "ברוך הבא אל Dog Finder",
+      title: "ברוך הבא אל Fluffy Finder",
       welcomeMessage1: "כדי להשתמש בשירות יש להרשם",
       welcomeMessage2: "או לחלופין להתחבר עם חשבון גוגל",
       cta: "התחל עכשיו",
       footer1: "בעת הרשמה אתה מאשר את",
       footer2: "תנאי השימוש ומדיניות הפרטיות",
-      footer3: "של Dog Finder",
+      footer3: "של Fluffy Finder",
     },
   },
   resultsPage: {
@@ -139,11 +139,11 @@ export const AppTexts = {
     error: "לא קיים מידע",
     unknown: "לא ידוע",
     whatsappLinks: {
-      lost: "היי, הגעתי אליך דרך פלטפורמת Dog Finder. ייתכן והכלב/ה שלי נמצא אצלך?",
+      lost: "היי, הגעתי אליך דרך פלטפורמת Fluffy Finder. ייתכן והכלב/ה שלי נמצא אצלך?",
       lost2: "זה הדיווח של הכלב שאיבדתי:",
       lost3: "זה הדיווח של הכלב שמצאת שאולי יכול להתאים:",
       found:
-        "היי, הגעתי אליך דרך פלטפורמת Dog Finder. מצאתי כלב/ה שדומה לשלך, שנבדוק? :)",
+        "היי, הגעתי אליך דרך פלטפורמת Fluffy Finder. מצאתי כלב/ה שדומה לשלך, שנבדוק? :)",
       found2: "זה הדיווח של הכלב שאיבדת:",
       found3: "זה הדיווח של הכלב שמצאתי שאולי יכול להתאים:",
     },
@@ -162,14 +162,14 @@ export const AppTexts = {
       text2:
         'בעקבות המצב, התגייסו אזרחים רבים בניסיון לסייע לבעלי החיים שאבדו. הוקמו חמ"לים מאולתרים בפייסבוק ובקבוצות וואטסאפ לאיתור חיות המחמד. זוהי יוזמה מבורכת, אולם התצורה הזו אינה יעילה ודורשת משאבי זמן וכוח אדם רבים.',
       text3:
-        "לאור המצב, הקמנו את מיזם Dog Finder. מטרתנו היא לאפשר איתור יעיל ומהיר של כלבים אבודים והשבתם לבעליהם המצפים להם.",
+        "לאור המצב, הקמנו את מיזם Fluffy Finder. מטרתנו היא לאפשר איתור יעיל ומהיר של כלבים אבודים והשבתם לבעליהם המצפים להם.",
       text4:
         "המערכת שפיתחנו מבוססת על אלגוריתמי בינה מלאכותית המסוגלים לזהות דמיון בין תמונות של כלבים אבודים לבין אלה של כלבים שדווחו כנעדרים. המערכת יעילה גם כאשר התמונות מזוויות שונות או כשמראה הכלב השתנה.",
       text5:
         "אם איבדתם את הכלב שלכם או מצאתם כלב תועה, נא פנו אלינו ונסייע באיתור הבעלים או הכלב הנעדר. נשמח לסייע לכם להתאחד מחדש 🙂",
     },
     moreInfo: "למידע נוסף או שאלות על המיזם אנא פנו אלינו במייל",
-    mail: "dogfinderinitiative@gmail.com",
+    mail: "fluffyfinderinitiative@gmail.com",
     ourPeople: "האנשים מאחורי המיזם",
   },
 };

@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+#root {
+  background-color: #1e1e1e;
+}
+
 /* fix the direction of arrows inside MUI calendar */
 .MuiDateCalendar-root .MuiPickersArrowSwitcher-root svg {
   transform: rotate(180deg);

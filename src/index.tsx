@@ -22,7 +22,7 @@ root.render(
     <head>
       <link rel="icon" href="/favicon.ico" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta property="og:title" content="Dog-Finder" />
+      <meta property="og:title" content="Fluffy-Finder" />
       <meta property="og:image:type" content="image/png" />
       <meta property="og:image" content="/src/assets/og-twitter/og-image.png" />
       <meta name="twitter:card" content="/src/assets/og-twitter/twitter.png" />
