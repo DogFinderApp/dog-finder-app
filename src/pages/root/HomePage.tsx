@@ -67,7 +67,9 @@ export const HomePage = () => {
   const styles = useHomePageStyles();
   const { innerWidth } = useWindowSize();
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
-  usePageTitle(isAuthenticated ? "Dog Finder" : AppTexts.homePage.noUser.title);
+  usePageTitle(
+    isAuthenticated ? "Fluffy Finder" : AppTexts.homePage.noUser.title,
+  );
 
   const commonButtonProps: ButtonOwnProps = {
     size: "large",
