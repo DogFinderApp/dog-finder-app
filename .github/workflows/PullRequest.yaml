@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - "main"
+      - "pre-production"
 jobs:
   lint_and_build:
     runs-on: ubuntu-latest
