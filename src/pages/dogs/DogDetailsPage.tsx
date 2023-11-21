@@ -85,7 +85,7 @@ const fetchedDataContainer = {
   alignItems: "center",
   gap: "3rem",
   marginTop: { md: "5rem", xs: "3rem" },
-  height: "45vh",
+  height: { sm:"40vh", xs:"100%" },
   width: "85vw",
 };
 
