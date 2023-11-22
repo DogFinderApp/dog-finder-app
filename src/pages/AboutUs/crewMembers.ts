@@ -2,10 +2,10 @@ import AnonymousMaleSVG from "../../assets/crewMembers/AnonymousMale.jpg";
 import AnonymousMaleSVGLow from "../../assets/crewMembers/reduced/AnonymousMale.jpg";
 import AnonymousFemaleSVG from "../../assets/crewMembers/AnonymousFemale.jpg";
 import AnonymousFemaleSVGLow from "../../assets/crewMembers/reduced/AnonymousFemale.jpg";
-import Gal_Schwarts from "../../assets/crewMembers/Gal_Schwarts.jpg";
-import Gal_SchwartsLow from "../../assets/crewMembers/reduced/Gal_Schwarts.jpg";
-import Gal_Zohar from "../../assets/crewMembers/Gal_Zohar.jpg";
-import Gal_ZoharLow from "../../assets/crewMembers/reduced/Gal_Zohar.jpg";
+import GalSchwarts from "../../assets/crewMembers/Gal_Schwarts.jpg";
+import GalSchwartsLow from "../../assets/crewMembers/reduced/Gal_Schwarts.jpg";
+import GalZohar from "../../assets/crewMembers/Gal_Zohar.jpg";
+import GalZoharLow from "../../assets/crewMembers/reduced/Gal_Zohar.jpg";
 import EdenGotlib from "../../assets/crewMembers/Eden_Gotlib.jpg";
 import EdenGotlibLow from "../../assets/crewMembers/reduced/Eden_Gotlib.jpg";
 import MaryDaniel from "../../assets/crewMembers/Mary_Daniel.jpg";
@@ -18,6 +18,8 @@ import YanivDavid from "../../assets/crewMembers/Yaniv_David.jpg";
 import YanivDavidLow from "../../assets/crewMembers/reduced/Yaniv_David.jpg";
 import YanivWein from "../../assets/crewMembers/Yaniv_Weinshtein.jpg";
 import YanivWeinLow from "../../assets/crewMembers/reduced/Yaniv_Weinshtein.jpg";
+import ZlilMalchi from "../../assets/crewMembers/Zlil_Malchi.jpeg";
+import ZlilMalchiLow from "../../assets/crewMembers/reduced/Zlil_Malchi.jpeg";
 
 export interface CrewMemberType {
   name: string;
@@ -67,8 +69,8 @@ export const crewMembers: CrewMemberType[] = [
   },
   {
     name: "גל זוהר",
-    image: Gal_Zohar,
-    imageLowQuality: Gal_ZoharLow,
+    image: GalZohar,
+    imageLowQuality: GalZoharLow,
     role: "Front End Developer",
     links: ["https://www.linkedin.com/in/galzo", "https://github.com/galzo"],
   },
@@ -114,9 +116,18 @@ export const crewMembers: CrewMemberType[] = [
   },
   {
     name: "גל שוורץ",
-    image: Gal_Schwarts,
-    imageLowQuality: Gal_SchwartsLow,
+    image: GalSchwarts,
+    imageLowQuality: GalSchwartsLow,
     role: "QA Engineer",
     links: ["http://linkedin.com/in/galrtz"],
+  },
+  {
+    name: "צליל מלכי",
+    image: ZlilMalchi,
+    imageLowQuality: ZlilMalchiLow,
+    role: "Marketing Advisor",
+    links: [
+      "https://www.linkedin.com/in/zlil-malchi-b5453046/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    ],
   },
 ];

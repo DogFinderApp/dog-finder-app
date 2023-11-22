@@ -1,0 +1,10 @@
+https://fluffyfinder.org/
+https://fluffyfinder.org/PrivacyPolicy
+https://fluffyfinder.org/about
+https://fluffyfinder.org/dogs/*
+https://fluffyfinder.org/report-found
+https://fluffyfinder.org/report-missing
+https://fluffyfinder.org/search-lost
+https://fluffyfinder.org/search-found
+https://fluffyfinder.org/results/*
+https://fluffyfinder.org/all-reports/*
