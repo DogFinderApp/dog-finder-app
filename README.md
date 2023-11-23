@@ -1,11 +1,22 @@
 # Fluffy Finder
 
-This Project contains the UI For a WIP system to make cross matches
-between dogs missing, and lost dogs found
+This Project contains the UI For a centralized system that uses AI and algorithms to cross-match
+between dogs reported missing and dogs reported as found.
+
+https://github.com/DogFinderApp/dog-finder-app/assets/97472180/064880da-3f92-417f-8f3b-35aa35d6c8c5
+
+## Setup Process
+
+- Clone the repo `git clone https://github.com/DogFinderApp/dog-finder-app.git`
+- Move to the repo `cd dog-finder-app`
+- Install dependencies `npm i`
+
+```bash
+git clone https://github.com/DogFinderApp/dog-finder-app.git
+cd dog-finder-app && npm i
+```
 
 ## Available Scripts
-
-In the project directory, you can run:
 
 ### `npm start`
 
@@ -24,3 +35,16 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run lint`
+
+Runs ES-Lint without fixing errors
+
+### `npm run fix`
+
+Runs ES-Lint and fixes issues and erors if possible
+<br />
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
