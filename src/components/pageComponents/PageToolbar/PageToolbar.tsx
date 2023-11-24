@@ -92,6 +92,7 @@ export const PageToolbar = () => {
   }, [isAuthenticated, getServerApi, dispatch]);
 
   const linksToRender = isHamalUser ? [...links, ...hamalLinks] : links;
+  const amountOfPublicLinks = 6;
 
   return (
     <Box sx={styles.root}>
@@ -119,12 +120,12 @@ export const PageToolbar = () => {
             >
               <MenuItem sx={styles.menuItem}>
                 {link.text}
-                {index > 4 && (
+                {index > amountOfPublicLinks && (
                   <Chip label={'חמ"ל'} color="primary" sx={styles.chip} />
                 )}
               </MenuItem>
             </Link>
-            {index === 4 && isHamalUser && (
+            {index === amountOfPublicLinks && isHamalUser && (
               <Divider variant="middle" sx={styles.divider} />
             )}
           </div>

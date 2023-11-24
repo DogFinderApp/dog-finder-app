@@ -5,8 +5,8 @@ export const AppTexts = {
   },
   searchPage: {
     title: "חיפוש אחר כלב",
-    beforeReportingLost:
-      "העלו תמונה של כלב שמצאתם ונראה אם מישהו דיווח עליו כנמצא",
+    searchLost: "העלו תמונה של כלב שמצאתם ונראה אם מישהו דיווח עליו כנעדר",
+    searchFound: "העלו תמונה של כלב שמצאתם ונראה אם מישהו דיווח עליו כנמצא",
     submit: "חיפוש",
   },
   reportPage: {
@@ -126,7 +126,8 @@ export const AppTexts = {
     aboutUs: "אודות",
     reportFound: "מצאתי כלב",
     reportLost: "איבדתי כלב",
-    searchFoundDog: "חיפוש כלב במאגר הנעדרים",
+    searchLost: "חיפוש כלב במאגר הנעדרים",
+    searchFound: "חיפוש כלב במאגר הנמצאים",
     privacyPolicy: "תנאי השימוש",
     allFound: "כל הכלבים שנמצאו",
     allLost: "כל הכלבים שנאבדו",
@@ -134,6 +135,7 @@ export const AppTexts = {
   dogDetails: {
     title: "פרטי הכלב",
     whatsappButton: "שליחת הודעת וואטסאפ",
+    disabledButtonText: "יש לדווח קודם על כלב שנמצא/נעדר",
     backButton: "חזרה אחורה",
     loading: "טוען את פרטי הכלב",
     error: "לא קיים מידע",

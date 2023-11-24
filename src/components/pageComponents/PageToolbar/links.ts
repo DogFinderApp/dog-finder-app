@@ -19,6 +19,14 @@ export const links = [
     text: AppTexts.navigation.reportLost,
   },
   {
+    href: AppRoutes.dogs.searchFoundDog,
+    text: AppTexts.navigation.searchFound,
+  },
+  {
+    href: AppRoutes.dogs.searchLostDog,
+    text: AppTexts.navigation.searchLost,
+  },
+  {
     href: AppRoutes.privacyPolicy,
     text: AppTexts.navigation.privacyPolicy,
   },

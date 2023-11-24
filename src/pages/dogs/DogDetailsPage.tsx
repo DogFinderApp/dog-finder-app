@@ -72,10 +72,11 @@ const actionBtnStyle = {
   height: { xs: "5vh", md: "5vh" },
 };
 
-const contactBtnStyle = (theme: Theme) => ({
+const contactBtnStyle = (theme: Theme, noUserReports: boolean) => ({
   ...actionBtnStyle,
   backgroundColor: "#E3F0FF",
   color: theme.palette.primary.main,
+  cursor: noUserReports ? "not-allowed" : "pointer",
   "&:hover": { backgroundColor: "#cad6e4 !important" },
 });
 
@@ -222,12 +223,14 @@ export const DogDetailsPage = () => {
   const { title, whatsappButton, backButton, loading, error, unknown } =
     AppTexts.dogDetails;
   usePageTitle(title);
+
   const theme = useTheme();
   const { isLoading } = useAuth0();
   const getServerApi = useGetServerApi();
   const { dog_id, lastReportedId } = useParams(); // eslint-disable-line
   const navigate = useNavigate();
   const { innerWidth } = useWindowSize();
+
   const isMobile = innerWidth < 600;
   const {
     state: { isHamalUser },
@@ -235,6 +238,9 @@ export const DogDetailsPage = () => {
 
   const [data, setData] = useState<DogDetailsReturnType | null>(null);
   const [isFetching, setIsFetching] = useState<boolean | null>(null);
+
+  const memorizedDogId: string | null = decryptData("lastReportedDogId");
+  const noUserReports: boolean = !lastReportedId && !memorizedDogId;
 
   useEffect(() => {
     const getDogData = async () => {
@@ -265,7 +271,6 @@ export const DogDetailsPage = () => {
     reportPossibleMatch({ lastReportedId, possibleMatchId }, getServerApi);
 
   const getWhatsappMessage = (status: "lost" | "found") => {
-    const memorizedDogId: string | null = decryptData("lastReportedDogId");
     const lastReportedDogId = lastReportedId ?? memorizedDogId; // get id from param or localStorage
     // Split the URL and keep only the IDs
     const dogIds = window.location.href
@@ -282,10 +287,10 @@ export const DogDetailsPage = () => {
 
     const messages = {
       lost: `${lost}${
-        !lastReportedDogPage ? "" : `%0A%0A${lost2}%0A${lastReportedDogPage}`
+        lastReportedDogPage ? `%0A%0A${lost2}%0A${lastReportedDogPage}` : ""
       }%0A%0A${lost3}%0A${dogPage}`,
       found: `${found}%0A%0A${found2}%0A${dogPage}${
-        !lastReportedDogPage ? "" : `%0A%0A${found3}%0A${lastReportedDogPage}`
+        lastReportedDogPage ? `%0A%0A${found3}%0A${lastReportedDogPage}` : ""
       }`,
     };
     return messages[status];
@@ -335,16 +340,24 @@ export const DogDetailsPage = () => {
               <IconArrowLeft {...commonIconProps} />
               {backButton}
             </Button>
-            <Link to={whatsappLink} target="_blank" rel="noopener noreferrer">
+            <Link
+              to={noUserReports ? "#" : whatsappLink}
+              onClick={(event) => noUserReports && event.preventDefault()}
+              aria-disabled={noUserReports}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Button
                 size="large"
                 variant="contained"
-                sx={contactBtnStyle(theme)}
-                onClick={() => data?.id && handleCTAButton(data.id)}
+                sx={contactBtnStyle(theme, noUserReports)}
+                onClick={() =>
+                  data?.id && !noUserReports && handleCTAButton(data.id)
+                }
               >
                 <img
                   src={WhatsappIcon}
-                  alt="Chat on Whatsapp"
+                  alt="Whatsapp"
                   style={{ marginRight: "4px" }}
                 />
                 {whatsappButton}
@@ -357,7 +370,6 @@ export const DogDetailsPage = () => {
             image={image}
             component="img"
             style={{ objectFit: "contain" }}
-            title="Dog Image"
             sx={cardMediaStyle}
           />
           <Box component="div" sx={detailsStyle}>

@@ -5,9 +5,9 @@ export const AppRoutes = {
   dogs: {
     dogPage: "/dogs/:dog_id/:lastReportedId?",
     reportFound: "/report-found",
-    reportLost: "/report-missing",
-    searchLostDog: "/search-lost",
+    reportLost: "/report-lost",
     searchFoundDog: "/search-found",
+    searchLostDog: "/search-lost",
     results: "/results/:dogType/:lastReportedId?",
     allReports: "/all-reports/:dogType?",
   },
