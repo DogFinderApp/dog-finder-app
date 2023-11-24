@@ -1,13 +1,21 @@
+import { useState } from "react";
 import {
   Button,
   Card,
   CardActions,
   CardMedia,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { IconGenderMale, IconGenderFemale } from "@tabler/icons-react";
+import {
+  IconGenderMale,
+  IconGenderFemale,
+  IconSearch,
+} from "@tabler/icons-react";
+import { useHamalContext } from "../../context/useHamalContext";
 import { createStyleHook } from "../../hooks/styleHooks";
+import { useWindowSize } from "../../hooks/useWindowSize";
 import { formatDateString } from "../../utils/datesFormatter";
 import { DogResult, DogType } from "../../facades/payload.types";
 import { AppTexts } from "../../consts/texts";
@@ -18,37 +26,60 @@ interface DogCardProps {
   dogType: DogType;
 }
 
+interface CardStyles {
+  isHovering: boolean;
+  isMobile: boolean;
+}
+
+const useCardStyles = createStyleHook(
+  (theme, { isHovering, isMobile }: CardStyles) => {
+    return {
+      CardMedia: { height: 400, objectFit: "contain" },
+      CardActions: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        gap: 1,
+        background: "#fff",
+      },
+      searchIconButton: {
+        position: "absolute",
+        right: 8,
+        top: 8,
+        minWidth: "unset",
+        padding: 1,
+        borderRadius: "100%",
+        opacity: isHovering || isMobile ? 1 : 0,
+        transition: "0.2s ease-in-out",
+      },
+      BottomButton: {
+        m: "0 auto",
+        fontSize: 18,
+        fontWeight: 600,
+        color: "#116DFF",
+        width: "100%",
+      },
+      Typography: {
+        color: "#343842",
+        fontWeight: 600,
+        display: "flex",
+        gap: "2px",
+        alignItems: "center",
+      },
+    };
+  },
+);
+
 export const DogCard = ({ dog, dogType }: DogCardProps) => {
-  const useCardStyles = createStyleHook(() => ({
-    CardMedia: { height: 400, objectFit: "contain" },
-    CardActions: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start",
-      gap: 1,
-      background: "#fff",
-    },
-
-    BottomButton: {
-      m: "0 auto",
-      fontSize: 18,
-      fontWeight: 600,
-      color: "#116DFF",
-      width: "100%",
-    },
-
-    Typography: {
-      color: "#343842",
-      fontWeight: 600,
-      display: "flex",
-      gap: "2px",
-      alignItems: "center",
-    },
-  }));
-
-  const styles = useCardStyles();
+  const [isHovering, setIsHovering] = useState<boolean>(false);
+  const { innerWidth } = useWindowSize();
+  const isMobile = innerWidth < 600;
+  const styles = useCardStyles({ isHovering, isMobile });
   const navigate = useNavigate();
   const { lastReportedId } = useParams();
+  const {
+    state: { isHamalUser },
+  } = useHamalContext();
 
   const navigateToSelectedDog = () => {
     navigate(
@@ -57,6 +88,14 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
         .replace(":lastReportedId?", lastReportedId ?? ""),
       { state: { dogType, lastReportedId } },
     );
+  };
+
+  const searchForSimilarDogs = () => {
+    const dogTypeToSearch = dog.type === "found" ? "lost" : "found";
+    const url = AppRoutes.dogs.results.replace(":dogType", dogTypeToSearch);
+    navigate(url, {
+      state: { type: dogTypeToSearch, base64Image: dog.imageBase64 },
+    });
   };
 
   const isMaleGender = dog.sex?.toLowerCase() === "male";
@@ -90,15 +129,30 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
   ];
 
   const image = `data:${dog.imageContentType};base64,${dog.imageBase64}`;
+  const toolTipText =
+    dog.type === "found"
+      ? AppTexts.dogCard.toolTipLost
+      : AppTexts.dogCard.toolTipFound;
 
   return (
-    <Card dir="rtl">
-      <CardMedia
-        image={image}
-        component="img"
-        title="Dog Image"
-        sx={styles.CardMedia}
-      />
+    <Card
+      dir="rtl"
+      sx={{ position: "relative" }}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      <CardMedia image={image} component="img" sx={styles.CardMedia} />
+      {isHamalUser && (
+        <Tooltip title={toolTipText} placement="top">
+          <Button
+            variant="contained"
+            sx={styles.searchIconButton}
+            onClick={searchForSimilarDogs}
+          >
+            <IconSearch width={25} />
+          </Button>
+        </Tooltip>
+      )}
       <CardActions sx={{ ...styles.CardActions, pr: 2, pt: 2 }}>
         {cardInfo.map((sectionText, index) => (
           <Typography key={sectionText} sx={styles.Typography}>
