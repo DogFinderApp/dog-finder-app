@@ -154,6 +154,8 @@ export const AppTexts = {
     sexText: "מין",
     foundDate: "נמצא בתאריך",
     lostDate: "אבד בתאריך",
+    toolTipLost: "חיפוש כלבים דומים שנעדרים",
+    toolTipFound: "חיפוש כלבים דומים שאותרו",
   },
   aboutPage: {
     texts: {
