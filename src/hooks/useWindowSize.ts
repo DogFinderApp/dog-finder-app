@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 
 const getWindowSize = () => {
   const { innerWidth, innerHeight } = window;
-  return { innerWidth, innerHeight };
+  const isMobile: boolean = innerWidth < 600;
+  const isTablet: boolean = innerWidth < 900;
+
+  return { innerWidth, innerHeight, isMobile, isTablet };
 };
 
 export const useWindowSize = () => {

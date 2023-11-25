@@ -139,9 +139,8 @@ export const DogDetailsPage = () => {
   const { isLoading } = useAuth0();
   const getServerApi = useGetServerApi();
   const { dog_id, lastReportedId } = useParams(); // eslint-disable-line
-  const { innerWidth } = useWindowSize();
+  const { isMobile } = useWindowSize();
 
-  const isMobile = innerWidth < 600;
   const {
     state: { isHamalUser },
   } = useHamalContext();

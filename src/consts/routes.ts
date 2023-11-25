@@ -11,4 +11,4 @@ export const AppRoutes = {
     results: "/results/:dogType/:lastReportedId?",
     allReports: "/all-reports/:dogType?",
   },
-};
+} as const;

@@ -58,7 +58,6 @@ const reportPossibleMatch = async (
 ): Promise<void> => {
   const { lastReportedId, possibleMatchId } = payload;
   const memorizedDogId: string | null = decryptData("lastReportedDogId");
-  // eslint-disable-next-line
   if (!lastReportedId && !memorizedDogId)
     return console.error("No memorized dog id in both URL and localStorage"); // eslint-disable-line
 
@@ -92,8 +91,7 @@ export const DogDetailsButtons = ({
 
   const getServerApi = useGetServerApi();
   const navigate = useNavigate();
-  const { innerWidth } = useWindowSize();
-  const isTablet = innerWidth < 900;
+  const { isTablet } = useWindowSize();
   const memorizedDogId: string | null = decryptData("lastReportedDogId");
   const noUserReports: boolean = !lastReportedId && !memorizedDogId;
   const styles = useDogDetailsButtonsStyles({ isTablet, noUserReports });
