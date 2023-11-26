@@ -6,7 +6,7 @@ import { AboutUsPage } from "../pages/AboutUs/AboutUsPage";
 import { ReportDogPage } from "../pages/dogs/ReportDogPage";
 import { SearchDogPage } from "../pages/dogs/SearchDogPage";
 import { ResultsDogPage } from "../pages/dogs/ResultsDogPage";
-import { DogDetailsPage } from "../pages/dogs/DogDetailsPage";
+import { DogDetailsPage } from "../pages/dogs/DogDetailsPage/DogDetailsPage";
 import { AllReportsPage } from "../pages/dogs/AllReportsPage";
 import { NotFound } from "../pages/NotFound";
 import { AppRoutes } from "./routes";

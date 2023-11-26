@@ -7,13 +7,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   IconGenderMale,
   IconGenderFemale,
   IconSearch,
 } from "@tabler/icons-react";
-import { useHamalContext } from "../../context/useHamalContext";
+import { useAuthContext } from "../../context/useAuthContext";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import { formatDateString } from "../../utils/datesFormatter";
@@ -76,18 +76,14 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
   const isMobile = innerWidth < 600;
   const styles = useCardStyles({ isHovering, isMobile });
   const navigate = useNavigate();
-  const { lastReportedId } = useParams();
   const {
     state: { isHamalUser },
-  } = useHamalContext();
+  } = useAuthContext();
 
   const navigateToSelectedDog = () => {
-    navigate(
-      AppRoutes.dogs.dogPage
-        .replace(":dog_id", dog.dogId)
-        .replace(":lastReportedId?", lastReportedId ?? ""),
-      { state: { dogType, lastReportedId } },
-    );
+    navigate(AppRoutes.dogs.dogPage.replace(":dog_id", dog.dogId), {
+      state: { dogType },
+    });
   };
 
   const searchForSimilarDogs = () => {

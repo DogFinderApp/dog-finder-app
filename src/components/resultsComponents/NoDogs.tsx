@@ -43,7 +43,7 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
   const theme = useTheme();
   const styles = useNoResultsStyles();
   const navigate = useNavigate();
-  const { innerWidth } = useWindowSize();
+  const { isMobile } = useWindowSize();
 
   const newReportText =
     dogType === DogType.FOUND
@@ -89,7 +89,7 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
           sx={styles.text}
         >
           {AppTexts.resultsPage.noResults.infoText1}
-          {innerWidth >= 600 && <br />}
+          {!isMobile && <br />}
           {AppTexts.resultsPage.noResults.infoText2}
         </Typography>
       </Box>

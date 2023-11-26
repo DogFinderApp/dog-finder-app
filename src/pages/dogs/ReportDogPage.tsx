@@ -18,9 +18,9 @@ import { DogType, ReportDogPayload, DogSex } from "../../facades/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { cleanImage } from "../../utils/imageUtils";
 import { dateToString } from "../../utils/datesFormatter";
-import { encryptData } from "../../utils/encryptionUtils";
 import { createStyleHook } from "../../hooks/styleHooks";
 import usePageTitle from "../../hooks/usePageTitle";
+import { useAuthContext } from "../../context/useAuthContext";
 import { useImageSelection } from "../../hooks/useImageSelection";
 import { useTextInput } from "../../hooks/useTextInput";
 import { useSelectInput } from "../../hooks/useSelectInput";
@@ -71,6 +71,7 @@ export const ReportDogPage = withAuthenticationRequired(
   ({ dogType }: ReportDogPageProps) => {
     const { onSelectImage, selectedImageUrl, clearSelection } =
       useImageSelection();
+    const { dispatch } = useAuthContext();
     const [isMissingImage, setIsMissingImage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -124,16 +125,12 @@ export const ReportDogPage = withAuthenticationRequired(
     const handleCloseError = () => setRequestStatus("");
 
     const navigateToResultsPage = ({
-      lastReportedId,
       base64Image,
     }: {
-      lastReportedId: string;
       base64Image: string;
     }) => {
       const dogTypeToSearch = dogType === "found" ? "lost" : "found";
-      const url = AppRoutes.dogs.results
-        .replace(":dogType", dogTypeToSearch)
-        .replace(":lastReportedId", lastReportedId);
+      const url = AppRoutes.dogs.results.replace(":dogType", dogTypeToSearch);
       navigate(url, { state: { type: dogTypeToSearch, base64Image } });
     };
 
@@ -180,15 +177,14 @@ export const ReportDogPage = withAuthenticationRequired(
       try {
         const response = await serverApi.report_dog(payload);
         const json = await response.json();
-        const lastReportedId = json.data.id;
 
         setRequestStatus("success");
         setIsLoading(false);
         clearInputs();
-        encryptData("lastReportedDogId", lastReportedId);
+        dispatch({ type: "ADD_NEW_REPORT", payload: json.data });
         setTimeout(() => {
           // wait before navigating to results page in order to show the success/error toast
-          navigateToResultsPage({ base64Image, lastReportedId });
+          navigateToResultsPage({ base64Image });
         }, 2000);
       } catch (error) {
         setRequestStatus("error");

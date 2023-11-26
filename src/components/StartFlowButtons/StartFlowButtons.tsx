@@ -22,8 +22,7 @@ export const StartFlowButtons = ({ alignRight }: { alignRight?: boolean }) => {
   }));
 
   const styles = useStartFlowButtonsStyles();
-  const { innerWidth } = useWindowSize();
-  const isMobile = innerWidth < 600;
+  const { isMobile } = useWindowSize();
 
   const commonIconProps: TablerIconsProps = {
     style: { marginRight: isMobile ? "auto" : "8px" },

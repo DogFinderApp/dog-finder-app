@@ -145,6 +145,11 @@ class ServerApi {
     });
   }
 
+  async getUserReportedDogs() {
+    const url = buildEndpoint("get_dogs_by_reporter_id");
+    return this.fetch(url);
+  }
+
   async getFullDogDetails(dogId: number) {
     const url = buildEndpoint(`get_dog_by_id?dogId=${dogId}`);
     return this.fetch(url);
