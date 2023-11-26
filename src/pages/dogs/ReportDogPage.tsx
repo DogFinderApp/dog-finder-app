@@ -19,6 +19,7 @@ import { useGetServerApi } from "../../facades/ServerApi";
 import { cleanImage } from "../../utils/imageUtils";
 import { dateToString } from "../../utils/datesFormatter";
 import { createStyleHook } from "../../hooks/styleHooks";
+import { DogDetailsReturnType } from "../../types/DogDetailsTypes";
 import usePageTitle from "../../hooks/usePageTitle";
 import { useAuthContext } from "../../context/useAuthContext";
 import { useImageSelection } from "../../hooks/useImageSelection";
@@ -69,13 +70,16 @@ interface ReportDogPageProps {
 
 export const ReportDogPage = withAuthenticationRequired(
   ({ dogType }: ReportDogPageProps) => {
-    const { onSelectImage, selectedImageUrl, clearSelection } =
-      useImageSelection();
     const { dispatch } = useAuthContext();
     const [isMissingImage, setIsMissingImage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [requestStatus, setRequestStatus] = useState<string>("");
+    const [matchingReports, setMatchingReports] = useState<
+      DogDetailsReturnType[]
+    >([]);
+    const { onSelectImage, selectedImageUrl, clearSelection } =
+      useImageSelection(dogType, setMatchingReports);
 
     const title =
       dogType === DogType.LOST
