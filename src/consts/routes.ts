@@ -3,12 +3,12 @@ export const AppRoutes = {
   privacyPolicy: "/PrivacyPolicy",
   about: "/about",
   dogs: {
-    dogPage: "/dogs/:dog_id/:lastReportedId?",
+    dogPage: "/dogs/:dog_id",
     reportFound: "/report-found",
     reportLost: "/report-lost",
     searchFoundDog: "/search-found",
     searchLostDog: "/search-lost",
-    results: "/results/:dogType/:lastReportedId?",
+    results: "/results/:dogType",
     allReports: "/all-reports/:dogType?",
   },
 } as const;

@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import { IconArrowLeft, TablerIconsProps } from "@tabler/icons-react";
-import { decryptData, encryptData } from "../../../utils/encryptionUtils";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
+import { useAuthContext } from "../../../context/useAuthContext";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { useWindowSize } from "../../../hooks/useWindowSize";
 import { useGetServerApi } from "../../../facades/ServerApi";
@@ -52,25 +52,16 @@ const useDogDetailsButtonsStyles = createStyleHook(
 );
 
 const reportPossibleMatch = async (
-  payload: { lastReportedId: string | undefined; possibleMatchId: number },
+  payload: { lastReportedId: number | null; possibleMatchId: number },
   getServerApi: Function,
   // eslint-disable-next-line
 ): Promise<void> => {
   const { lastReportedId, possibleMatchId } = payload;
-  const memorizedDogId: string | null = decryptData("lastReportedDogId");
-  if (!lastReportedId && !memorizedDogId)
-    return console.error("No memorized dog id in both URL and localStorage"); // eslint-disable-line
-
-  if (
-    lastReportedId &&
-    (!memorizedDogId || (memorizedDogId && lastReportedId !== memorizedDogId))
-  ) {
-    encryptData("lastReportedDogId", lastReportedId);
-  }
+  if (!lastReportedId) return console.error("User has no previous reports"); // eslint-disable-line
 
   const serverApi = await getServerApi();
   const response = await serverApi.addPossibleDogMatch({
-    dogId: Number(lastReportedId ?? memorizedDogId),
+    dogId: lastReportedId,
     possibleMatchId,
   });
   // eslint-disable-next-line
@@ -78,49 +69,46 @@ const reportPossibleMatch = async (
 };
 
 interface DogDetailsButtonsProps {
-  lastReportedId: string | undefined;
   data: DogDetailsReturnType | null;
 }
 
-export const DogDetailsButtons = ({
-  lastReportedId,
-  data,
-}: DogDetailsButtonsProps) => {
+export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
   const { whatsappButton, disabledButtonText, backButton } =
     AppTexts.dogDetails;
+
+  const {
+    state: { reports },
+  } = useAuthContext();
+  const noUserReports: boolean = !reports || !reports.length;
 
   const getServerApi = useGetServerApi();
   const navigate = useNavigate();
   const { isTablet } = useWindowSize();
-  const memorizedDogId: string | null = decryptData("lastReportedDogId");
-  const noUserReports: boolean = !lastReportedId && !memorizedDogId;
   const styles = useDogDetailsButtonsStyles({ isTablet, noUserReports });
+
+  const lastReportedId: number | null = reports
+    ? reports[reports.length - 1].id
+    : null;
 
   const handleCTAButton = (possibleMatchId: number) =>
     reportPossibleMatch({ lastReportedId, possibleMatchId }, getServerApi);
 
   const getWhatsappMessage = (status: "lost" | "found") => {
-    const lastReportedDogId = lastReportedId ?? memorizedDogId; // get id from param or localStorage
     // Split the URL and keep only the IDs
     const dogIds = window.location.href
       .split("/")
       .filter((segment) => segment !== "" && Number(segment));
     const dogPage: string = `${window.location.origin}/dogs/${dogIds[0]}`;
-    const lastReportedDogPage: string | null =
-      dogIds[1] || lastReportedDogId
-        ? `${window.location.origin}/dogs/${dogIds[1] ?? lastReportedDogId}`
-        : null;
+    const lastReportedDogPage: string | null = lastReportedId
+      ? `${window.location.origin}/dogs/${lastReportedId}`
+      : null;
 
     const whatsappTexts = AppTexts.dogDetails.whatsappLinks;
     const { lost, lost2, lost3, found, found2, found3 } = whatsappTexts;
 
     const messages = {
-      lost: `${lost}${
-        lastReportedDogPage ? `%0A%0A${lost2}%0A${lastReportedDogPage}` : ""
-      }%0A%0A${lost3}%0A${dogPage}`,
-      found: `${found}%0A%0A${found2}%0A${dogPage}${
-        lastReportedDogPage ? `%0A%0A${found3}%0A${lastReportedDogPage}` : ""
-      }`,
+      lost: `${lost}${`%0A%0A${lost2}%0A${lastReportedDogPage}`}%0A%0A${lost3}%0A${dogPage}`,
+      found: `${found}%0A%0A${found2}%0A${dogPage}%0A%0A${found3}%0A${lastReportedDogPage}`,
     };
     return messages[status];
   };

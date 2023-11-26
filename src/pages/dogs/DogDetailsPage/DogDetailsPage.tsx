@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Box, CardMedia, Typography, useTheme } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { formatDateString } from "../../../utils/datesFormatter";
-import { useHamalContext } from "../../../context/useHamalContext";
+import { useAuthContext } from "../../../context/useAuthContext";
 import { DogType } from "../../../facades/payload.types";
 import { useGetServerApi } from "../../../facades/ServerApi";
 import { AppTexts } from "../../../consts/texts";
@@ -138,12 +138,12 @@ export const DogDetailsPage = () => {
   const theme = useTheme();
   const { isLoading } = useAuth0();
   const getServerApi = useGetServerApi();
-  const { dog_id, lastReportedId } = useParams(); // eslint-disable-line
+  const { dog_id } = useParams(); // eslint-disable-line
   const { isMobile } = useWindowSize();
 
   const {
     state: { isHamalUser },
-  } = useHamalContext();
+  } = useAuthContext();
 
   const [data, setData] = useState<DogDetailsReturnType | null>(null);
   const [isFetching, setIsFetching] = useState<boolean | null>(null);
@@ -195,7 +195,7 @@ export const DogDetailsPage = () => {
               {title}
             </Typography>
           </Box>
-          <DogDetailsButtons lastReportedId={lastReportedId} data={data} />
+          <DogDetailsButtons data={data} />
         </Box>
         <Box sx={fetchedDataContainer}>
           <CardMedia

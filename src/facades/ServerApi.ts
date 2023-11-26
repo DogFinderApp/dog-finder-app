@@ -146,7 +146,7 @@ class ServerApi {
   }
 
   async getUserReportedDogs() {
-    const url = buildEndpoint(`get_dogs_by_reporter_id`);
+    const url = buildEndpoint("get_dogs_by_reporter_id");
     return this.fetch(url);
   }
 

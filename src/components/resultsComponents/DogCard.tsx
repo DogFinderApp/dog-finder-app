@@ -5,7 +5,7 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IconGenderMale, IconGenderFemale } from "@tabler/icons-react";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { formatDateString } from "../../utils/datesFormatter";
@@ -48,15 +48,11 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
 
   const styles = useCardStyles();
   const navigate = useNavigate();
-  const { lastReportedId } = useParams();
 
   const navigateToSelectedDog = () => {
-    navigate(
-      AppRoutes.dogs.dogPage
-        .replace(":dog_id", dog.dogId)
-        .replace(":lastReportedId?", lastReportedId ?? ""),
-      { state: { dogType, lastReportedId } },
-    );
+    navigate(AppRoutes.dogs.dogPage.replace(":dog_id", dog.dogId), {
+      state: { dogType },
+    });
   };
 
   const isMaleGender = dog.sex?.toLowerCase() === "male";

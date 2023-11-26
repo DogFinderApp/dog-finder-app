@@ -1,7 +1,7 @@
 export const AppTexts = {
   authPage: {
-    loginCta: "התחבר",
-    logoutCta: "התנתק",
+    loginCta: "התחברות",
+    logoutCta: "התנתקות",
   },
   searchPage: {
     title: "חיפוש אחר כלב",
@@ -78,9 +78,9 @@ export const AppTexts = {
       title: "ברוך הבא אל Fluffy Finder",
       welcomeMessage1: "כדי להשתמש בשירות יש להרשם",
       welcomeMessage2: "או לחלופין להתחבר עם חשבון גוגל",
-      cta: "התחל עכשיו",
-      footer1: "בעת הרשמה אתה מאשר את",
-      footer2: "תנאי השימוש ומדיניות הפרטיות",
+      cta: "התחלה",
+      footer1: "הרשמה לאתר מהווה אישור",
+      footer2: "לתנאי השימוש ומדיניות הפרטיות",
       footer3: "של Fluffy Finder",
     },
   },
