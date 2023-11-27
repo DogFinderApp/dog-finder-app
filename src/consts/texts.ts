@@ -168,7 +168,7 @@ export const AppTexts = {
     foundDate: "נמצא בתאריך",
     lostDate: "אבד בתאריך",
     toolTipLost: "חיפוש כלבים דומים שנעדרים",
-    toolTipFound: "חיפוש כלבים דומים שאותרו",
+    toolTipFound: "חיפוש כלבים דומים שנמצאו",
   },
   aboutPage: {
     texts: {

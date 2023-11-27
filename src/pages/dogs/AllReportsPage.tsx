@@ -72,8 +72,8 @@ export const AllReportsPage = withAuthenticationRequired(() => {
   const fetcher = async () => {
     const serverApi = await getServerApi();
     const type = ["found", "lost"].includes(selectedType) ? selectedType : "";
-    // we need to send the payload without the type in order to fetch all reports
     const page_size = 12; // eslint-disable-line
+    // we need to send the payload without the type in order to fetch ALL reports
     const payload = type ? { type, page, page_size } : { page, page_size };
     try {
       const response = await serverApi.getAllReportedDogs(payload);
@@ -100,6 +100,8 @@ export const AllReportsPage = withAuthenticationRequired(() => {
   });
 
   const sortResults = () => {
+    // create 2 arrays for lost and found dogs.
+    // then loop over each dog in the results and push it to the matching array
     const initValue = { foundDogs: [], lostDogs: [] };
     if (!response?.results) return initValue;
     return response?.results.reduce(

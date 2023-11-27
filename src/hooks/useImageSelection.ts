@@ -55,7 +55,7 @@ export const useImageSelection = (
   const clearSelection = () => {
     setSelectedImage(undefined);
     setImageURL(undefined);
-    setMatchingReports && setMatchingReports([]);
+    if (setMatchingReports) setMatchingReports([]);
   };
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export const useImageSelection = (
         fileReader.abort();
       }
     };
-  }, [selectedImage]);
+  }, [selectedImage, getServerApi, setMatchingReports, setIsModalOpen, type]);
 
   return {
     onSelectImage,

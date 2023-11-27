@@ -6,13 +6,13 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Fade, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { TransitionProps } from "@mui/material/transitions";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
 import { DogType } from "../../../facades/payload.types";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { AppRoutes } from "../../../consts/routes";
 import { AppTexts } from "../../../consts/texts";
-import { useNavigate } from "react-router-dom";
-import { TransitionProps } from "@mui/material/transitions";
 
 interface AlertModalProps {
   matchingReports: DogDetailsReturnType[];
@@ -25,7 +25,7 @@ const useAlertModalStyles = createStyleHook(() => ({
   dialog: {
     direction: "rtl",
     margin: "0 auto",
-    width: { sm: "100%", xs: "90%" },
+    width: { md: "100%", xs: "90%" },
     maxWidth: "800px",
     textAlign: "center",
     ".css-1i7xwvs-MuiPaper-root-MuiDialog-paper": {
@@ -36,7 +36,7 @@ const useAlertModalStyles = createStyleHook(() => ({
       borderRadius: "8px",
     },
   },
-  title: { fontSize: { sm: 36, xs: 26 }, fontWeight: 600 },
+  title: { fontSize: { sm: 36, xs: 26 }, fontWeight: 600, lineHeight: 1.1 },
   content: { fontSize: { sm: 20, xs: 16 } },
   imageContainer: {
     position: "relative",
@@ -60,7 +60,7 @@ const useAlertModalStyles = createStyleHook(() => ({
     color: "white",
     fontSize: "16px",
   },
-  continueButton: { color: "white", fontSize: "16px" },
+  continueButton: { color: "white", fontSize: "16px", margin: "0 !important" },
 }));
 
 const linkStyles = {
@@ -105,56 +105,54 @@ export default function MatchingReportModal({
   const image = `data:${mostMatchingReport?.imageContentType};base64, ${mostMatchingReport?.imageBase64}`;
 
   return (
-    <>
-      <Dialog
-        fullScreen
-        open={isModalOpen}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        sx={styles.dialog}
-        TransitionComponent={Transition}
-      >
-        <DialogTitle sx={styles.title}>{title}</DialogTitle>
-        <DialogContent sx={{ flex: "unset" }}>
-          <DialogContentText sx={styles.content}>
-            {alertTexts[dogType]}
-          </DialogContentText>
-        </DialogContent>
-        {mostMatchingReport && (
-          <DialogActions sx={styles.imageContainer}>
-            <img
-              src={image}
-              alt=""
-              style={{ width: "100%", maxHeight: "400px" }}
-            />
-            <a
-              href={AppRoutes.dogs.dogPage.replace(
-                ":dog_id",
-                // @ts-expect-error
-                mostMatchingReport.dogId,
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={linkStyles}
-            >
-              <Typography sx={styles.linkText}>{watchProfile}</Typography>
-            </a>
-          </DialogActions>
-        )}
-        <DialogActions sx={styles.buttonsContainer}>
-          <Button
-            autoFocus
-            onClick={handleDeclineButton}
-            sx={styles.cancelButton}
+    <Dialog
+      fullScreen
+      open={isModalOpen}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      sx={styles.dialog}
+      TransitionComponent={Transition}
+    >
+      <DialogTitle sx={styles.title}>{title}</DialogTitle>
+      <DialogContent sx={{ flex: "unset" }}>
+        <DialogContentText sx={styles.content}>
+          {alertTexts[dogType]}
+        </DialogContentText>
+      </DialogContent>
+      {mostMatchingReport && (
+        <DialogActions sx={styles.imageContainer}>
+          <img
+            src={image}
+            alt=""
+            style={{ width: "100%", maxHeight: "400px" }}
+          />
+          <a
+            href={AppRoutes.dogs.dogPage.replace(
+              ":dog_id",
+              // @ts-expect-error
+              mostMatchingReport.dogId,
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={linkStyles}
           >
-            {cancelText}
-          </Button>
-          <Button onClick={handleClose} sx={styles.continueButton}>
-            {continueText}
-          </Button>
+            <Typography sx={styles.linkText}>{watchProfile}</Typography>
+          </a>
         </DialogActions>
-      </Dialog>
-    </>
+      )}
+      <DialogActions sx={styles.buttonsContainer}>
+        <Button
+          autoFocus
+          onClick={handleDeclineButton}
+          sx={styles.cancelButton}
+        >
+          {cancelText}
+        </Button>
+        <Button onClick={handleClose} sx={styles.continueButton}>
+          {continueText}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
