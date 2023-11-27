@@ -1,7 +1,7 @@
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { imageMimeType } from "../consts/formats";
 import { DogDetailsReturnType } from "../types/DogDetailsTypes";
-import { DogType } from "../facades/payload.types";
+import { DogType } from "../types/payload.types";
 import { useGetServerApi } from "../facades/ServerApi";
 
 const checkForMatchingDogs = async (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DogResult } from "../facades/payload.types";
+import { DogResult } from "../types/payload.types";
 
 const usePagination = (data: DogResult[], itemsPerPage: number) => {
   const [currentPage, setCurrentPage] = useState(1);

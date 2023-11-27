@@ -5,7 +5,7 @@ import usePageTitle from "../../hooks/usePageTitle";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { AppTexts } from "../../consts/texts";
 import { useGetServerApi } from "../../facades/ServerApi";
-import { DogType } from "../../facades/payload.types";
+import { DogType } from "../../types/payload.types";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";

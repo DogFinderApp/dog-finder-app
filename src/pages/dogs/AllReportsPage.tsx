@@ -8,7 +8,7 @@ import usePagination from "../../hooks/usePagination";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { AppTexts } from "../../consts/texts";
 import { useGetServerApi } from "../../facades/ServerApi";
-import { DogResult } from "../../facades/payload.types";
+import { DogResult } from "../../types/payload.types";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";

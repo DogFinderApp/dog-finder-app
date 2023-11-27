@@ -1,6 +1,6 @@
 import { Grid, Typography, useTheme } from "@mui/material";
 import { createStyleHook } from "../../hooks/styleHooks";
-import { DogResult } from "../../facades/payload.types";
+import { DogResult } from "../../types/payload.types";
 import { AppTexts } from "../../consts/texts";
 import { DogCard } from "./DogCard";
 

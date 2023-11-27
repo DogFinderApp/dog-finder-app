@@ -9,17 +9,10 @@ import { Fade, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { TransitionProps } from "@mui/material/transitions";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
-import { DogType } from "../../../facades/payload.types";
 import { createStyleHook } from "../../../hooks/styleHooks";
+import { DogType } from "../../../types/payload.types";
 import { AppRoutes } from "../../../consts/routes";
 import { AppTexts } from "../../../consts/texts";
-
-interface AlertModalProps {
-  matchingReports: DogDetailsReturnType[];
-  isModalOpen: boolean;
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-  dogType: DogType;
-}
 
 const useAlertModalStyles = createStyleHook(() => ({
   dialog: {
@@ -80,6 +73,13 @@ const Transition = forwardRef(function Transition(
   return <Fade in ref={ref} timeout={300} {...props} />;
 });
 
+interface AlertModalProps {
+  matchingReports: DogDetailsReturnType[];
+  isModalOpen: boolean;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  dogType: DogType;
+}
+
 export default function MatchingReportModal({
   matchingReports,
   isModalOpen,
@@ -95,7 +95,7 @@ export default function MatchingReportModal({
     setIsModalOpen(false);
   };
 
-  const handleDeclineButton = () => {
+  const handleCancelButton = () => {
     setIsModalOpen(false);
     navigate(AppRoutes.root);
   };
@@ -142,11 +142,7 @@ export default function MatchingReportModal({
         </DialogActions>
       )}
       <DialogActions sx={styles.buttonsContainer}>
-        <Button
-          autoFocus
-          onClick={handleDeclineButton}
-          sx={styles.cancelButton}
-        >
+        <Button autoFocus onClick={handleCancelButton} sx={styles.cancelButton}>
           {cancelText}
         </Button>
         <Button onClick={handleClose} sx={styles.continueButton}>

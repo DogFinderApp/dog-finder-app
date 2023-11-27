@@ -9,7 +9,7 @@ import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
 import { useImageSelection } from "../../hooks/useImageSelection";
 import usePageTitle from "../../hooks/usePageTitle";
-import { DogType, QueryPayload } from "../../facades/payload.types";
+import { DogType, QueryPayload } from "../../types/payload.types";
 import { cleanImage } from "../../utils/imageUtils";
 import { RTLWrapper } from "../../components/common/RTLWrapper";
 import { AppRoutes } from "../../consts/routes";

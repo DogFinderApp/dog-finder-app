@@ -17,7 +17,7 @@ import { useAuthContext } from "../../context/useAuthContext";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import { formatDateString } from "../../utils/datesFormatter";
-import { DogResult, DogType } from "../../facades/payload.types";
+import { DogResult, DogType } from "../../types/payload.types";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
 

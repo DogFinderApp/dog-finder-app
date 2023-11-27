@@ -4,7 +4,7 @@ import { DatePicker as MaterialDatePicker } from "@mui/x-date-pickers/DatePicker
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useRTLTextFieldStyles } from "../pageComponents/RTLTextInput/RTLTextField";
 import { createStyleHook } from "../../hooks/styleHooks";
-import { DogType } from "../../facades/payload.types";
+import { DogType } from "../../types/payload.types";
 import { RTLWrapper } from "../common/RTLWrapper";
 import { AppTexts } from "../../consts/texts";
 
