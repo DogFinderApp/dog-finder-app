@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback } from "react";
 import { jwtDecode } from "jwt-decode";
-import { QueryPayload, ReportDogPayload } from "./payload.types";
+import { QueryPayload, ReportDogPayload } from "../types/payload.types";
 
 interface DecodedUserData {
   iss: string;

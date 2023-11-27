@@ -1,4 +1,4 @@
-import { DogType } from "../facades/payload.types";
+import { DogType } from "./payload.types";
 
 export interface DogDetailsReturnType {
   id: number;
@@ -23,4 +23,5 @@ export interface DogDetailsReturnType {
   location: string;
   dogFoundOn: string;
   contactPhone: string;
+  score?: number;
 }

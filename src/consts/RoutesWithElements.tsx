@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { DogType } from "../facades/payload.types";
+import { DogType } from "../types/payload.types";
 import { HomePage } from "../pages/root/HomePage";
 import { PrivacyPolicy } from "../pages/PrivacyPolicy/PrivacyPolicy";
 import { AboutUsPage } from "../pages/AboutUs/AboutUsPage";

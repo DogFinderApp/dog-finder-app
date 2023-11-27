@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { useWindowSize } from "../../hooks/useWindowSize";
-import { DogType } from "../../facades/payload.types";
+import { DogType } from "../../types/payload.types";
 import { AppRoutes } from "../../consts/routes";
 import { AppTexts } from "../../consts/texts";
 

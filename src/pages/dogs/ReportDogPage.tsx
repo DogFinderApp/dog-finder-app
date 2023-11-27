@@ -14,11 +14,12 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { IconSend } from "@tabler/icons-react";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
-import { DogType, ReportDogPayload, DogSex } from "../../facades/payload.types";
+import { DogType, ReportDogPayload, DogSex } from "../../types/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { cleanImage } from "../../utils/imageUtils";
 import { dateToString } from "../../utils/datesFormatter";
 import { createStyleHook } from "../../hooks/styleHooks";
+import { DogDetailsReturnType } from "../../types/DogDetailsTypes";
 import usePageTitle from "../../hooks/usePageTitle";
 import { useAuthContext } from "../../context/useAuthContext";
 import { useImageSelection } from "../../hooks/useImageSelection";
@@ -33,6 +34,7 @@ import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
 import { RTLTextField } from "../../components/pageComponents/RTLTextInput/RTLTextField";
 import DatePicker from "../../components/DatePicker/DatePicker";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
+import MatchingReportModal from "../../components/pageComponents/Modal/MatchingReportModal";
 
 const useReportDogPageStyles = createStyleHook(
   (theme, props: { isError: boolean }) => ({
@@ -69,13 +71,17 @@ interface ReportDogPageProps {
 
 export const ReportDogPage = withAuthenticationRequired(
   ({ dogType }: ReportDogPageProps) => {
-    const { onSelectImage, selectedImageUrl, clearSelection } =
-      useImageSelection();
     const { dispatch } = useAuthContext();
     const [isMissingImage, setIsMissingImage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [requestStatus, setRequestStatus] = useState<string>("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [matchingReports, setMatchingReports] = useState<
+      DogDetailsReturnType[]
+    >([]);
+    const { onSelectImage, selectedImageUrl, clearSelection } =
+      useImageSelection(dogType, setMatchingReports, setIsModalOpen);
 
     const title =
       dogType === DogType.LOST
@@ -217,182 +223,190 @@ export const ReportDogPage = withAuthenticationRequired(
       : "";
 
     return (
-      <PageContainer>
-        <Box sx={styles.root}>
-          <PageTitle text={title} />
-          <Snackbar
-            open={!!requestStatus}
-            autoHideDuration={6000}
-            onClose={handleCloseError}
-          >
-            <Alert
+      <>
+        <MatchingReportModal
+          matchingReports={matchingReports}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          dogType={dogType}
+        />
+        <PageContainer>
+          <Box sx={styles.root}>
+            <PageTitle text={title} />
+            <Snackbar
+              open={!!requestStatus}
+              autoHideDuration={6000}
               onClose={handleCloseError}
-              severity={requestStatus as AlertColor}
-              sx={styles.alert}
             >
-              {alertText}
-              <br />
-              {alertText === successMessage &&
-                AppTexts.reportPage.request.success.redirect}
-            </Alert>
-          </Snackbar>
-          {isLoading ? (
-            <CircularProgress />
-          ) : (
-            <>
-              <DogPhoto
-                onSelectImage={onSelectImage}
-                selectedImageUrl={selectedImageUrl}
-                clearSelection={clearSelection}
-                isError={isMissingImage}
-              />
-              <RTLTextField
-                label={AppTexts.reportPage.dogDetails.dogRace}
-                type="text"
-                fullWidth
-                margin="normal"
-                value={inputs.dogBreed.value}
-                onChange={inputs.dogBreed.onTextChange}
-                error={!inputs.dogBreed.isTextValid}
-              />
-              <RTLTextField
-                label={AppTexts.reportPage.dogDetails.dogSize}
-                type="text"
-                fullWidth
-                margin="normal"
-                value={inputs.dogSize.value}
-                onChange={inputs.dogSize.onTextChange}
-                error={!inputs.dogSize.isTextValid}
-              />
-              <SelectInputField
-                options={dogSexOptions}
-                label={AppTexts.reportPage.dogDetails.dogSex}
-                onChange={inputs.dogSex.onSelectChange}
-                error={!inputs.dogSex.isValueValid}
-                value={inputs.dogSex.value}
-              />
-              <SelectInputField
-                options={AppTexts.reportPage.dogAge}
-                label={AppTexts.reportPage.dogDetails.dogAge}
-                onChange={inputs.ageGroup.onSelectChange}
-                error={!inputs.ageGroup.isValueValid}
-                value={inputs.ageGroup.value}
-              />
-              <RTLTextField
-                label={AppTexts.reportPage.dogDetails.dogColor}
-                type="text"
-                fullWidth
-                margin="normal"
-                value={inputs.dogColor.value}
-                onChange={inputs.dogColor.onTextChange}
-                error={!inputs.dogColor.isTextValid}
-              />
-              <RTLTextField
-                label={AppTexts.reportPage.dogDetails.chipNumber}
-                type="text"
-                fullWidth
-                margin="normal"
-                value={inputs.chipNumber.value}
-                onChange={inputs.chipNumber.onTextChange}
-                error={!inputs.chipNumber.isTextValid}
-              />
-              <DatePicker
-                reportType={dogType}
-                date={inputs.date.dateInput}
-                handleDateChange={inputs.date.handleDateChange}
-                error={!inputs.date.isInputValid}
-              />
-              <RTLTextField
-                label={locationText}
-                fullWidth
-                required
-                type="text"
-                margin="normal"
-                value={inputs.location.value}
-                onChange={inputs.location.onTextChange}
-                error={!inputs.location.isTextValid}
-              />
-              <RTLTextField
-                rows={2}
-                label={AppTexts.reportPage.extraDetails.contactName}
-                fullWidth
-                required
-                multiline
-                type="text"
-                margin="normal"
-                value={inputs.contactName.value}
-                onChange={inputs.contactName.onTextChange}
-                error={!inputs.contactName.isTextValid}
-              />
-              <RTLTextField
-                rows={2}
-                label={AppTexts.reportPage.extraDetails.contactPhone}
-                fullWidth
-                required
-                multiline
-                type="tel"
-                margin="normal"
-                value={inputs.contactPhone.value}
-                onChange={inputs.contactPhone.onPhoneChange}
-                error={!inputs.contactPhone.isPhoneValid}
-                helperText={phoneInputHelperText}
-                placeholder={AppTexts.reportPage.helperTexts.phonePlaceholder}
-              />
-              <RTLTextField
-                rows={2}
-                label={AppTexts.reportPage.extraDetails.contactEmail}
-                fullWidth
-                required
-                multiline
-                type="text"
-                margin="normal"
-                value={inputs.contactEmail.value}
-                onChange={inputs.contactEmail.onEmailChange}
-                error={!inputs.contactEmail.isEmailValid}
-                helperText={emailInputHelperText}
-              />
-              <RTLTextField
-                rows={2}
-                label={AppTexts.reportPage.extraDetails.contactAddress}
-                fullWidth
-                multiline
-                type="text"
-                margin="normal"
-                value={inputs.contactAddress.value}
-                onChange={inputs.contactAddress.onTextChange}
-                error={!inputs.contactAddress.isTextValid}
-              />
-              <RTLTextField
-                rows={5}
-                label={AppTexts.reportPage.extraDetails.extraDetails}
-                fullWidth
-                multiline
-                type="text"
-                margin="normal"
-                value={inputs.extraDetails.value}
-                onChange={inputs.extraDetails.onTextChange}
-                error={!inputs.extraDetails.isTextValid}
-              />
-              <Typography
-                variant="subtitle1"
-                color={theme.palette.error.main}
-                sx={styles.error}
+              <Alert
+                onClose={handleCloseError}
+                severity={requestStatus as AlertColor}
+                sx={styles.alert}
               >
-                {AppTexts.reportPage.error}
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={styles.button}
-                onClick={handleSubmitForm}
-              >
-                <IconSend style={{ marginRight: "8px" }} />
-                {AppTexts.reportPage.cta}
-              </Button>
-            </>
-          )}
-        </Box>
-      </PageContainer>
+                {alertText}
+                <br />
+                {alertText === successMessage &&
+                  AppTexts.reportPage.request.success.redirect}
+              </Alert>
+            </Snackbar>
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <>
+                <DogPhoto
+                  onSelectImage={onSelectImage}
+                  selectedImageUrl={selectedImageUrl}
+                  clearSelection={clearSelection}
+                  isError={isMissingImage}
+                />
+                <RTLTextField
+                  label={AppTexts.reportPage.dogDetails.dogRace}
+                  type="text"
+                  fullWidth
+                  margin="normal"
+                  value={inputs.dogBreed.value}
+                  onChange={inputs.dogBreed.onTextChange}
+                  error={!inputs.dogBreed.isTextValid}
+                />
+                <RTLTextField
+                  label={AppTexts.reportPage.dogDetails.dogSize}
+                  type="text"
+                  fullWidth
+                  margin="normal"
+                  value={inputs.dogSize.value}
+                  onChange={inputs.dogSize.onTextChange}
+                  error={!inputs.dogSize.isTextValid}
+                />
+                <SelectInputField
+                  options={dogSexOptions}
+                  label={AppTexts.reportPage.dogDetails.dogSex}
+                  onChange={inputs.dogSex.onSelectChange}
+                  error={!inputs.dogSex.isValueValid}
+                  value={inputs.dogSex.value}
+                />
+                <SelectInputField
+                  options={AppTexts.reportPage.dogAge}
+                  label={AppTexts.reportPage.dogDetails.dogAge}
+                  onChange={inputs.ageGroup.onSelectChange}
+                  error={!inputs.ageGroup.isValueValid}
+                  value={inputs.ageGroup.value}
+                />
+                <RTLTextField
+                  label={AppTexts.reportPage.dogDetails.dogColor}
+                  type="text"
+                  fullWidth
+                  margin="normal"
+                  value={inputs.dogColor.value}
+                  onChange={inputs.dogColor.onTextChange}
+                  error={!inputs.dogColor.isTextValid}
+                />
+                <RTLTextField
+                  label={AppTexts.reportPage.dogDetails.chipNumber}
+                  type="text"
+                  fullWidth
+                  margin="normal"
+                  value={inputs.chipNumber.value}
+                  onChange={inputs.chipNumber.onTextChange}
+                  error={!inputs.chipNumber.isTextValid}
+                />
+                <DatePicker
+                  reportType={dogType}
+                  date={inputs.date.dateInput}
+                  handleDateChange={inputs.date.handleDateChange}
+                  error={!inputs.date.isInputValid}
+                />
+                <RTLTextField
+                  label={locationText}
+                  fullWidth
+                  required
+                  type="text"
+                  margin="normal"
+                  value={inputs.location.value}
+                  onChange={inputs.location.onTextChange}
+                  error={!inputs.location.isTextValid}
+                />
+                <RTLTextField
+                  rows={2}
+                  label={AppTexts.reportPage.extraDetails.contactName}
+                  fullWidth
+                  required
+                  multiline
+                  type="text"
+                  margin="normal"
+                  value={inputs.contactName.value}
+                  onChange={inputs.contactName.onTextChange}
+                  error={!inputs.contactName.isTextValid}
+                />
+                <RTLTextField
+                  rows={2}
+                  label={AppTexts.reportPage.extraDetails.contactPhone}
+                  fullWidth
+                  required
+                  multiline
+                  type="tel"
+                  margin="normal"
+                  value={inputs.contactPhone.value}
+                  onChange={inputs.contactPhone.onPhoneChange}
+                  error={!inputs.contactPhone.isPhoneValid}
+                  helperText={phoneInputHelperText}
+                  placeholder={AppTexts.reportPage.helperTexts.phonePlaceholder}
+                />
+                <RTLTextField
+                  rows={2}
+                  label={AppTexts.reportPage.extraDetails.contactEmail}
+                  fullWidth
+                  required
+                  multiline
+                  type="text"
+                  margin="normal"
+                  value={inputs.contactEmail.value}
+                  onChange={inputs.contactEmail.onEmailChange}
+                  error={!inputs.contactEmail.isEmailValid}
+                  helperText={emailInputHelperText}
+                />
+                <RTLTextField
+                  rows={2}
+                  label={AppTexts.reportPage.extraDetails.contactAddress}
+                  fullWidth
+                  multiline
+                  type="text"
+                  margin="normal"
+                  value={inputs.contactAddress.value}
+                  onChange={inputs.contactAddress.onTextChange}
+                  error={!inputs.contactAddress.isTextValid}
+                />
+                <RTLTextField
+                  rows={5}
+                  label={AppTexts.reportPage.extraDetails.extraDetails}
+                  fullWidth
+                  multiline
+                  type="text"
+                  margin="normal"
+                  value={inputs.extraDetails.value}
+                  onChange={inputs.extraDetails.onTextChange}
+                  error={!inputs.extraDetails.isTextValid}
+                />
+                <Typography
+                  variant="subtitle1"
+                  color={theme.palette.error.main}
+                  sx={styles.error}
+                >
+                  {AppTexts.reportPage.error}
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={styles.button}
+                  onClick={handleSubmitForm}
+                >
+                  <IconSend style={{ marginRight: "8px" }} />
+                  {AppTexts.reportPage.cta}
+                </Button>
+              </>
+            )}
+          </Box>
+        </PageContainer>
+      </>
     );
   },
 );

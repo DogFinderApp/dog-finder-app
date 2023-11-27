@@ -129,24 +129,22 @@ export const PageToolbar = () => {
             <MenuItem sx={styles.menuItem}>{link.text}</MenuItem>
           </Link>
         ))}
-        {isHamalUser && (
-          <>
-            <Divider variant="middle" sx={styles.divider} />
-            {hamalLinks.map((link) => (
-              <Link
-                key={link.text}
-                to={link.href}
-                style={linkStyles}
-                onClick={handleCloseMenu}
-              >
-                <MenuItem sx={styles.menuItem}>
-                  {link.text}
-                  <Chip label={'חמ"ל'} color="primary" sx={styles.chip} />
-                </MenuItem>
-              </Link>
-            ))}
-          </>
-        )}
+        {/* can't use Fragments inside Menu component */}
+        {isHamalUser && <Divider variant="middle" sx={styles.divider} />}
+        {isHamalUser &&
+          hamalLinks.map((link) => (
+            <Link
+              key={link.text}
+              to={link.href}
+              style={linkStyles}
+              onClick={handleCloseMenu}
+            >
+              <MenuItem sx={styles.menuItem}>
+                {link.text}
+                <Chip label={'חמ"ל'} color="primary" sx={styles.chip} />
+              </MenuItem>
+            </Link>
+          ))}
       </Menu>
     </Box>
   );

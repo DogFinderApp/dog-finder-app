@@ -68,6 +68,17 @@ export const AppTexts = {
         redirect: "מיד תועברו לחיפוש במאגר",
       },
     },
+    matchingReport: {
+      title: "מצאנו דיווח שנראה תואם לתמונה שהעלאת",
+      alertTexts: {
+        found:
+          "המערכת שלנו זיהתה מבין הדיווחים על הכלבים שנמצאו את הפרופיל הבא",
+        lost: "המערכת שלנו זיהתה מבין הדיווחים על הכלבים האבודים את הפרופיל הבא",
+      },
+      watchProfile: "צפה בפרופיל",
+      cancelText: "ביטול דיווח",
+      continueText: "המשך למילוי דיווח",
+    },
   },
   homePage: {
     cta: {
@@ -157,7 +168,7 @@ export const AppTexts = {
     foundDate: "נמצא בתאריך",
     lostDate: "אבד בתאריך",
     toolTipLost: "חיפוש כלבים דומים שנעדרים",
-    toolTipFound: "חיפוש כלבים דומים שאותרו",
+    toolTipFound: "חיפוש כלבים דומים שנמצאו",
   },
   aboutPage: {
     texts: {

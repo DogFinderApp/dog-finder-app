@@ -4,7 +4,7 @@ import { Box, CardMedia, Typography, useTheme } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { formatDateString } from "../../../utils/datesFormatter";
 import { useAuthContext } from "../../../context/useAuthContext";
-import { DogType } from "../../../facades/payload.types";
+import { DogType } from "../../../types/payload.types";
 import { useGetServerApi } from "../../../facades/ServerApi";
 import { AppTexts } from "../../../consts/texts";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
