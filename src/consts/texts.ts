@@ -142,8 +142,8 @@ export const AppTexts = {
   navigation: {
     home: "בית",
     aboutUs: "אודות",
-    reportFound: "מצאתי כלב",
-    reportLost: "איבדתי כלב",
+    reportFound: "דיווח - מצאתי כלב",
+    reportLost: "דיווח - איבדתי כלב",
     searchLost: "חיפוש כלב במאגר הנעדרים",
     searchFound: "חיפוש כלב במאגר הנמצאים",
     privacyPolicy: "תנאי השימוש",
