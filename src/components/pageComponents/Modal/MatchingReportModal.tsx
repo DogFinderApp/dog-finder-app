@@ -21,7 +21,7 @@ const useAlertModalStyles = createStyleHook(() => ({
     width: { md: "100%", xs: "90%" },
     maxWidth: "800px",
     textAlign: "center",
-    ".css-1i7xwvs-MuiPaper-root-MuiDialog-paper": {
+    ".MuiDialog-paper": {
       backgroundColor: "rgba(37, 37, 37, 0.85)",
       backdropFilter: "blur(4px)",
       height: "unset",
