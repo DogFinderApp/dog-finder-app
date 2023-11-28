@@ -81,7 +81,8 @@ const thinText = { fontWeight: "400" };
 const advancedDetailsRowStyle = {
   display: "flex",
   flexDirection: "column",
-  gap: "2rem",
+  gap: "12px",
+  marginTop: "8px",
 };
 
 const BackdropComp: FC<{ children: ReactNode }> = ({ children }) => (
@@ -206,12 +207,6 @@ export const DogDetailsPage = () => {
           />
           <Box component="div" sx={detailsStyle}>
             <Box sx={detailsListStyle}>
-              {data?.extraDetails && (
-                <Box sx={advancedDetailsRowStyle}>
-                  <span style={boldText}>פרטים נוספים: </span>
-                  <span style={thinText}>{data?.extraDetails || ""}</span>
-                </Box>
-              )}
               <Box sx={detailRowStyle}>
                 <span style={boldText}>סטטוס: </span>
                 <span style={thinText}>
@@ -227,11 +222,29 @@ export const DogDetailsPage = () => {
               {data?.ageGroup && (
                 <Box sx={detailRowStyle}>
                   <span style={boldText}>
-                    {AppTexts.reportPage.dogDetails.dogAge}:
+                    {AppTexts.reportPage.dogDetails.dogAgeFound}:
                   </span>
                   <span style={thinText}>
                     {AppTexts.reportPage.dogAge[data.ageGroup] ?? ""}
                   </span>
+                </Box>
+              )}
+              {data?.breed && (
+                <Box sx={detailRowStyle}>
+                  <span style={boldText}>גזע: </span>
+                  <span style={thinText}>{data?.breed ?? ""}</span>
+                </Box>
+              )}
+              {data?.color && (
+                <Box sx={detailRowStyle}>
+                  <span style={boldText}>צבע: </span>
+                  <span style={thinText}>{data?.color ?? ""}</span>
+                </Box>
+              )}
+              {data?.size && (
+                <Box sx={detailRowStyle}>
+                  <span style={boldText}>גודל: </span>
+                  <span style={thinText}>{data?.size ?? ""}</span>
                 </Box>
               )}
               <Box sx={detailRowStyle}>
@@ -253,22 +266,16 @@ export const DogDetailsPage = () => {
                   {formatDateString(data?.dogFoundOn ?? "")}
                 </span>
               </Box>
-              {data?.breed && (
-                <Box sx={detailRowStyle}>
-                  <span style={boldText}>גזע: </span>
-                  <span style={thinText}>{data?.breed ?? ""}</span>
-                </Box>
-              )}
-              {data?.color && (
-                <Box sx={detailRowStyle}>
-                  <span style={boldText}>צבע: </span>
-                  <span style={thinText}>{data?.color ?? ""}</span>
-                </Box>
-              )}
               {data?.chipNumber && isHamalUser && (
                 <Box sx={detailRowStyle}>
                   <span style={boldText}>מספר שבב: </span>
                   <span style={thinText}>{data.chipNumber}</span>
+                </Box>
+              )}
+              {data?.extraDetails && (
+                <Box sx={advancedDetailsRowStyle}>
+                  <span style={boldText}>פרטים נוספים: </span>
+                  <span style={thinText}>{data?.extraDetails || ""}</span>
                 </Box>
               )}
             </Box>

@@ -101,7 +101,10 @@ export const ReportDogPage = withAuthenticationRequired(
 
     const inputs = {
       dogBreed: useTextInput({ isMandatoryInput: false }),
-      dogSize: useTextInput({ isMandatoryInput: false }),
+      dogSize: useSelectInput({
+        isMandatoryInput: false,
+        possibleValues: Object.keys(AppTexts.reportPage.dogSizeOptions),
+      }),
       ageGroup: useSelectInput({
         isMandatoryInput: false,
         possibleValues: Object.keys(AppTexts.reportPage.dogAge),
@@ -222,6 +225,24 @@ export const ReportDogPage = withAuthenticationRequired(
       ? AppTexts.reportPage.helperTexts.email
       : "";
 
+    const dateText =
+      dogType === DogType.LOST
+        ? AppTexts.reportPage.dateDetails.lostDate
+        : AppTexts.reportPage.dateDetails.foundDate;
+
+    const matchGender = (text: string) => {
+      const maleText = text.slice(0, text.length - 2); // remove prefix "ה/"
+      if (inputs.dogSex.value === "male") return `${maleText}`;
+      if (inputs.dogSex.value === "female") return `${maleText}ה`;
+      return text; // if the gender input is empty
+    };
+
+    const ageText =
+      // if the dogs is lost, their owner probably knows their age, we don't need to add "משוער"
+      dogType === DogType.LOST
+        ? matchGender(AppTexts.reportPage.dogDetails.dogAgeLost)
+        : AppTexts.reportPage.dogDetails.dogAgeFound;
+
     return (
       <>
         <MatchingReportModal
@@ -260,7 +281,7 @@ export const ReportDogPage = withAuthenticationRequired(
                   isError={isMissingImage}
                 />
                 <RTLTextField
-                  label={AppTexts.reportPage.dogDetails.dogRace}
+                  label={matchGender(AppTexts.reportPage.dogDetails.dogRace)}
                   type="text"
                   fullWidth
                   margin="normal"
@@ -268,25 +289,23 @@ export const ReportDogPage = withAuthenticationRequired(
                   onChange={inputs.dogBreed.onTextChange}
                   error={!inputs.dogBreed.isTextValid}
                 />
-                <RTLTextField
-                  label={AppTexts.reportPage.dogDetails.dogSize}
-                  type="text"
-                  fullWidth
-                  margin="normal"
+                <SelectInputField
+                  options={AppTexts.reportPage.dogSizeOptions}
+                  label={matchGender(AppTexts.reportPage.dogDetails.dogSize)}
+                  onChange={inputs.dogSize.onSelectChange}
+                  error={!inputs.dogSize.isValueValid}
                   value={inputs.dogSize.value}
-                  onChange={inputs.dogSize.onTextChange}
-                  error={!inputs.dogSize.isTextValid}
                 />
                 <SelectInputField
                   options={dogSexOptions}
-                  label={AppTexts.reportPage.dogDetails.dogSex}
+                  label={matchGender(AppTexts.reportPage.dogDetails.dogSex)}
                   onChange={inputs.dogSex.onSelectChange}
                   error={!inputs.dogSex.isValueValid}
                   value={inputs.dogSex.value}
                 />
                 <SelectInputField
                   options={AppTexts.reportPage.dogAge}
-                  label={AppTexts.reportPage.dogDetails.dogAge}
+                  label={ageText}
                   onChange={inputs.ageGroup.onSelectChange}
                   error={!inputs.ageGroup.isValueValid}
                   value={inputs.ageGroup.value}
@@ -310,13 +329,13 @@ export const ReportDogPage = withAuthenticationRequired(
                   error={!inputs.chipNumber.isTextValid}
                 />
                 <DatePicker
-                  reportType={dogType}
+                  label={matchGender(dateText)}
                   date={inputs.date.dateInput}
                   handleDateChange={inputs.date.handleDateChange}
                   error={!inputs.date.isInputValid}
                 />
                 <RTLTextField
-                  label={locationText}
+                  label={matchGender(locationText)}
                   fullWidth
                   required
                   type="text"
@@ -377,7 +396,9 @@ export const ReportDogPage = withAuthenticationRequired(
                 />
                 <RTLTextField
                   rows={5}
-                  label={AppTexts.reportPage.extraDetails.extraDetails}
+                  label={matchGender(
+                    AppTexts.reportPage.extraDetails.extraDetails,
+                  )}
                   fullWidth
                   multiline
                   type="text"

@@ -25,7 +25,7 @@ const useDogPhotoStyles = createStyleHook(() => ({
   },
   deleteButton: {
     position: "absolute",
-    zIndex: "30",
+    zIndex: 15,
     borderRadius: "100%",
     padding: "8px",
     backgroundColor: "white",
