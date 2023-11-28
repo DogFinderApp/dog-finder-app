@@ -46,6 +46,11 @@ export const AppTexts = {
       dogAgeFound: "גיל משוער",
       dogAgeLost: "גיל הכלב/ה",
     },
+    dogSizeOptions: {
+      קטן: "קטן",
+      בינוני: "בינוני",
+      גדול: "גדול",
+    },
     extraDetails: {
       extraDetails: "מידע נוסף שיעזור לזיהוי הכלב/ה",
       contactDetails: "פרטים ליצירת קשר",

@@ -101,7 +101,10 @@ export const ReportDogPage = withAuthenticationRequired(
 
     const inputs = {
       dogBreed: useTextInput({ isMandatoryInput: false }),
-      dogSize: useTextInput({ isMandatoryInput: false }),
+      dogSize: useSelectInput({
+        isMandatoryInput: false,
+        possibleValues: Object.keys(AppTexts.reportPage.dogSizeOptions),
+      }),
       ageGroup: useSelectInput({
         isMandatoryInput: false,
         possibleValues: Object.keys(AppTexts.reportPage.dogAge),
@@ -286,14 +289,12 @@ export const ReportDogPage = withAuthenticationRequired(
                   onChange={inputs.dogBreed.onTextChange}
                   error={!inputs.dogBreed.isTextValid}
                 />
-                <RTLTextField
+                <SelectInputField
+                  options={AppTexts.reportPage.dogSizeOptions}
                   label={matchGender(AppTexts.reportPage.dogDetails.dogSize)}
-                  type="text"
-                  fullWidth
-                  margin="normal"
+                  onChange={inputs.dogSize.onSelectChange}
+                  error={!inputs.dogSize.isValueValid}
                   value={inputs.dogSize.value}
-                  onChange={inputs.dogSize.onTextChange}
-                  error={!inputs.dogSize.isTextValid}
                 />
                 <SelectInputField
                   options={dogSexOptions}
