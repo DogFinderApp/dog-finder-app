@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import { Box, Pagination, SelectChangeEvent } from "@mui/material";
+import { Box, Pagination, SelectChangeEvent, Typography } from "@mui/material";
 import useSWR from "swr";
 import usePageTitle from "../../hooks/usePageTitle";
 import usePagination from "../../hooks/usePagination";
@@ -33,6 +33,7 @@ const usePageStyles = createStyleHook(() => ({
     gap: 5,
     width: "100%",
   },
+  selectorFlex: { display: "flex", flexDirection: "column", gap: 1 },
   paginationContainer: {
     width: "100%",
     display: "flex",
@@ -52,6 +53,12 @@ const usePageStyles = createStyleHook(() => ({
         height: "35px !important",
       },
     },
+  },
+  typography: {
+    color: "white",
+    width: "max-content",
+    ml: "auto",
+    fontSize: 18,
   },
 }));
 
@@ -184,13 +191,20 @@ export const AllReportsPage = withAuthenticationRequired(() => {
       )}
       {!isLoading && !error && !unauthorizedError && (
         <Box sx={styles.responseContainer}>
-          <SelectInputField
-            options={AppTexts.allReportsPage.select}
-            label={AppTexts.allReportsPage.selectLabel}
-            onChange={changeSelectedReports}
-            value={selectedType}
-            notCentered
-          />
+          <Box sx={styles.selectorFlex}>
+            <SelectInputField
+              options={AppTexts.allReportsPage.select}
+              label={AppTexts.allReportsPage.selectLabel}
+              onChange={changeSelectedReports}
+              value={selectedType}
+              notCentered
+            />
+            {response?.pagination && (
+              <Typography
+                sx={styles.typography}
+              >{`${AppTexts.allReportsPage.numberOfReports} ${response?.pagination?.total}`}</Typography>
+            )}
+          </Box>
           <ResultsGrid results={paginatedReports.currentData()} noTexts />
           {filteredReports.length && (
             <Box sx={styles.paginationContainer}>
