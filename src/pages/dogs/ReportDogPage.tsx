@@ -183,15 +183,19 @@ export const ReportDogPage = withAuthenticationRequired(
       try {
         const response = await serverApi.report_dog(payload);
         const json = await response.json();
-
-        setRequestStatus("success");
-        setIsLoading(false);
-        clearInputs();
-        dispatch({ type: "ADD_NEW_REPORT", payload: json.data });
-        setTimeout(() => {
-          // wait before navigating to results page in order to show the success/error toast
-          navigateToResultsPage({ base64Image });
-        }, 2000);
+        if (json.status_code === 200) {
+          setRequestStatus("success");
+          setIsLoading(false);
+          clearInputs();
+          dispatch({ type: "ADD_NEW_REPORT", payload: json.data });
+          setTimeout(() => {
+            // wait before navigating to results page in order to show the success/error toast
+            navigateToResultsPage({ base64Image });
+          }, 2000);
+        } else {
+          setRequestStatus("error");
+          setIsLoading(false);
+        }
       } catch (error) {
         setRequestStatus("error");
         setIsLoading(false);
