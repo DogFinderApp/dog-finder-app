@@ -227,7 +227,7 @@ export const DogDetailsPage = () => {
               {data?.ageGroup && (
                 <Box sx={detailRowStyle}>
                   <span style={boldText}>
-                    {AppTexts.reportPage.dogDetails.dogAge}:
+                    {AppTexts.reportPage.dogDetails.dogAgeFound}:
                   </span>
                   <span style={thinText}>
                     {AppTexts.reportPage.dogAge[data.ageGroup] ?? ""}

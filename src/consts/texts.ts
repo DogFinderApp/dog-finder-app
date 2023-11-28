@@ -30,12 +30,12 @@ export const AppTexts = {
       senior: "מבוגר",
     },
     locationDetails: {
-      locationDescriptionFound: "המיקום בו נמצא",
-      locationDescriptionLost: "המיקום בו נאבד",
+      locationDescriptionFound: "המיקום בו נמצא/ה",
+      locationDescriptionLost: "המיקום בו נאבד/ה",
     },
     dateDetails: {
-      foundDate: "תאריך בו נמצא",
-      lostDate: "תאריך בו אבד",
+      foundDate: "תאריך בו נמצא/ה",
+      lostDate: "תאריך בו אבד/ה",
     },
     dogDetails: {
       dogRace: "גזע הכלב/ה",
@@ -43,15 +43,16 @@ export const AppTexts = {
       dogColor: "צבע הפרווה",
       dogSex: "מין הכלב/ה",
       chipNumber: "מספר שבב",
-      dogAge: "גיל משוער",
+      dogAgeFound: "גיל משוער",
+      dogAgeLost: "גיל הכלב/ה",
     },
     extraDetails: {
-      extraDetails: "מידע נוסף שיעזור לזיהוי הכלב",
+      extraDetails: "מידע נוסף שיעזור לזיהוי הכלב/ה",
       contactDetails: "פרטים ליצירת קשר",
-      contactName: "שם איש קשר",
-      contactPhone: "מספר טלפון איש קשר",
-      contactEmail: "אימייל איש קשר",
-      contactAddress: "כתובת איש קשר",
+      contactName: "שם איש/ת קשר",
+      contactPhone: "מספר טלפון איש/ת קשר",
+      contactEmail: "אימייל איש/ת קשר",
+      contactAddress: "כתובת איש/ת קשר",
     },
     helperTexts: {
       phone: "מספר הטלפון אינו תקין",
@@ -131,6 +132,7 @@ export const AppTexts = {
       lost: "הצג כלבים נעדרים",
       all: "הצג את כל הכלבים שדווחו",
     },
+    numberOfReports: "מספר הדיווחים:",
   },
   navigation: {
     home: "בית",
@@ -173,15 +175,15 @@ export const AppTexts = {
   aboutPage: {
     texts: {
       text1:
-        "החל מ-7 באוקטובר 2023, עשרות כלבים וחתולי בית ברחבי הארץ, בעיקר באזור הדרום והצפון, אזורים שתושביהם נאלצו לנטוש בחיפזון עקב המצב הביטחוני, אבדו או ננטשו בבהלה שנוצרה מאזעקות.",
+        "החל מ-7 באוקטובר 2023, עשרות כלבים וחתולי בית ברחבי הארץ, בעיקר באזור הדרום והצפון, אזורים שתושביהם/ן נאלצו לנטוש בחיפזון עקב המצב הביטחוני, אבדו או ננטשו בבהלה שנוצרה מהאזעקות.",
       text2:
-        'בעקבות המצב, התגייסו אזרחים רבים בניסיון לסייע לבעלי החיים שאבדו. הוקמו חמ"לים מאולתרים בפייסבוק ובקבוצות וואטסאפ לאיתור חיות המחמד. זוהי יוזמה מבורכת, אולם התצורה הזו אינה יעילה ודורשת משאבי זמן וכוח אדם רבים.',
+        'בעקבות המצב, התגייסו אזרחים ואזרחיות רבים בניסיון לסייע לבעלי החיים שאבדו. הוקמו חמ"לים מאולתרים בפייסבוק ובקבוצות וואטסאפ לאיתור חיות המחמד. זוהי יוזמה מבורכת, אולם התצורה הזו אינה יעילה ודורשת משאבי זמן וכוח אדם רבים.',
       text3:
-        "לאור המצב, הקמנו את מיזם Fluffy Finder. מטרתנו היא לאפשר איתור יעיל ומהיר של כלבים אבודים והשבתם לבעליהם המצפים להם.",
+        "לאור המצב, הקמנו את מיזם Fluffy Finder. מטרתנו היא לאפשר איתור יעיל ומהיר של כלבים וכלבות שאבדו והשבתם/ן לבעליהם המצפים להם.",
       text4:
-        "המערכת שפיתחנו מבוססת על אלגוריתמי בינה מלאכותית המסוגלים לזהות דמיון בין תמונות של כלבים אבודים לבין אלה של כלבים שדווחו כנעדרים. המערכת יעילה גם כאשר התמונות מזוויות שונות או כשמראה הכלב השתנה.",
+        'המערכת שפיתחנו מבוססת על אלגוריתמי בינה מלאכותית המסוגלים לזהות דמיון בין תמונות של כלבים וכלבות שנמצאו בשטח ע"י גורמים שונים בין תמונות של אלו שדווחו שאבדו. המערכת יעילה גם כאשר התמונות מזוויות שונות או כשמראה הכלב השתנה.',
       text5:
-        "אם איבדתם את הכלב שלכם או מצאתם כלב תועה, נא פנו אלינו ונסייע באיתור הבעלים או הכלב הנעדר. נשמח לסייע לכם להתאחד מחדש 🙂",
+        "אם הכלב/ה שלך הלך/ה לאיבוד או שמצאת כלב תועה, אנחנו פה ונשמח לסייע באיחוד מחדש 🙂",
     },
     moreInfo: "למידע נוסף או שאלות על המיזם אנא פנו אלינו במייל",
     mail: "fluffyfinderinitiative@gmail.com",
