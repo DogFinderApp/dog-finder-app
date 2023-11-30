@@ -77,16 +77,10 @@ const useCardStyles = createStyleHook(
 interface DogCardProps {
   dog: DogResult;
   dogType: DogType;
-  allReportsPage?: boolean;
-  getUpdatedReports?: Function;
+  getUpdatedReports?: Function; // refetch after deleting a report
 }
 
-export const DogCard = ({
-  dog,
-  dogType,
-  allReportsPage,
-  getUpdatedReports,
-}: DogCardProps) => {
+export const DogCard = ({ dog, dogType, getUpdatedReports }: DogCardProps) => {
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -185,7 +179,7 @@ export const DogCard = ({
         onMouseLeave={() => setIsHovering(false)}
       >
         <CardMedia image={image} component="img" sx={styles.CardMedia} />
-        {allReportsPage && !!role && (
+        {!!role && (
           <Box sx={styles.absoluteContainer}>
             <Tooltip title={searchToolTipText} placement="top">
               <Button

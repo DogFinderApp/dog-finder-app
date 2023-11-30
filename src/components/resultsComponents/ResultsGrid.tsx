@@ -16,7 +16,7 @@ const useResultsStyles = createStyleHook(() => ({
 
 interface ResultsGridProps {
   results: DogResult[] | undefined;
-  allReportsPage?: boolean; // being used in "all-reports" page
+  allReportsPage?: boolean;
   getUpdatedReports?: Function; // refetch after deleting a report
 }
 
@@ -41,7 +41,6 @@ export const ResultsGrid = ({
             <DogCard
               dog={dog}
               dogType={dog.type!}
-              allReportsPage={allReportsPage}
               getUpdatedReports={getUpdatedReports}
             />
           </Grid>

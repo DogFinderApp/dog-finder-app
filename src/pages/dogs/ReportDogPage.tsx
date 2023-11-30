@@ -121,7 +121,7 @@ export const ReportDogPage = withAuthenticationRequired(
       date: useDateInput({ isMandatoryInput: false }),
       contactName: useTextInput({ isMandatoryInput: true }),
       contactPhone: usePhoneNumberInput({ isMandatoryInput: true }),
-      contactEmail: useEmailInput({ isMandatoryInput: true }),
+      contactEmail: useEmailInput({ isMandatoryInput: false }),
       contactAddress: useTextInput({ isMandatoryInput: false }),
       extraDetails: useTextInput({ isMandatoryInput: false }),
     };
