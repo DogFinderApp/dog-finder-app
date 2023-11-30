@@ -2,6 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback } from "react";
 import { jwtDecode } from "jwt-decode";
 import { QueryPayload, ReportDogPayload } from "../types/payload.types";
+import { UserRole } from "../types/UserRole";
 
 interface DecodedUserData {
   iss: string;
@@ -98,7 +99,7 @@ class ServerApi {
     return (jwtDecode(this.token) as DecodedUserData) ?? null;
   }
 
-  getUserRole() {
+  getUserRole(): UserRole {
     // returns the role of the user as string, or null for "normal" users
     const user = this.getDecodedUserData();
     if (!user) return null;
@@ -170,6 +171,11 @@ class ServerApi {
       url.searchParams.append(key, payload[key]?.toString()!),
     );
     return this.fetch(url.toString());
+  }
+
+  async deleteDogById(dogId: string) {
+    const url = buildEndpoint(`delete_dog_by_id?dogId=${dogId}`);
+    return this.fetch(url, { method: "DELETE" });
   }
 }
 

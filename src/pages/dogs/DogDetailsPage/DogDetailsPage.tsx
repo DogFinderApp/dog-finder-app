@@ -113,13 +113,11 @@ const fetcher = async (
     // we can't place this fetch request inside ServerApi because this page should be
     // accessible to everyone, and ServerApi requires to be authenticated
     const API_URL = process.env.REACT_APP_API_URL || "";
-    const urlByUserRole = !!role
-      ? "get_dog_by_id_full_details"
-      : "get_dog_by_id";
+    const urlByUserRole = role ? "get_dog_by_id_full_details" : "get_dog_by_id";
     const url = `${API_URL}/dogfinder/${urlByUserRole}?dogId=${dogId}`;
 
     let headers = {};
-    if (!!role) {
+    if (role) {
       const serverApi = await getServerApi();
       headers = {
         Authorization: `Bearer ${await serverApi.getUndecodedUserData()}`,

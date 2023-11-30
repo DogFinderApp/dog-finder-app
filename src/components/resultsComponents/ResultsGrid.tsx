@@ -16,16 +16,21 @@ const useResultsStyles = createStyleHook(() => ({
 
 interface ResultsGridProps {
   results: DogResult[] | undefined;
-  noTexts?: boolean;
+  allReportsPage?: boolean; // being used in "all-reports" page
+  getUpdatedReports?: Function; // refetch after deleting a report
 }
 
-export const ResultsGrid = ({ results, noTexts }: ResultsGridProps) => {
+export const ResultsGrid = ({
+  results,
+  allReportsPage,
+  getUpdatedReports,
+}: ResultsGridProps) => {
   const styles = useResultsStyles();
   const theme = useTheme();
 
   return (
     <>
-      {!noTexts && (
+      {!allReportsPage && (
         <Typography color={theme.palette.text.primary} sx={styles.topTextStyle}>
           {AppTexts.resultsPage.topText}
         </Typography>
@@ -33,11 +38,16 @@ export const ResultsGrid = ({ results, noTexts }: ResultsGridProps) => {
       <Grid container spacing={4} dir="rtl">
         {results?.map((dog) => (
           <Grid item xs={12} sm={6} md={4} key={dog.dogId}>
-            <DogCard dog={dog} dogType={dog.type!} />
+            <DogCard
+              dog={dog}
+              dogType={dog.type!}
+              allReportsPage={allReportsPage}
+              getUpdatedReports={getUpdatedReports}
+            />
           </Grid>
         ))}
       </Grid>
-      {!noTexts && (
+      {!allReportsPage && (
         <Typography
           color={theme.palette.text.primary}
           sx={{ ...styles.topTextStyle, my: 4 }}

@@ -14,7 +14,12 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { IconSend } from "@tabler/icons-react";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
-import { DogType, ReportDogPayload, DogSex, DogResult } from "../../types/payload.types";
+import {
+  DogType,
+  ReportDogPayload,
+  DogSex,
+  DogResult,
+} from "../../types/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { cleanImage } from "../../utils/imageUtils";
 import { dateToString } from "../../utils/datesFormatter";
@@ -33,7 +38,7 @@ import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
 import { RTLTextField } from "../../components/pageComponents/RTLTextInput/RTLTextField";
 import DatePicker from "../../components/DatePicker/DatePicker";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
-import MatchingReportModal from "../../components/pageComponents/Modal/MatchingReportModal";
+import MatchingReportModal from "../../components/Modals/MatchingReportModal";
 
 const useReportDogPageStyles = createStyleHook(
   (theme, props: { isError: boolean }) => ({
@@ -76,9 +81,7 @@ export const ReportDogPage = withAuthenticationRequired(
     const [isLoading, setIsLoading] = useState(false);
     const [requestStatus, setRequestStatus] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [matchingReports, setMatchingReports] = useState<
-    DogResult[]
-    >([]);
+    const [matchingReports, setMatchingReports] = useState<DogResult[]>([]);
     const { onSelectImage, selectedImageUrl, clearSelection } =
       useImageSelection(dogType, setMatchingReports, setIsModalOpen);
 
