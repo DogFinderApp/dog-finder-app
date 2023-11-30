@@ -3,10 +3,11 @@ import { useParams } from "react-router-dom";
 import { Box, CardMedia, Typography, useTheme } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { formatDateString } from "../../../utils/datesFormatter";
-import { useAuthContext } from "../../../context/useAuthContext";
-import { DogType } from "../../../types/payload.types";
 import { useGetServerApi } from "../../../facades/ServerApi";
 import { AppTexts } from "../../../consts/texts";
+import { useAuthContext } from "../../../context/useAuthContext";
+import { DogType } from "../../../types/payload.types";
+import { UserRole } from "../../../types/UserRole";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
 import usePageTitle from "../../../hooks/usePageTitle";
 import { useWindowSize } from "../../../hooks/useWindowSize";
@@ -103,22 +104,22 @@ enum DogTypeTranslateEnum {
 }
 
 const fetcher = async (
-  payload: { dogId: number; isHamalUser: boolean | null },
+  payload: { dogId: number; role: UserRole },
   getServerApi: Function,
   // eslint-disable-next-line
 ): Promise<DogDetailsReturnType | void> => {
-  const { dogId, isHamalUser } = payload;
+  const { dogId, role } = payload;
   try {
     // we can't place this fetch request inside ServerApi because this page should be
     // accessible to everyone, and ServerApi requires to be authenticated
     const API_URL = process.env.REACT_APP_API_URL || "";
-    const urlByUserRole = isHamalUser
+    const urlByUserRole = !!role
       ? "get_dog_by_id_full_details"
       : "get_dog_by_id";
     const url = `${API_URL}/dogfinder/${urlByUserRole}?dogId=${dogId}`;
 
     let headers = {};
-    if (isHamalUser) {
+    if (!!role) {
       const serverApi = await getServerApi();
       headers = {
         Authorization: `Bearer ${await serverApi.getUndecodedUserData()}`,
@@ -143,7 +144,7 @@ export const DogDetailsPage = () => {
   const { isMobile } = useWindowSize();
 
   const {
-    state: { isHamalUser },
+    state: { role },
   } = useAuthContext();
 
   const [data, setData] = useState<DogDetailsReturnType | null>(null);
@@ -153,14 +154,14 @@ export const DogDetailsPage = () => {
     const getDogData = async () => {
       setIsFetching(true);
       const response = await fetcher(
-        { dogId: Number(dog_id), isHamalUser },
+        { dogId: Number(dog_id), role },
         getServerApi,
       );
       if (response) setData(response);
       setIsFetching(false);
     };
     if (!isLoading) getDogData();
-  }, [isLoading, isHamalUser]); // eslint-disable-line
+  }, [isLoading, role]); // eslint-disable-line
 
   const image = data?.images
     ? `data:${data?.images[0].imageContentType};base64, ${data?.images[0].base64Image}`
@@ -266,7 +267,19 @@ export const DogDetailsPage = () => {
                   {formatDateString(data?.dogFoundOn ?? "")}
                 </span>
               </Box>
-              {data?.chipNumber && isHamalUser && (
+              {data?.breed && (
+                <Box sx={detailRowStyle}>
+                  <span style={boldText}>גזע: </span>
+                  <span style={thinText}>{data?.breed ?? ""}</span>
+                </Box>
+              )}
+              {data?.color && (
+                <Box sx={detailRowStyle}>
+                  <span style={boldText}>צבע: </span>
+                  <span style={thinText}>{data?.color ?? ""}</span>
+                </Box>
+              )}
+              {data?.chipNumber && role && (
                 <Box sx={detailRowStyle}>
                   <span style={boldText}>מספר שבב: </span>
                   <span style={thinText}>{data.chipNumber}</span>

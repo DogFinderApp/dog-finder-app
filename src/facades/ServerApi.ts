@@ -98,9 +98,13 @@ class ServerApi {
     return (jwtDecode(this.token) as DecodedUserData) ?? null;
   }
 
-  isHamalUser(): boolean | null {
+  getUserRole() {
+    // returns the role of the user as string, or null for "normal" users
     const user = this.getDecodedUserData();
-    return user ? user.permissions.includes("read:dogs") : null;
+    if (!user) return null;
+    if (user.permissions.includes("delete:delete_dog_by_id")) return "admin";
+    if (user.permissions.includes("read:dogs")) return "hamal";
+    return null;
   }
 
   async searchDog(payload: QueryPayload) {

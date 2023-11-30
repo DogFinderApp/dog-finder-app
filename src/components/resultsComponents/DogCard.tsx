@@ -77,7 +77,7 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
   const styles = useCardStyles({ isHovering, isMobile });
   const navigate = useNavigate();
   const {
-    state: { isHamalUser },
+    state: { role },
   } = useAuthContext();
 
   const navigateToSelectedDog = () => {
@@ -138,7 +138,7 @@ export const DogCard = ({ dog, dogType }: DogCardProps) => {
       onMouseLeave={() => setIsHovering(false)}
     >
       <CardMedia image={image} component="img" sx={styles.CardMedia} />
-      {isHamalUser && (
+      {role && (
         <Tooltip title={toolTipText} placement="top">
           <Button
             variant="contained"
