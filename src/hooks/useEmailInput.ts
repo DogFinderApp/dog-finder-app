@@ -38,5 +38,6 @@ export const useEmailInput = (props: { isMandatoryInput: boolean }) => {
     isEmailValid: isInputValid,
     validateInput,
     clearInput,
+    isRequired: props.isMandatoryInput,
   };
 };

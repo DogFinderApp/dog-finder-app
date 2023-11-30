@@ -109,10 +109,12 @@ export const ReportDogPage = withAuthenticationRequired(
       date: useDateInput({ isMandatoryInput: false }),
       contactName: useTextInput({ isMandatoryInput: true }),
       contactPhone: usePhoneNumberInput({ isMandatoryInput: true }),
-      contactEmail: useEmailInput({ isMandatoryInput: true }),
+      contactEmail: useEmailInput({ isMandatoryInput: false }),
       contactAddress: useTextInput({ isMandatoryInput: false }),
       extraDetails: useTextInput({ isMandatoryInput: false }),
     };
+
+    
 
     const clearInputs = () => {
       Object.values(inputs).forEach((input) => {
@@ -309,7 +311,7 @@ export const ReportDogPage = withAuthenticationRequired(
               <RTLTextField
                 label={locationText}
                 fullWidth
-                required
+                required={inputs.location.isRequired}
                 type="text"
                 margin="normal"
                 value={inputs.location.value}
@@ -320,7 +322,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 rows={2}
                 label={AppTexts.reportPage.extraDetails.contactName}
                 fullWidth
-                required
+                required={inputs.contactName.isRequired}
                 multiline
                 type="text"
                 margin="normal"
@@ -332,7 +334,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 rows={2}
                 label={AppTexts.reportPage.extraDetails.contactPhone}
                 fullWidth
-                required
+                required={inputs.contactPhone.isRequired}
                 multiline
                 type="tel"
                 margin="normal"
@@ -346,7 +348,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 rows={2}
                 label={AppTexts.reportPage.extraDetails.contactEmail}
                 fullWidth
-                required
+                required={inputs.contactEmail.isRequired}
                 multiline
                 type="text"
                 margin="normal"

@@ -43,5 +43,6 @@ export const useSelectInput = ({
     isValueValid: isInputValid,
     validateInput,
     clearInput,
+    isRequired: isMandatoryInput,
   };
 };
