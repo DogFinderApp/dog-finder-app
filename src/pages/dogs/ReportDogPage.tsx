@@ -14,12 +14,11 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { IconSend } from "@tabler/icons-react";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
-import { DogType, ReportDogPayload, DogSex } from "../../types/payload.types";
+import { DogType, ReportDogPayload, DogSex, DogResult } from "../../types/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { cleanImage } from "../../utils/imageUtils";
 import { dateToString } from "../../utils/datesFormatter";
 import { createStyleHook } from "../../hooks/styleHooks";
-import { DogDetailsReturnType } from "../../types/DogDetailsTypes";
 import usePageTitle from "../../hooks/usePageTitle";
 import { useAuthContext } from "../../context/useAuthContext";
 import { useImageSelection } from "../../hooks/useImageSelection";
@@ -78,7 +77,7 @@ export const ReportDogPage = withAuthenticationRequired(
     const [requestStatus, setRequestStatus] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [matchingReports, setMatchingReports] = useState<
-      DogDetailsReturnType[]
+    DogResult[]
     >([]);
     const { onSelectImage, selectedImageUrl, clearSelection } =
       useImageSelection(dogType, setMatchingReports, setIsModalOpen);

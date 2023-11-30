@@ -8,9 +8,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Fade, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { TransitionProps } from "@mui/material/transitions";
-import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
 import { createStyleHook } from "../../../hooks/styleHooks";
-import { DogType } from "../../../types/payload.types";
+import { DogType, DogResult } from "../../../types/payload.types";
 import { AppRoutes } from "../../../consts/routes";
 import { AppTexts } from "../../../consts/texts";
 
@@ -74,7 +73,7 @@ const Transition = forwardRef(function Transition(
 });
 
 interface AlertModalProps {
-  matchingReports: DogDetailsReturnType[];
+  matchingReports: DogResult[];
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   dogType: DogType;
@@ -101,7 +100,6 @@ export default function MatchingReportModal({
   };
 
   const mostMatchingReport = matchingReports ? matchingReports[0] : null;
-  // @ts-expect-error
   const image = `data:${mostMatchingReport?.imageContentType};base64, ${mostMatchingReport?.imageBase64}`;
 
   return (
@@ -130,7 +128,6 @@ export default function MatchingReportModal({
           <a
             href={AppRoutes.dogs.dogPage.replace(
               ":dog_id",
-              // @ts-expect-error
               mostMatchingReport.dogId,
             )}
             target="_blank"

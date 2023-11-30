@@ -50,4 +50,5 @@ export interface DogResult {
   imageContentType: string;
   dogFoundOn?: string;
   type?: DogType;
+  score?: number;
 }
