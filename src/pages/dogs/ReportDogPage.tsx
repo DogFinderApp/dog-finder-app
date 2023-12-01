@@ -114,8 +114,6 @@ export const ReportDogPage = withAuthenticationRequired(
       extraDetails: useTextInput({ isMandatoryInput: false }),
     };
 
-    
-
     const clearInputs = () => {
       Object.values(inputs).forEach((input) => {
         input.clearInput();
