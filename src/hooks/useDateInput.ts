@@ -33,5 +33,6 @@ export const useDateInput = ({ isMandatoryInput }: UseDateInput) => {
     isInputValid,
     validateInput,
     clearInput,
+    isRequired: isMandatoryInput,
   };
 };
