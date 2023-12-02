@@ -205,7 +205,11 @@ export const AllReportsPage = withAuthenticationRequired(() => {
               >{`${AppTexts.allReportsPage.numberOfReports} ${response?.pagination?.total}`}</Typography>
             )}
           </Box>
-          <ResultsGrid results={paginatedReports.currentData()} noTexts />
+          <ResultsGrid
+            results={paginatedReports.currentData()}
+            allReportsPage
+            getUpdatedReports={mutate}
+          />
           {filteredReports.length && (
             <Box sx={styles.paginationContainer}>
               <Pagination

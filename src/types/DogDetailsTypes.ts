@@ -23,5 +23,4 @@ export interface DogDetailsReturnType {
   location: string;
   dogFoundOn: string;
   contactPhone: string;
-  score?: number;
 }

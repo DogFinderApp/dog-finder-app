@@ -37,5 +37,6 @@ export const usePhoneNumberInput = (props: { isMandatoryInput: boolean }) => {
     isPhoneValid: isInputValid,
     validateInput,
     clearInput,
+    isRequired: props.isMandatoryInput,
   };
 };

@@ -65,7 +65,7 @@ export const PageToolbar = () => {
   const { isAuthenticated } = useAuth0();
   const {
     dispatch,
-    state: { isHamalUser },
+    state: { role },
   } = useAuthContext();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,7 +85,7 @@ export const PageToolbar = () => {
   useEffect(() => {
     const getUserRoleAndReports = async () => {
       const serverApi = await getServerApi();
-      dispatch({ type: "SET_IS_HAMAL_USER", payload: serverApi.isHamalUser() });
+      dispatch({ type: "SET_USER_ROLE", payload: serverApi.getUserRole() });
       try {
         const response = await serverApi.getUserReportedDogs();
         if (!response?.ok) return;
@@ -130,8 +130,8 @@ export const PageToolbar = () => {
           </Link>
         ))}
         {/* can't use Fragments inside Menu component */}
-        {isHamalUser && <Divider variant="middle" sx={styles.divider} />}
-        {isHamalUser &&
+        {!!role && <Divider variant="middle" sx={styles.divider} />}
+        {!!role &&
           hamalLinks.map((link) => (
             <Link
               key={link.text}

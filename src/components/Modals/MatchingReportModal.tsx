@@ -8,15 +8,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Fade, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { TransitionProps } from "@mui/material/transitions";
-import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
-import { createStyleHook } from "../../../hooks/styleHooks";
-import { DogType } from "../../../types/payload.types";
-import { AppRoutes } from "../../../consts/routes";
-import { AppTexts } from "../../../consts/texts";
+import { createStyleHook } from "../../hooks/styleHooks";
+import { DogType, DogResult } from "../../types/payload.types";
+import { AppRoutes } from "../../consts/routes";
+import { AppTexts } from "../../consts/texts";
 
 const useAlertModalStyles = createStyleHook(() => ({
   dialog: {
-    direction: "rtl",
     margin: "0 auto",
     width: { md: "100%", xs: "90%" },
     maxWidth: "800px",
@@ -74,7 +72,7 @@ const Transition = forwardRef(function Transition(
 });
 
 interface AlertModalProps {
-  matchingReports: DogDetailsReturnType[];
+  matchingReports: DogResult[];
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   dogType: DogType;
@@ -89,7 +87,7 @@ export default function MatchingReportModal({
   const styles = useAlertModalStyles();
   const navigate = useNavigate();
   const { title, alertTexts, watchProfile, cancelText, continueText } =
-    AppTexts.reportPage.matchingReport;
+    AppTexts.modals.matchingReport;
 
   const handleClose = () => {
     setIsModalOpen(false);
@@ -101,7 +99,6 @@ export default function MatchingReportModal({
   };
 
   const mostMatchingReport = matchingReports ? matchingReports[0] : null;
-  // @ts-expect-error
   const image = `data:${mostMatchingReport?.imageContentType};base64, ${mostMatchingReport?.imageBase64}`;
 
   return (
@@ -113,6 +110,7 @@ export default function MatchingReportModal({
       aria-describedby="alert-dialog-description"
       sx={styles.dialog}
       TransitionComponent={Transition}
+      dir="rtl"
     >
       <DialogTitle sx={styles.title}>{title}</DialogTitle>
       <DialogContent sx={{ flex: "unset" }}>
@@ -130,7 +128,6 @@ export default function MatchingReportModal({
           <a
             href={AppRoutes.dogs.dogPage.replace(
               ":dog_id",
-              // @ts-expect-error
               mostMatchingReport.dogId,
             )}
             target="_blank"

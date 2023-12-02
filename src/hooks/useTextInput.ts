@@ -36,5 +36,6 @@ export const useTextInput = (props: { isMandatoryInput: boolean }) => {
     isTextValid: isInputValid,
     validateInput,
     clearInput,
+    isRequired: props.isMandatoryInput,
   };
 };

@@ -74,17 +74,6 @@ export const AppTexts = {
         redirect: "מיד תועברו לחיפוש במאגר",
       },
     },
-    matchingReport: {
-      title: "מצאנו דיווח שנראה תואם לתמונה שהעלאת",
-      alertTexts: {
-        found:
-          "המערכת שלנו זיהתה מבין הדיווחים על הכלבים שנמצאו את הפרופיל הבא",
-        lost: "המערכת שלנו זיהתה מבין הדיווחים על הכלבים האבודים את הפרופיל הבא",
-      },
-      watchProfile: "צפה בפרופיל",
-      cancelText: "ביטול דיווח",
-      continueText: "המשך למילוי דיווח",
-    },
   },
   homePage: {
     cta: {
@@ -176,6 +165,7 @@ export const AppTexts = {
     lostDate: "אבד בתאריך",
     toolTipLost: "חיפוש כלבים דומים שנעדרים",
     toolTipFound: "חיפוש כלבים דומים שנמצאו",
+    tooltipDelete: "מחיקת דיווח",
   },
   aboutPage: {
     texts: {
@@ -193,5 +183,26 @@ export const AppTexts = {
     moreInfo: "למידע נוסף או שאלות על המיזם אנא פנו אלינו במייל",
     mail: "fluffyfinderinitiative@gmail.com",
     ourPeople: "האנשים מאחורי המיזם",
+  },
+  modals: {
+    matchingReport: {
+      title: "מצאנו דיווח שנראה תואם לתמונה שהעלאת",
+      alertTexts: {
+        found:
+          "המערכת שלנו זיהתה מבין הדיווחים על הכלבים שנמצאו את הפרופיל הבא",
+        lost: "המערכת שלנו זיהתה מבין הדיווחים על הכלבים האבודים את הפרופיל הבא",
+      },
+      watchProfile: "צפה בפרופיל",
+      cancelText: "ביטול דיווח",
+      continueText: "המשך למילוי דיווח",
+    },
+    deleteReport: {
+      title: "מחיקת דיווח מהמאגר",
+      text: "האם אתה בטוח שברצונך למחוק את הדיווח?",
+      text2: "פעולה זו הינה בלתי הפיכה",
+      cancelText: "ביטול",
+      continueText: "מחיקה לצמיתות",
+      deletingText: "מוחק...",
+    },
   },
 };

@@ -1,13 +1,12 @@
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { imageMimeType } from "../consts/formats";
-import { DogDetailsReturnType } from "../types/DogDetailsTypes";
-import { DogType } from "../types/payload.types";
+import { DogResult, DogType } from "../types/payload.types";
 import { useGetServerApi } from "../facades/ServerApi";
 
 const checkForMatchingDogs = async (
   payload: { base64Image: string; type: DogType },
   getServerApi: Function,
-  setMatchingReports: Dispatch<SetStateAction<DogDetailsReturnType[]>>,
+  setMatchingReports: Dispatch<SetStateAction<DogResult[]>>,
   setIsModalOpen: Dispatch<SetStateAction<boolean>>,
 ) => {
   const serverApi = await getServerApi();
@@ -19,8 +18,7 @@ const checkForMatchingDogs = async (
     const json = await response.json();
     if (json?.data?.results) {
       const filteredResults = json.data.results.filter(
-        (result: DogDetailsReturnType) =>
-          result?.score && result.score >= 0.995,
+        (result: DogResult) => result?.score && result.score >= 0.995,
       );
       if (filteredResults.length) {
         setMatchingReports(filteredResults);
@@ -36,7 +34,7 @@ const checkForMatchingDogs = async (
 export const useImageSelection = (
   // the arguments are for the report pages and are used in `checkForMatchingDogs` function
   type?: DogType,
-  setMatchingReports?: Dispatch<SetStateAction<DogDetailsReturnType[]>>,
+  setMatchingReports?: Dispatch<SetStateAction<DogResult[]>>,
   setIsModalOpen?: Dispatch<SetStateAction<boolean>>,
 ) => {
   const getServerApi = useGetServerApi();

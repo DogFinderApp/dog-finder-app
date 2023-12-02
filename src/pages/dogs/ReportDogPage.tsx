@@ -14,12 +14,16 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { IconSend } from "@tabler/icons-react";
 import { AppTexts } from "../../consts/texts";
 import { AppRoutes } from "../../consts/routes";
-import { DogType, ReportDogPayload, DogSex } from "../../types/payload.types";
+import {
+  DogType,
+  ReportDogPayload,
+  DogSex,
+  DogResult,
+} from "../../types/payload.types";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { cleanImage } from "../../utils/imageUtils";
 import { dateToString } from "../../utils/datesFormatter";
 import { createStyleHook } from "../../hooks/styleHooks";
-import { DogDetailsReturnType } from "../../types/DogDetailsTypes";
 import usePageTitle from "../../hooks/usePageTitle";
 import { useAuthContext } from "../../context/useAuthContext";
 import { useImageSelection } from "../../hooks/useImageSelection";
@@ -34,7 +38,7 @@ import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
 import { RTLTextField } from "../../components/pageComponents/RTLTextInput/RTLTextField";
 import DatePicker from "../../components/DatePicker/DatePicker";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
-import MatchingReportModal from "../../components/pageComponents/Modal/MatchingReportModal";
+import MatchingReportModal from "../../components/Modals/MatchingReportModal";
 
 const useReportDogPageStyles = createStyleHook(
   (theme, props: { isError: boolean }) => ({
@@ -77,9 +81,7 @@ export const ReportDogPage = withAuthenticationRequired(
     const [isLoading, setIsLoading] = useState(false);
     const [requestStatus, setRequestStatus] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [matchingReports, setMatchingReports] = useState<
-      DogDetailsReturnType[]
-    >([]);
+    const [matchingReports, setMatchingReports] = useState<DogResult[]>([]);
     const { onSelectImage, selectedImageUrl, clearSelection } =
       useImageSelection(dogType, setMatchingReports, setIsModalOpen);
 
@@ -119,7 +121,7 @@ export const ReportDogPage = withAuthenticationRequired(
       date: useDateInput({ isMandatoryInput: false }),
       contactName: useTextInput({ isMandatoryInput: true }),
       contactPhone: usePhoneNumberInput({ isMandatoryInput: true }),
-      contactEmail: useEmailInput({ isMandatoryInput: true }),
+      contactEmail: useEmailInput({ isMandatoryInput: false }),
       contactAddress: useTextInput({ isMandatoryInput: false }),
       extraDetails: useTextInput({ isMandatoryInput: false }),
     };
@@ -341,7 +343,7 @@ export const ReportDogPage = withAuthenticationRequired(
                 <RTLTextField
                   label={matchGender(locationText)}
                   fullWidth
-                  required
+                  required={inputs.location.isRequired}
                   type="text"
                   margin="normal"
                   value={inputs.location.value}
@@ -352,7 +354,7 @@ export const ReportDogPage = withAuthenticationRequired(
                   rows={2}
                   label={AppTexts.reportPage.extraDetails.contactName}
                   fullWidth
-                  required
+                  required={inputs.contactName.isRequired}
                   multiline
                   type="text"
                   margin="normal"
@@ -364,7 +366,7 @@ export const ReportDogPage = withAuthenticationRequired(
                   rows={2}
                   label={AppTexts.reportPage.extraDetails.contactPhone}
                   fullWidth
-                  required
+                  required={inputs.contactPhone.isRequired}
                   multiline
                   type="tel"
                   margin="normal"
@@ -378,7 +380,7 @@ export const ReportDogPage = withAuthenticationRequired(
                   rows={2}
                   label={AppTexts.reportPage.extraDetails.contactEmail}
                   fullWidth
-                  required
+                  required={inputs.contactEmail.isRequired}
                   multiline
                   type="text"
                   margin="normal"
