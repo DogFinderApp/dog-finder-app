@@ -85,7 +85,6 @@ export const useReportDogInputs = () => {
     }
 
     const inputsData: InputData[] = [
-      //! don't forget to add "required={inputs[].isRequired"
       {
         name: "dogBreed",
         label: matchGender(AppTexts.reportPage.dogDetails.dogRace),

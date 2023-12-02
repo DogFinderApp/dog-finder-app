@@ -225,7 +225,8 @@ export const ReportDogPage = withAuthenticationRequired(
                 />
                 {getInputsData(dogType).map((inputField) => {
                   const selectedInput = inputs[inputField.name];
-                  const isSelectInput = [
+                  const isSelectType = [
+                    // represents inputs with type="select"
                     "dogSize",
                     "dogSex",
                     "ageGroup",
@@ -233,7 +234,7 @@ export const ReportDogPage = withAuthenticationRequired(
 
                   return (
                     <div key={inputField.name} style={{ width: "100%" }}>
-                      {isSelectInput ? (
+                      {isSelectType ? (
                         <SelectInputField
                           options={inputField.options!}
                           label={inputField.label}
