@@ -8,7 +8,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   IconGenderMale,
   IconGenderFemale,
@@ -112,11 +112,7 @@ export const DogCard = ({ dog, dogType, getUpdatedReports }: DogCardProps) => {
     }
   };
 
-  const navigateToSelectedDog = () => {
-    navigate(AppRoutes.dogs.dogPage.replace(":dog_id", dog.dogId), {
-      state: { dogType },
-    });
-  };
+  const dogPageUrl = AppRoutes.dogs.dogPage.replace(":dog_id", dog.dogId);
 
   const searchForSimilarDogs = () => {
     const dogTypeToSearch = dog.type === "found" ? "lost" : "found";
@@ -212,9 +208,11 @@ export const DogCard = ({ dog, dogType, getUpdatedReports }: DogCardProps) => {
           ))}
         </CardActions>
         <CardActions sx={styles.CardActions}>
-          <Button sx={styles.BottomButton} onClick={navigateToSelectedDog}>
-            {AppTexts.resultsPage.moreDetails}
-          </Button>
+          <Link to={dogPageUrl} style={{ width: "100%" }}>
+            <Button sx={styles.BottomButton}>
+              {AppTexts.resultsPage.moreDetails}
+            </Button>
+          </Link>
         </CardActions>
       </Card>
     </>
