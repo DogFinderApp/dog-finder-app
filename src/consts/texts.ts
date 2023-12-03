@@ -96,7 +96,6 @@ export const AppTexts = {
       "הנה רשימה של התאמות פוטנציאליות לכלב שהעלאת. עיין בתמונות, ובמידע הנוסף וצור קשר עם הבעלים אם אתה מזהה התאמה.",
     bottomText:
       'במידה והכלב/ה שלך לא נמצאים ברשימה, אנא המתן ליצירת קשר ע"י האדם שימצא אותו.',
-    moreDetails: "לחצו לעוד פרטים",
     call: "טלפון",
     email: "מייל",
     loading: "מאתר כלבים דומים במאגר שלנו",
@@ -128,6 +127,9 @@ export const AppTexts = {
     },
     numberOfReports: "מספר הדיווחים:",
   },
+  allMatchesPage: {
+    loadingText: "טוען את מאגר ההתאמות",
+  },
   navigation: {
     home: "בית",
     aboutUs: "אודות",
@@ -138,6 +140,7 @@ export const AppTexts = {
     privacyPolicy: "תנאי השימוש",
     allFound: "כל הכלבים שנמצאו",
     allLost: "כל הכלבים שנאבדו",
+    allMatches: "כל ההתאמות",
   },
   dogDetails: {
     title: "פרטי הכלב",
@@ -163,9 +166,15 @@ export const AppTexts = {
     sexText: "מין",
     foundDate: "נמצא בתאריך",
     lostDate: "אבד בתאריך",
+    moreDetails: "לחצו לעוד פרטים",
+    watchProfile: "צפייה בפרופיל",
     toolTipLost: "חיפוש כלבים דומים שנעדרים",
     toolTipFound: "חיפוש כלבים דומים שנמצאו",
     tooltipDelete: "מחיקת דיווח",
+    contactReporter: "פניה למפרסם הדיווח",
+    deleteMatch: "מחיקת התאמה",
+    confirmMatch: "אישור התאמה",
+    whatsappText: `היית אנחנו פונים אליך מ-Fluffy Finder. המערכת זיהתה שייתכן ומצאת את כלב/תך. נשמח לתשובה בהודעה חוזרת אם הכלב/ה נמצא/ה או לא, על מנת לדעת אם להמשיך לחפש אותו/ה :)`,
   },
   aboutPage: {
     texts: {

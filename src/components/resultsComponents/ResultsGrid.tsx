@@ -2,7 +2,7 @@ import { Grid, Typography, useTheme } from "@mui/material";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { DogResult } from "../../types/payload.types";
 import { AppTexts } from "../../consts/texts";
-import { DogCard } from "./DogCard";
+import { DogCard } from "./DogCard/DogCard";
 
 const useResultsStyles = createStyleHook(() => ({
   topTextStyle: {

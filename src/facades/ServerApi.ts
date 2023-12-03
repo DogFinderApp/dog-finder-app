@@ -173,6 +173,19 @@ class ServerApi {
     return this.fetch(url.toString());
   }
 
+  async getPossibleMatches(payload: {
+    page: number;
+    page_size: number;
+    dogId?: number; // if the dogId is null it will fetch all matches
+  }) {
+    const url = new URL(buildEndpoint("get_possible_dog_matches"));
+    const stringKeys = Object.keys(payload) as Array<keyof typeof payload>;
+    stringKeys.forEach((key) =>
+      url.searchParams.append(key, payload[key]?.toString()!),
+    );
+    return this.fetch(url.toString());
+  }
+
   async deleteDogById(dogId: string) {
     const url = buildEndpoint(`delete_dog_by_id?dogId=${dogId}`);
     return this.fetch(url, { method: "DELETE" });

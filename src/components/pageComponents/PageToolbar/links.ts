@@ -45,4 +45,8 @@ export const hamalLinks = [
     href: AppRoutes.dogs.allReports.replace("/:dogType", ""),
     text: AppTexts.allReportsPage.title,
   },
+  {
+    href: AppRoutes.dogs.allMatches,
+    text: AppTexts.navigation.allMatches,
+  },
 ];

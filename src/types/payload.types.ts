@@ -52,3 +52,10 @@ export interface DogResult {
   type?: DogType;
   score?: number;
 }
+
+export interface MatchingReports {
+  dog: DogResult;
+  dogId: number;
+  possibleMatch: DogResult;
+  possibleMatchId: number;
+}
