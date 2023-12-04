@@ -5,11 +5,13 @@ import { useGetServerApi } from "../../facades/ServerApi";
 import { DogResult, MatchingReports } from "./../../types/payload.types";
 import { createStyleHook } from "../../hooks/styleHooks";
 import usePageTitle from "../../hooks/usePageTitle";
+import { usePagination } from "../../hooks/usePagination";
 import { AppTexts } from "../../consts/texts";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { LoadingSpinnerWithText } from "../../components/common/LoadingSpinnerWithText";
 import { DogCard } from "../../components/resultsComponents/DogCard/DogCard";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
+import { Pagination } from "../../components/pageComponents/Pagination/Pagination";
 
 const usePageStyles = createStyleHook(() => ({
   pageWrapper: {
@@ -48,7 +50,7 @@ export const AllMatchesPage = () => {
 
   const [unauthorizedError, setUnauthorizedError] = useState(false);
   const [page, setPage] = useState<number>(1);
-  const page_size = 12;
+  const page_size = 6;
 
   const fetcher = async () => {
     const serverApi = await getServerApi();
@@ -88,6 +90,20 @@ export const AllMatchesPage = () => {
     return modifiedDog;
   };
 
+  const paginatedReports = usePagination(response?.results ?? [], page_size);
+  const pagesCount: number =
+    Math.ceil((response?.pagination?.total as number) / page_size) ?? 0;
+
+  const handlePagination = (
+    event: React.ChangeEvent<unknown>,
+    value: number | string,
+  ) => {
+    const newValue = typeof value === "number" ? value : 1;
+    setPage(newValue);
+    paginatedReports.jump(newValue);
+    window.scroll({ top: 0 });
+  };
+
   return (
     <Box sx={styles.pageWrapper}>
       <PageTitle text={title} />
@@ -101,9 +117,10 @@ export const AllMatchesPage = () => {
       {!isLoading && !error && (
         <Box sx={styles.responseContainer}>
           <Grid container spacing={4} dir="rtl">
-            {response?.results?.map((reportsPair) => {
+            {paginatedReports.currentData()?.map((reportsPair) => {
               const { dog, dogId, possibleMatch, possibleMatchId } =
-                reportsPair;
+                reportsPair as MatchingReports;
+
               return (
                 <Grid item xs={12} lg={6} key={`${dogId} ${possibleMatchId}`}>
                   <Box sx={styles.cardsContainer}>
@@ -122,6 +139,13 @@ export const AllMatchesPage = () => {
               );
             })}
           </Grid>
+          {response?.results.length && (
+            <Pagination
+              count={pagesCount}
+              page={page}
+              onChange={handlePagination}
+            />
+          )}
         </Box>
       )}
     </Box>

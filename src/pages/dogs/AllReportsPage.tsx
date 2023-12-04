@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import { Box, Pagination, SelectChangeEvent, Typography } from "@mui/material";
+import { Box, SelectChangeEvent, Typography } from "@mui/material";
 import useSWR from "swr";
 import usePageTitle from "../../hooks/usePageTitle";
-import usePagination from "../../hooks/usePagination";
+import { usePagination } from "../../hooks/usePagination";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { AppTexts } from "../../consts/texts";
 import { useGetServerApi } from "../../facades/ServerApi";
@@ -14,6 +14,7 @@ import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
 import { LoadingSpinnerWithText } from "../../components/common/LoadingSpinnerWithText";
+import { Pagination } from "../../components/pageComponents/Pagination/Pagination";
 
 const usePageStyles = createStyleHook(() => ({
   pageWrapper: {
@@ -34,26 +35,6 @@ const usePageStyles = createStyleHook(() => ({
     width: "100%",
   },
   selectorFlex: { display: "flex", flexDirection: "column", gap: 1 },
-  paginationContainer: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    marginBottom: "2rem",
-    position: "sticky",
-  },
-  pagination: {
-    "& .MuiPaginationItem-previousNext": {
-      transform: "rotate(180deg) !important",
-    },
-    "@media (max-width: 600px)": {
-      "& .MuiPaginationItem-root": {
-        padding: "0 !important",
-        margin: "0 !important",
-        minWidth: "35px !important",
-        height: "35px !important",
-      },
-    },
-  },
   typography: {
     color: "white",
     width: "max-content",
@@ -206,21 +187,16 @@ export const AllReportsPage = withAuthenticationRequired(() => {
             )}
           </Box>
           <ResultsGrid
-            results={paginatedReports.currentData()}
+            results={paginatedReports.currentData() as DogResult[]}
             allReportsPage
             getUpdatedReports={mutate}
           />
           {filteredReports.length && (
-            <Box sx={styles.paginationContainer}>
-              <Pagination
-                count={pagesCount}
-                page={page}
-                onChange={handlePagination}
-                color="primary"
-                size="large"
-                sx={styles.pagination}
-              />
-            </Box>
+            <Pagination
+              count={pagesCount}
+              page={page}
+              onChange={handlePagination}
+            />
           )}
         </Box>
       )}

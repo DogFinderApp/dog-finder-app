@@ -171,7 +171,7 @@ export const AppTexts = {
     toolTipLost: "חיפוש כלבים דומים שנעדרים",
     toolTipFound: "חיפוש כלבים דומים שנמצאו",
     tooltipDelete: "מחיקת דיווח",
-    contactReporter: "פניה למפרסם הדיווח",
+    contactReporter: "פניה למפרסם/ת הדיווח",
     deleteMatch: "מחיקת התאמה",
     confirmMatch: "אישור התאמה",
     whatsappText: `היית אנחנו פונים אליך מ-Fluffy Finder. המערכת זיהתה שייתכן ומצאת את כלב/תך. נשמח לתשובה בהודעה חוזרת אם הכלב/ה נמצא/ה או לא, על מנת לדעת אם להמשיך לחפש אותו/ה :)`,

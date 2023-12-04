@@ -154,10 +154,16 @@ export const DogCard = ({
   const locationType =
     dogType === "found" ? dogCard.foundLocation : dogCard.lostLocation;
 
+  const matchGender = (text: string) => {
+    // return "אבד" / "אבדה" and "נמצא" / "נמצאה" according to the dog's gender
+    const words = text.split(" ");
+    return dog.sex === "female" ? `${words[0]}ה ${words[1]}` : text;
+  };
+
   const cardInfo = [
-    `${locationType}: ${dog.location || ""}`,
     `${dogCard.sexText}: ${genderText}`,
-    `${reportType}: ${formatDateString(dog.dogFoundOn || "")}`,
+    `${matchGender(locationType)}: ${dog.location || ""}`,
+    `${matchGender(reportType)}: ${formatDateString(dog.dogFoundOn || "")}`,
   ];
 
   const image = `data:${dog.imageContentType};base64,${dog.imageBase64}`;
@@ -214,7 +220,7 @@ export const DogCard = ({
               !(matchingReportCard && index === 1) && (
                 // render the card texts, don't show dog gender in 'all-matches' page
                 <Typography key={sectionText} sx={styles.Typography}>
-                  {sectionText} {index === 1 && dog.sex && genderIcon}
+                  {sectionText} {index === 0 && dog.sex && genderIcon}
                 </Typography>
               ),
           )}
