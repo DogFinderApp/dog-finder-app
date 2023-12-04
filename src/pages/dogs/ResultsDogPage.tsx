@@ -69,8 +69,8 @@ export const ResultsDogPage = () => {
   });
 
   useEffect(() => {
+    // eslint-disable-next-line consistent-return
     setTimeout(() => {
-      // eslint-disable-line consistent-return
       if (isLoading && loadingText === loadingTextOptions[0])
         return setLoadingText(loadingTextOptions[1]);
       if (isLoading && loadingText === loadingTextOptions[1])
