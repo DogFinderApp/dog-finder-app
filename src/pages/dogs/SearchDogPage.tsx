@@ -66,7 +66,11 @@ export const SearchDogPage = withAuthenticationRequired(
         >
           <PageTitle text={AppTexts.searchPage.title} />
           <RTLWrapper>
-            <Typography color={theme.palette.text.primary}>
+            <Typography
+              color={theme.palette.text.primary}
+              sx={{ textAlign: "center", textWrap: "balance" }}
+              fontSize={18}
+            >
               {searchText}
             </Typography>
           </RTLWrapper>
