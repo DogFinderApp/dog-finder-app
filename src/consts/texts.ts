@@ -195,6 +195,11 @@ export const AppTexts = {
       watchProfile: "צפה בפרופיל",
       cancelText: "ביטול דיווח",
       continueText: "המשך למילוי דיווח",
+      bottomText: {
+        part1: "אם כבר העלת בעבר דיווח על כלבך, ניתן לחפש דיווחים דומים ",
+        linkText: "בעמוד החיפוש",
+        part2: "אם זהו לא הכלב/ה שלך, ניתן להמשיך במילוי הדיווח",
+      },
     },
     deleteReport: {
       title: "מחיקת דיווח מהמאגר",

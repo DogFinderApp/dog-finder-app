@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Fade, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { TransitionProps } from "@mui/material/transitions";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { DogType, DogResult } from "../../types/payload.types";
@@ -28,7 +28,12 @@ const useAlertModalStyles = createStyleHook(() => ({
     },
   },
   title: { fontSize: { sm: 36, xs: 26 }, fontWeight: 600, lineHeight: 1.1 },
-  content: { fontSize: { sm: 20, xs: 16 } },
+  content: {
+    fontSize: { sm: 20, xs: 16 },
+    maxWidth: "90%",
+    marginX: "auto",
+    textWrap: "balance",
+  },
   imageContainer: {
     position: "relative",
     width: "90%",
@@ -86,8 +91,14 @@ export default function MatchingReportModal({
 }: AlertModalProps) {
   const styles = useAlertModalStyles();
   const navigate = useNavigate();
-  const { title, alertTexts, watchProfile, cancelText, continueText } =
-    AppTexts.modals.matchingReport;
+  const {
+    title,
+    alertTexts,
+    watchProfile,
+    cancelText,
+    continueText,
+    bottomText,
+  } = AppTexts.modals.matchingReport;
 
   const handleClose = () => {
     setIsModalOpen(false);
@@ -100,6 +111,11 @@ export default function MatchingReportModal({
 
   const mostMatchingReport = matchingReports ? matchingReports[0] : null;
   const image = `data:${mostMatchingReport?.imageContentType};base64, ${mostMatchingReport?.imageBase64}`;
+
+  const linkToSearchPage =
+    dogType === "found"
+      ? AppRoutes.dogs.searchLostDog
+      : AppRoutes.dogs.searchFoundDog;
 
   return (
     <Dialog
@@ -138,6 +154,14 @@ export default function MatchingReportModal({
           </a>
         </DialogActions>
       )}
+      <DialogContentText sx={{ ...styles.content, mb: 2 }}>
+        {bottomText.part1}
+        <Link to={linkToSearchPage} style={{ color: "white" }}>
+          {bottomText.linkText}
+        </Link>
+        {". "}
+        {bottomText.part2}.
+      </DialogContentText>
       <DialogActions sx={styles.buttonsContainer}>
         <Button autoFocus onClick={handleCancelButton} sx={styles.cancelButton}>
           {cancelText}
