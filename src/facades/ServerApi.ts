@@ -186,6 +186,11 @@ class ServerApi {
     return this.fetch(url.toString());
   }
 
+  async getPossibleMatchesCount() {
+    const url = buildEndpoint("get_possible_dog_matches_count");
+    return this.fetch(url);
+  }
+
   async deleteDogById(dogId: string) {
     const url = buildEndpoint(`delete_dog_by_id?dogId=${dogId}`);
     return this.fetch(url, { method: "DELETE" });

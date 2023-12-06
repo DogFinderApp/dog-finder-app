@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { Box, SelectChangeEvent, Typography } from "@mui/material";
 import useSWR from "swr";
@@ -7,8 +7,10 @@ import usePageTitle from "../../hooks/usePageTitle";
 import { usePagination } from "../../hooks/usePagination";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { AppTexts } from "../../consts/texts";
+import { AppRoutes } from "../../consts/routes";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { DogResult } from "../../types/payload.types";
+import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
 import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
@@ -26,7 +28,6 @@ const usePageStyles = createStyleHook(() => ({
     flexDirection: "column",
     alignItems: "center",
     px: { sm: 4 },
-    mt: 10,
   },
   responseContainer: {
     display: "flex",
@@ -56,6 +57,9 @@ export const AllReportsPage = withAuthenticationRequired(() => {
   );
   const [unauthorizedError, setUnauthorizedError] = useState(false);
   const [page, setPage] = useState<number>(1);
+  const [potentialMatchesCount, setPotentialMatchesCount] = useState<
+    number | null
+  >(null);
 
   const fetcher = async () => {
     const serverApi = await getServerApi();
@@ -86,6 +90,24 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     revalidateOnFocus: false,
     keepPreviousData: true,
   });
+
+  const fetchPotentialMatchesCount = async () => {
+    const serverApi = await getServerApi();
+    try {
+      const response = await serverApi.getPossibleMatchesCount();
+      if (response.status === 200) {
+        const json = await response.json();
+        setPotentialMatchesCount(json);
+      }
+    } catch (error) {
+      console.error(error); // eslint-disable-line
+      throw new Error("Failed to fetch possible matches count");
+    }
+  };
+
+  useEffect(() => {
+    if (potentialMatchesCount === null) fetchPotentialMatchesCount();
+  }, [potentialMatchesCount]);
 
   const sortResults = () => {
     // create 2 arrays for lost and found dogs.
@@ -159,47 +181,63 @@ export const AllReportsPage = withAuthenticationRequired(() => {
   };
 
   return (
-    <Box sx={styles.pageWrapper}>
-      <PageTitle text={AppTexts.allReportsPage.title} />
-      {isLoading && (
-        <LoadingSpinnerWithText title={AppTexts.allReportsPage.loading} />
-      )}
-      {!isLoading && error && !unauthorizedError && (
-        <ErrorLoadingDogs refresh={mutate} />
-      )}
-      {unauthorizedError && (
-        <ErrorLoadingDogs text={AppTexts.allReportsPage.unauthorized} />
-      )}
-      {!isLoading && !error && !unauthorizedError && (
-        <Box sx={styles.responseContainer}>
-          <Box sx={styles.selectorFlex}>
-            <SelectInputField
-              options={AppTexts.allReportsPage.select}
-              label={AppTexts.allReportsPage.selectLabel}
-              onChange={changeSelectedReports}
-              value={selectedType}
-              notCentered
+    <PageContainer>
+      <Box sx={styles.pageWrapper}>
+        <PageTitle text={AppTexts.allReportsPage.title} />
+        {isLoading && (
+          <LoadingSpinnerWithText title={AppTexts.allReportsPage.loading} />
+        )}
+        {!isLoading && error && !unauthorizedError && (
+          <ErrorLoadingDogs refresh={mutate} />
+        )}
+        {unauthorizedError && (
+          <ErrorLoadingDogs text={AppTexts.allReportsPage.unauthorized} />
+        )}
+        {!isLoading && !error && !unauthorizedError && (
+          <Box sx={styles.responseContainer}>
+            <Box sx={styles.selectorFlex}>
+              <SelectInputField
+                options={AppTexts.allReportsPage.select}
+                label={AppTexts.allReportsPage.selectLabel}
+                onChange={changeSelectedReports}
+                value={selectedType}
+                notCentered
+              />
+              {response?.pagination && (
+                <Typography sx={styles.typography}>
+                  <span style={{ textDecoration: "underline" }}>
+                    {AppTexts.allReportsPage.numberOfReports}
+                  </span>{" "}
+                  {`${response?.pagination?.total}`}
+                </Typography>
+              )}
+              <Link
+                to={AppRoutes.dogs.allMatches}
+                style={{ textDecoration: "none" }}
+              >
+                <Typography sx={styles.typography}>
+                  <span style={{ textDecoration: "underline" }}>
+                    {AppTexts.allReportsPage.numberOfMatches}
+                  </span>{" "}
+                  {`${potentialMatchesCount ?? "טוען"}`}
+                </Typography>
+              </Link>
+            </Box>
+            <ResultsGrid
+              results={paginatedReports.currentData() as DogResult[]}
+              allReportsPage
+              getUpdatedReports={mutate}
             />
-            {response?.pagination && (
-              <Typography
-                sx={styles.typography}
-              >{`${AppTexts.allReportsPage.numberOfReports} ${response?.pagination?.total}`}</Typography>
+            {filteredReports.length && (
+              <Pagination
+                count={pagesCount}
+                page={page}
+                onChange={handlePagination}
+              />
             )}
           </Box>
-          <ResultsGrid
-            results={paginatedReports.currentData() as DogResult[]}
-            allReportsPage
-            getUpdatedReports={mutate}
-          />
-          {filteredReports.length && (
-            <Pagination
-              count={pagesCount}
-              page={page}
-              onChange={handlePagination}
-            />
-          )}
-        </Box>
-      )}
-    </Box>
+        )}
+      </Box>
+    </PageContainer>
   );
 });

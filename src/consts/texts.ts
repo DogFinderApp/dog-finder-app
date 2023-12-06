@@ -125,11 +125,12 @@ export const AppTexts = {
     unauthorized: "אין למשתמש זה גישה למאגר הכלבים המלא",
     selectLabel: "מיין לפי:",
     select: {
-      found: "הצג כלבים שנמצאו",
-      lost: "הצג כלבים נעדרים",
-      all: "הצג את כל הכלבים שדווחו",
+      found: "כלבים שנמצאו",
+      lost: "כלבים נעדרים",
+      all: "כל הכלבים שדווחו",
     },
     numberOfReports: "מספר הדיווחים:",
+    numberOfMatches: "מספר ההתאמות:",
   },
   allMatchesPage: {
     loadingText: "טוען את מאגר ההתאמות",
