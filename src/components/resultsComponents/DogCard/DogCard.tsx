@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
+import { KeyedMutator } from "swr";
 import {
   IconGenderMale,
   IconGenderFemale,
@@ -20,7 +21,7 @@ import { useGetServerApi } from "../../../facades/ServerApi";
 import { useAuthContext } from "../../../context/useAuthContext";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { useWindowSize } from "../../../hooks/useWindowSize";
-import { DogResult, DogType } from "../../../types/payload.types";
+import { DogResult, MatchingReports } from "../../../types/payload.types";
 import { AppTexts } from "../../../consts/texts";
 import { AppRoutes } from "../../../consts/routes";
 import { DeleteReportModal } from "../../Modals/DeleteReportModal";
@@ -29,11 +30,19 @@ import { MatchingReportsButtons } from "./MatchingReportsButtons";
 interface CardStyles {
   isHovering: boolean;
   isMobile: boolean;
+  matchingReportCard: boolean | undefined;
 }
 
 const useCardStyles = createStyleHook(
-  (theme, { isHovering, isMobile }: CardStyles) => {
+  (theme, { isHovering, isMobile, matchingReportCard }: CardStyles) => {
     return {
+      Card: {
+        position: "relative",
+        boxShadow:
+          isHovering && !matchingReportCard && !isMobile
+            ? "0 0 10px 4px rgba(255,255,255,0.3)"
+            : "none",
+      },
       CardMedia: { height: 400, objectFit: "contain" },
       CardActions: {
         display: "flex",
@@ -47,7 +56,7 @@ const useCardStyles = createStyleHook(
         right: 8,
         top: 8,
         display: "flex",
-        gap: 1.5,
+        gap: 1,
       },
       iconButton: {
         minWidth: "unset",
@@ -82,16 +91,28 @@ const useCardStyles = createStyleHook(
 
 interface DogCardProps {
   dog: DogResult;
-  dogType: DogType;
-  getUpdatedReports?: Function; // refetch after deleting a report
-  matchingReportCard?: boolean; // show the card for all-matches page
+  // mutate function: refetch reports after deleting a report
+  getUpdatedReports?: KeyedMutator<void | {
+    results: DogResult[];
+    pagination: any;
+  }>;
+  matchingReportCard?: boolean; // show the custom card for all-matches page
+  dogId?: number; // for deleting potential matches or setting them as resolved
+  possibleMatchId?: number; // for deleting potential matches or setting them as resolved
+  // mutate function: refetch possible matching reports after deleting a match
+  getUpdatedPossibleMatches?: KeyedMutator<void | {
+    results: MatchingReports[];
+    pagination: any;
+  }>;
 }
 
 export const DogCard = ({
   dog,
-  dogType,
   getUpdatedReports,
   matchingReportCard,
+  dogId,
+  possibleMatchId,
+  getUpdatedPossibleMatches,
 }: DogCardProps) => {
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -101,7 +122,7 @@ export const DogCard = ({
   const navigate = useNavigate();
   const { innerWidth } = useWindowSize();
   const isMobile = innerWidth < 600;
-  const styles = useCardStyles({ isHovering, isMobile });
+  const styles = useCardStyles({ isHovering, isMobile, matchingReportCard });
   const {
     state: { role },
   } = useAuthContext();
@@ -150,9 +171,10 @@ export const DogCard = ({
       : AppTexts.reportPage.dogSex.female
     : "לא ידוע";
 
-  const reportType = dogType === "found" ? dogCard.foundDate : dogCard.lostDate;
+  const reportType =
+    dog.type === "found" ? dogCard.foundDate : dogCard.lostDate;
   const locationType =
-    dogType === "found" ? dogCard.foundLocation : dogCard.lostLocation;
+    dog.type === "found" ? dogCard.foundLocation : dogCard.lostLocation;
 
   const matchGender = (text: string) => {
     // return "אבד" / "אבדה" and "נמצא" / "נמצאה" according to the dog's gender
@@ -184,7 +206,7 @@ export const DogCard = ({
       />
       <Card
         dir="rtl"
-        sx={{ position: "relative" }}
+        sx={styles.Card}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       >
@@ -232,7 +254,17 @@ export const DogCard = ({
           >
             <Button sx={styles.BottomButton}>{mainButtonText}</Button>
           </Link>
-          {matchingReportCard && <MatchingReportsButtons dog={dog} />}
+          {matchingReportCard &&
+            dogId &&
+            possibleMatchId &&
+            getUpdatedPossibleMatches && (
+              <MatchingReportsButtons
+                dog={dog}
+                dogId={dogId}
+                possibleMatchId={possibleMatchId}
+                getUpdatedPossibleMatches={getUpdatedPossibleMatches}
+              />
+            )}
         </CardActions>
       </Card>
     </>

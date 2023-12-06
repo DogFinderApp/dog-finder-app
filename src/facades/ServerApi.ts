@@ -150,6 +150,21 @@ class ServerApi {
     });
   }
 
+  async resolvePossibleMatch(payload: {
+    dogId: number;
+    possibleMatchId: number;
+  }) {
+    const url = buildEndpoint("dog_resolved");
+    return this.fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  }
+
   async getUserReportedDogs() {
     const url = buildEndpoint("get_dogs_by_reporter_id");
     return this.fetch(url);
