@@ -102,7 +102,7 @@ export const AppTexts = {
       part1: "המערכת מצליבה כעת את מאפייני הכלב שלך עם כלבים שיש לנו במאגר",
       part2: "על מנת לקבל את התוצאה המדויקת ביותר",
       part3: "הנתונים יעלו ממש בקרוב...",
-    } as const,
+    },
     error: "תקלה בטעינת התוצאות",
     noResults: {
       title: "לא נמצאו תוצאות",
@@ -134,6 +134,11 @@ export const AppTexts = {
   },
   allMatchesPage: {
     loadingText: "טוען את מאגר ההתאמות",
+    noMatches: {
+      title: "אין התאמות פוטנציאליות",
+      infoText1: "נראה שלא קיימים דיווחים על התאמות פוטנציאליות במאגר כרגע.",
+      infoText2: "אנא נסו שוב בעתיד :)",
+    },
   },
   navigation: {
     home: "בית",
@@ -179,7 +184,9 @@ export const AppTexts = {
     contactReporter: "פניה למפרסם/ת הדיווח",
     deleteMatch: "מחיקת התאמה",
     confirmMatch: "אישור התאמה",
-    whatsappText: `היית אנחנו פונים אליך מ-Fluffy Finder. המערכת זיהתה שייתכן ומצאת את כלב/תך. נשמח לתשובה בהודעה חוזרת אם הכלב/ה נמצא/ה או לא, על מנת לדעת אם להמשיך לחפש אותו/ה :)`,
+    updating: "מעדכן",
+    whatsappText:
+      "היית אנחנו פונים אליך מ-Fluffy Finder. המערכת זיהתה שייתכן ומצאת את כלב/תך. נשמח לתשובה בהודעה חוזרת אם הכלב/ה נמצא/ה או לא, על מנת לדעת אם להמשיך לחפש אותו/ה :)",
   },
   aboutPage: {
     texts: {
@@ -220,4 +227,4 @@ export const AppTexts = {
       deletingText: "מוחק...",
     },
   },
-};
+} as const;

@@ -27,7 +27,7 @@ const useNoResultsStyles = createStyleHook(() => ({
     gap: 4,
     mt: 4,
   },
-  text: { direction: "rtl", textAlign: "center" },
+  text: { direction: "rtl", textAlign: "center", textWrap: "balance" },
   buttonsWrapper: {
     display: "flex",
     flexDirection: { sm: "row", xs: "column-reverse" },
@@ -39,16 +39,33 @@ const useNoResultsStyles = createStyleHook(() => ({
   },
 }));
 
-export const NoDogs = ({ dogType }: { dogType: DogType }) => {
+export const NoDogs = ({ dogType }: { dogType?: DogType }) => {
+  // if `dogType` arg is undefined, it means we use it inside "all-matches" page which doesn't need a dogType
+
   const theme = useTheme();
   const styles = useNoResultsStyles();
   const navigate = useNavigate();
   const { isMobile } = useWindowSize();
+  const { noResults } = AppTexts.resultsPage;
+  const { noMatches } = AppTexts.allMatchesPage;
 
+  const title = dogType ? noResults.title : noMatches.title;
+  const infoText = dogType ? (
+    <>
+      {noResults.infoText1}
+      {!isMobile && <br />}
+      {noResults.infoText2}
+    </>
+  ) : (
+    <>
+      {noMatches.infoText1} <br />
+      {noMatches.infoText2}
+    </>
+  );
   const newReportText =
     dogType === DogType.FOUND
-      ? AppTexts.resultsPage.noResults.reportDogFound
-      : AppTexts.resultsPage.noResults.reportMissingDog;
+      ? noResults.reportDogFound
+      : noResults.reportMissingDog;
 
   const newReportRoute =
     dogType === DogType.FOUND
@@ -67,7 +84,7 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
       icon: IconPlus,
     },
     {
-      text: AppTexts.resultsPage.noResults.tryAgain,
+      text: noResults.tryAgain,
       navigationRoute: tryAgainRoute,
       icon: IconSearch,
     },
@@ -80,33 +97,36 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
           variant="h3"
           color={theme.palette.text.primary}
           fontSize={40}
+          sx={styles.text}
         >
-          {AppTexts.resultsPage.noResults.title}
+          {title}
         </Typography>
         <Typography
-          variant="h5"
+          variant="h6"
           color={theme.palette.text.primary}
           sx={styles.text}
         >
-          {AppTexts.resultsPage.noResults.infoText1}
-          {!isMobile && <br />}
-          {AppTexts.resultsPage.noResults.infoText2}
+          {infoText}
         </Typography>
       </Box>
-      <Box sx={styles.buttonsWrapper}>
-        {buttonsData.map((button) => (
-          <Button
-            key={button.text}
-            size="large"
-            variant="contained"
-            sx={styles.button}
-            onClick={() => navigate(button.navigationRoute)}
-          >
-            <button.icon size={20} />
-            {button.text}
-          </Button>
-        ))}
-      </Box>
+
+      {/* these buttons are only needed in "results" page, if !dogType it means we're in "all-matches" page */}
+      {dogType && (
+        <Box sx={styles.buttonsWrapper}>
+          {buttonsData.map((button) => (
+            <Button
+              key={button.text}
+              size="large"
+              variant="contained"
+              sx={styles.button}
+              onClick={() => navigate(button.navigationRoute)}
+            >
+              <button.icon size={20} />
+              {button.text}
+            </Button>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 };

@@ -2,16 +2,18 @@ import { useState } from "react";
 import { Box, Grid } from "@mui/material";
 import useSWR from "swr";
 import { useGetServerApi } from "../../facades/ServerApi";
-import { DogResult, MatchingReports } from "./../../types/payload.types";
+import { DogResult, MatchingReports } from "../../types/payload.types";
 import { createStyleHook } from "../../hooks/styleHooks";
 import usePageTitle from "../../hooks/usePageTitle";
 import { usePagination } from "../../hooks/usePagination";
 import { AppTexts } from "../../consts/texts";
+import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { LoadingSpinnerWithText } from "../../components/common/LoadingSpinnerWithText";
 import { DogCard } from "../../components/resultsComponents/DogCard/DogCard";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
 import { Pagination } from "../../components/pageComponents/Pagination/Pagination";
+import { NoDogs } from "../../components/resultsComponents/NoDogs";
 
 const usePageStyles = createStyleHook(() => ({
   pageWrapper: {
@@ -23,7 +25,6 @@ const usePageStyles = createStyleHook(() => ({
     flexDirection: "column",
     alignItems: "center",
     px: { sm: 4 },
-    mt: 10,
     mb: 4,
   },
   responseContainer: {
@@ -48,7 +49,8 @@ export const AllMatchesPage = () => {
   const styles = usePageStyles();
   const getServerApi = useGetServerApi();
 
-  const [unauthorizedError, setUnauthorizedError] = useState(false);
+  const [unauthorizedError, setUnauthorizedError] = useState<boolean>(false);
+  const [isEmpty, setIsEmpty] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const page_size = 6;
 
@@ -56,10 +58,10 @@ export const AllMatchesPage = () => {
     const serverApi = await getServerApi();
     try {
       const response = await serverApi.getPossibleMatches({ page, page_size });
-
       if (response.status === 403) return setUnauthorizedError(true);
       if (response.status === 200) {
         const json = await response.json();
+        if (json?.data?.results?.length === 0) setIsEmpty(true);
         return {
           results: (json?.data?.results || []) as MatchingReports[],
           pagination: json?.data?.pagination,
@@ -105,49 +107,52 @@ export const AllMatchesPage = () => {
   };
 
   return (
-    <Box sx={styles.pageWrapper}>
-      <PageTitle text={title} />
-      {isLoading && <LoadingSpinnerWithText title={loadingText} />}
-      {!isLoading && error && !unauthorizedError && (
-        <ErrorLoadingDogs refresh={mutate} />
-      )}
-      {unauthorizedError && (
-        <ErrorLoadingDogs text={AppTexts.allReportsPage.unauthorized} />
-      )}
-      {!isLoading && !error && (
-        <Box sx={styles.responseContainer}>
-          <Grid container spacing={4} dir="rtl">
-            {paginatedReports.currentData()?.map((reportsPair) => {
-              const { dog, dogId, possibleMatch, possibleMatchId } =
-                reportsPair as MatchingReports;
+    <PageContainer>
+      <Box sx={styles.pageWrapper}>
+        <PageTitle text={title} />
+        {isLoading && <LoadingSpinnerWithText title={loadingText} />}
+        {!isLoading && error && !unauthorizedError && (
+          <ErrorLoadingDogs refresh={mutate} />
+        )}
+        {unauthorizedError && (
+          <ErrorLoadingDogs text={AppTexts.allReportsPage.unauthorized} />
+        )}
+        {isEmpty && <NoDogs />}
+        {!isLoading && !error && (
+          <Box sx={styles.responseContainer}>
+            <Grid container spacing={4} dir="rtl">
+              {paginatedReports.currentData()?.map((reportsPair) => {
+                const { dog, dogId, possibleMatch, possibleMatchId } =
+                  reportsPair as MatchingReports;
 
-              return (
-                <Grid item xs={12} lg={6} key={`${dogId} ${possibleMatchId}`}>
-                  <Box sx={styles.cardsContainer}>
-                    <DogCard
-                      dog={fixReportData(dog)}
-                      dogType={dog.type!}
-                      matchingReportCard
-                    />
-                    <DogCard
-                      dog={fixReportData(possibleMatch)}
-                      dogType={possibleMatch.type!}
-                      matchingReportCard
-                    />
-                  </Box>
-                </Grid>
-              );
-            })}
-          </Grid>
-          {response?.results.length && (
-            <Pagination
-              count={pagesCount}
-              page={page}
-              onChange={handlePagination}
-            />
-          )}
-        </Box>
-      )}
-    </Box>
+                return (
+                  <Grid item xs={12} lg={6} key={`${dogId} ${possibleMatchId}`}>
+                    <Box sx={styles.cardsContainer}>
+                      {[dog, possibleMatch].map((dog, index) => (
+                        <DogCard
+                          key={index ? possibleMatchId : dogId}
+                          matchingReportCard
+                          dog={fixReportData(dog)}
+                          dogId={dogId}
+                          possibleMatchId={possibleMatchId}
+                          getUpdatedPossibleMatches={mutate}
+                        />
+                      ))}
+                    </Box>
+                  </Grid>
+                );
+              })}
+            </Grid>
+            {!!response?.results.length && (
+              <Pagination
+                count={pagesCount}
+                page={page}
+                onChange={handlePagination}
+              />
+            )}
+          </Box>
+        )}
+      </Box>
+    </PageContainer>
   );
 };
