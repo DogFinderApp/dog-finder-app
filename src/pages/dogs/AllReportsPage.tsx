@@ -57,7 +57,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
   );
   const [unauthorizedError, setUnauthorizedError] = useState(false);
   const [page, setPage] = useState<number>(1);
-  const [potentialMatchesCount, setPotentialMatchesCount] = useState<
+  const [possibleMatchesCount, setPossibleMatchesCount] = useState<
     number | null
   >(null);
 
@@ -91,23 +91,23 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     keepPreviousData: true,
   });
 
-  const fetchPotentialMatchesCount = async () => {
-    const serverApi = await getServerApi();
-    try {
-      const response = await serverApi.getPossibleMatchesCount();
-      if (response.status === 200) {
-        const json = await response.json();
-        setPotentialMatchesCount(json);
-      }
-    } catch (error) {
-      console.error(error); // eslint-disable-line
-      throw new Error("Failed to fetch possible matches count");
-    }
-  };
-
   useEffect(() => {
-    if (potentialMatchesCount === null) fetchPotentialMatchesCount();
-  }, [potentialMatchesCount]);
+    const fetchPossibleMatchesCount = async () => {
+      const serverApi = await getServerApi();
+      try {
+        const MatchesResponse = await serverApi.getPossibleMatchesCount();
+        if (MatchesResponse.status === 200) {
+          const json = await MatchesResponse.json();
+          setPossibleMatchesCount(json);
+        }
+      } catch (err) {
+        console.error(err); // eslint-disable-line
+        throw new Error("Failed to fetch possible matches count");
+      }
+    };
+
+    if (possibleMatchesCount === null) fetchPossibleMatchesCount();
+  }, [possibleMatchesCount, getServerApi]);
 
   const sortResults = () => {
     // create 2 arrays for lost and found dogs.
@@ -162,15 +162,6 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     window.scroll({ top: 0 });
   };
 
-  useEffect(() => {
-    const pathName = window.location.pathname;
-    const urlParts = pathName.split("/");
-    const typeFromUrl = urlParts[urlParts.length - 1];
-    const newSelectedType = typeFromUrl === "all-reports" ? "all" : typeFromUrl;
-    setSelectedType(newSelectedType as SelectOptions);
-    setTimeout(mutate, 0); // setTimeout is used to make sure we mutate only after selectedType has changed
-  }, [window.location.pathname, mutate]); // eslint-disable-line
-
   const changeSelectedReports = (event: SelectChangeEvent<any>) => {
     const { value } = event.target;
     if (selectedType !== value) {
@@ -219,7 +210,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
                   <span style={{ textDecoration: "underline" }}>
                     {AppTexts.allReportsPage.numberOfMatches}
                   </span>{" "}
-                  {`${potentialMatchesCount ?? "טוען"}`}
+                  {`${possibleMatchesCount ?? "טוען"}`}
                 </Typography>
               </Link>
             </Box>

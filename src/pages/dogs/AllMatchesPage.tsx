@@ -52,8 +52,9 @@ export const AllMatchesPage = () => {
   const [unauthorizedError, setUnauthorizedError] = useState<boolean>(false);
   const [isEmpty, setIsEmpty] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  const page_size = 6;
+  const page_size = 6; // eslint-disable-line
 
+  // eslint-disable-next-line consistent-return
   const fetcher = async () => {
     const serverApi = await getServerApi();
     try {
@@ -128,11 +129,11 @@ export const AllMatchesPage = () => {
                 return (
                   <Grid item xs={12} lg={6} key={`${dogId} ${possibleMatchId}`}>
                     <Box sx={styles.cardsContainer}>
-                      {[dog, possibleMatch].map((dog, index) => (
+                      {[dog, possibleMatch].map((dogResult, index) => (
                         <DogCard
                           key={index ? possibleMatchId : dogId}
                           matchingReportCard
-                          dog={fixReportData(dog)}
+                          dog={fixReportData(dogResult)}
                           dogId={dogId}
                           possibleMatchId={possibleMatchId}
                           getUpdatedPossibleMatches={mutate}

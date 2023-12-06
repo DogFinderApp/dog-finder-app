@@ -27,7 +27,7 @@ const useCardButtonsStyles = createStyleHook(
         fontWeight: 600,
         display: "flex",
         gap: "4px",
-        cursor: !!loadingState ? "not-allowed" : "pointer",
+        cursor: loadingState ? "not-allowed" : "pointer",
       },
     };
   },
@@ -109,7 +109,7 @@ export const MatchingReportsButtons = ({
               sx={styles.MatchButtons}
               color="success"
               onClick={(event) =>
-                !!loadingState ? event.preventDefault() : markMatchAsResolved()
+                loadingState ? event.preventDefault() : markMatchAsResolved()
               }
             >
               {confirmText} <IconCheck width={25} />
