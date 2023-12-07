@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import { Box, SelectChangeEvent, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  SelectChangeEvent,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import useSWR from "swr";
+import { useAuthContext } from "../../context/useAuthContext";
 import usePageTitle from "../../hooks/usePageTitle";
 import { usePagination } from "../../hooks/usePagination";
 import { createStyleHook } from "../../hooks/styleHooks";
@@ -37,19 +44,32 @@ const usePageStyles = createStyleHook(() => ({
   },
   selectorFlex: { display: "flex", flexDirection: "column", gap: 1 },
   typography: {
+    direction: "rtl",
     color: "white",
     width: "max-content",
-    ml: "auto",
+    mr: "auto",
     fontSize: 18,
   },
 }));
 
 export const AllReportsPage = withAuthenticationRequired(() => {
-  usePageTitle(AppTexts.allReportsPage.title);
+  const {
+    title,
+    loadingText,
+    unauthorized,
+    selectLabel,
+    selectOptions,
+    numberOfReports,
+    numberOfMatches,
+  } = AppTexts.allReportsPage;
+  usePageTitle(title);
   const getServerApi = useGetServerApi();
   const styles = usePageStyles();
   const navigate = useNavigate();
   const { dogType } = useParams();
+  const {
+    state: { role },
+  } = useAuthContext();
 
   type SelectOptions = "found" | "lost" | "all";
   const [selectedType, setSelectedType] = useState<SelectOptions>(
@@ -63,6 +83,11 @@ export const AllReportsPage = withAuthenticationRequired(() => {
 
   const fetcher = async () => {
     const serverApi = await getServerApi();
+    //? only hamal and admin users are allowed to fetch this data
+    // we must check both `role` and `serverApi.getUserRole()` because there could be a chance
+    // the user has reloaded the page and we invoke this function before the browser has updated
+    // the user role in context
+    if (!role && !serverApi.getUserRole()) return;
     const type = ["found", "lost"].includes(selectedType) ? selectedType : "";
     const page_size = 12; // eslint-disable-line
     // we need to send the payload without the type in order to fetch ALL reports
@@ -106,8 +131,8 @@ export const AllReportsPage = withAuthenticationRequired(() => {
       }
     };
 
-    if (possibleMatchesCount === null) fetchPossibleMatchesCount();
-  }, [possibleMatchesCount, getServerApi]);
+    if (role && possibleMatchesCount === null) fetchPossibleMatchesCount();
+  }, [role, possibleMatchesCount, getServerApi]);
 
   const sortResults = () => {
     // create 2 arrays for lost and found dogs.
@@ -174,22 +199,20 @@ export const AllReportsPage = withAuthenticationRequired(() => {
   return (
     <PageContainer>
       <Box sx={styles.pageWrapper}>
-        <PageTitle text={AppTexts.allReportsPage.title} />
-        {isLoading && (
-          <LoadingSpinnerWithText title={AppTexts.allReportsPage.loading} />
-        )}
+        <PageTitle text={title} />
+        {isLoading && <LoadingSpinnerWithText title={loadingText} />}
         {!isLoading && error && !unauthorizedError && (
           <ErrorLoadingDogs refresh={mutate} />
         )}
-        {unauthorizedError && (
-          <ErrorLoadingDogs text={AppTexts.allReportsPage.unauthorized} />
+        {(!role || unauthorizedError) && (
+          <ErrorLoadingDogs text={unauthorized} />
         )}
-        {!isLoading && !error && !unauthorizedError && (
+        {role && !isLoading && !error && !unauthorizedError && (
           <Box sx={styles.responseContainer}>
             <Box sx={styles.selectorFlex}>
               <SelectInputField
-                options={AppTexts.allReportsPage.select}
-                label={AppTexts.allReportsPage.selectLabel}
+                options={selectOptions}
+                label={selectLabel}
                 onChange={changeSelectedReports}
                 value={selectedType}
                 notCentered
@@ -197,22 +220,30 @@ export const AllReportsPage = withAuthenticationRequired(() => {
               {response?.pagination && (
                 <Typography sx={styles.typography}>
                   <span style={{ textDecoration: "underline" }}>
-                    {AppTexts.allReportsPage.numberOfReports}
+                    {numberOfReports}
                   </span>{" "}
                   {`${response?.pagination?.total}`}
                 </Typography>
               )}
-              <Link
-                to={AppRoutes.dogs.allMatches}
-                style={{ textDecoration: "none" }}
-              >
-                <Typography sx={styles.typography}>
-                  <span style={{ textDecoration: "underline" }}>
-                    {AppTexts.allReportsPage.numberOfMatches}
-                  </span>{" "}
-                  {`${possibleMatchesCount ?? "טוען"}`}
-                </Typography>
-              </Link>
+              <Tooltip placement="bottom" title="מעבר לעמוד כל ההתאמות">
+                <Link
+                  to={AppRoutes.dogs.allMatches}
+                  style={{
+                    textDecoration: "none",
+                    width: "max-content",
+                    marginLeft: "auto",
+                  }}
+                >
+                  <Typography sx={styles.typography}>
+                    <span style={{ textDecoration: "underline" }}>
+                      {numberOfMatches}
+                    </span>{" "}
+                    {possibleMatchesCount ?? (
+                      <CircularProgress size={20} sx={{ mr: 1 }} />
+                    )}
+                  </Typography>
+                </Link>
+              </Tooltip>
             </Box>
             <ResultsGrid
               results={paginatedReports.currentData() as DogResult[]}

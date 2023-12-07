@@ -1,6 +1,11 @@
 import { Box, Button, Typography, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { Link, To } from "react-router-dom";
+import {
+  IconArrowLeft,
+  IconPlus,
+  IconSearch,
+  TablerIconsProps,
+} from "@tabler/icons-react";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import { DogType } from "../../types/payload.types";
@@ -44,7 +49,6 @@ export const NoDogs = ({ dogType }: { dogType?: DogType }) => {
 
   const theme = useTheme();
   const styles = useNoResultsStyles();
-  const navigate = useNavigate();
   const { isMobile } = useWindowSize();
   const { noResults } = AppTexts.resultsPage;
   const { noMatches } = AppTexts.allMatchesPage;
@@ -77,18 +81,34 @@ export const NoDogs = ({ dogType }: { dogType?: DogType }) => {
       ? AppRoutes.dogs.searchFoundDog
       : AppRoutes.dogs.searchLostDog;
 
-  const buttonsData = [
-    {
-      text: newReportText,
-      navigationRoute: newReportRoute,
-      icon: IconPlus,
-    },
-    {
-      text: noResults.tryAgain,
-      navigationRoute: tryAgainRoute,
-      icon: IconSearch,
-    },
-  ];
+  interface ButtonData {
+    text: string;
+    icon: (props: TablerIconsProps) => JSX.Element;
+    navigationRoute: string | number;
+  }
+
+  const buttonsData: ButtonData[] = dogType
+    ? [
+        // search page + all report page
+        {
+          text: newReportText,
+          navigationRoute: newReportRoute,
+          icon: IconPlus,
+        },
+        {
+          text: noResults.tryAgain,
+          navigationRoute: tryAgainRoute,
+          icon: IconSearch,
+        },
+      ]
+    : [
+        // all matches page
+        {
+          text: AppTexts.dogDetails.backButton,
+          navigationRoute: -1,
+          icon: IconArrowLeft,
+        },
+      ];
 
   return (
     <Box sx={styles.content}>
@@ -109,24 +129,20 @@ export const NoDogs = ({ dogType }: { dogType?: DogType }) => {
           {infoText}
         </Typography>
       </Box>
-
-      {/* these buttons are only needed in "results" page, if !dogType it means we're in "all-matches" page */}
-      {dogType && (
-        <Box sx={styles.buttonsWrapper}>
-          {buttonsData.map((button) => (
-            <Button
-              key={button.text}
-              size="large"
-              variant="contained"
-              sx={styles.button}
-              onClick={() => navigate(button.navigationRoute)}
-            >
+      <Box sx={styles.buttonsWrapper}>
+        {buttonsData.map((button) => (
+          <Link
+            key={button.text}
+            to={button.navigationRoute as To}
+            style={{ textDecoration: "none" }}
+          >
+            <Button size="large" variant="contained" sx={styles.button}>
               <button.icon size={20} />
               {button.text}
             </Button>
-          ))}
-        </Box>
-      )}
+          </Link>
+        ))}
+      </Box>
     </Box>
   );
 };

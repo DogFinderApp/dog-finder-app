@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { Box, Grid } from "@mui/material";
 import useSWR from "swr";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { DogResult, MatchingReports } from "../../types/payload.types";
+import { useAuthContext } from "../../context/useAuthContext";
 import { createStyleHook } from "../../hooks/styleHooks";
 import usePageTitle from "../../hooks/usePageTitle";
 import { usePagination } from "../../hooks/usePagination";
@@ -42,21 +44,28 @@ const usePageStyles = createStyleHook(() => ({
   },
 }));
 
-export const AllMatchesPage = () => {
+export const AllMatchesPage = withAuthenticationRequired(() => {
   const title = AppTexts.navigation.allMatches;
   const { loadingText } = AppTexts.allMatchesPage;
   usePageTitle(title);
   const styles = usePageStyles();
   const getServerApi = useGetServerApi();
+  const {
+    state: { role },
+  } = useAuthContext();
 
   const [unauthorizedError, setUnauthorizedError] = useState<boolean>(false);
   const [isEmpty, setIsEmpty] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const page_size = 6; // eslint-disable-line
 
-  // eslint-disable-next-line consistent-return
   const fetcher = async () => {
     const serverApi = await getServerApi();
+    // ? only hamal and admin users are allowed to fetch this data
+    // we must check both `role` and `serverApi.getUserRole()` because there could be a chance
+    // the user has reloaded the page and we invoke this function before the browser has updated
+    // the user role in context
+    if (!role && !serverApi.getUserRole()) return;
     try {
       const response = await serverApi.getPossibleMatches({ page, page_size });
       if (response.status === 403) return setUnauthorizedError(true);
@@ -96,7 +105,6 @@ export const AllMatchesPage = () => {
   const paginatedReports = usePagination(response?.results ?? [], page_size);
   const pagesCount: number =
     Math.ceil((response?.pagination?.total as number) / page_size) ?? 0;
-
   const handlePagination = (
     event: React.ChangeEvent<unknown>,
     value: number | string,
@@ -115,7 +123,7 @@ export const AllMatchesPage = () => {
         {!isLoading && error && !unauthorizedError && (
           <ErrorLoadingDogs refresh={mutate} />
         )}
-        {unauthorizedError && (
+        {(!role || unauthorizedError) && (
           <ErrorLoadingDogs text={AppTexts.allReportsPage.unauthorized} />
         )}
         {isEmpty && <NoDogs />}
@@ -125,7 +133,6 @@ export const AllMatchesPage = () => {
               {paginatedReports.currentData()?.map((reportsPair) => {
                 const { dog, dogId, possibleMatch, possibleMatchId } =
                   reportsPair as MatchingReports;
-
                 return (
                   <Grid item xs={12} lg={6} key={`${dogId} ${possibleMatchId}`}>
                     <Box sx={styles.cardsContainer}>
@@ -156,4 +163,4 @@ export const AllMatchesPage = () => {
       </Box>
     </PageContainer>
   );
-};
+});

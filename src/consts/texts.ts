@@ -121,10 +121,10 @@ export const AppTexts = {
   },
   allReportsPage: {
     title: "כל הדיווחים",
-    loading: "טוען את מאגר הדיווחים",
+    loadingText: "טוען את מאגר הדיווחים",
     unauthorized: "אין למשתמש זה גישה למאגר הכלבים המלא",
     selectLabel: "מיין לפי:",
-    select: {
+    selectOptions: {
       found: "כלבים שנמצאו",
       lost: "כלבים נעדרים",
       all: "כל הכלבים שדווחו",
