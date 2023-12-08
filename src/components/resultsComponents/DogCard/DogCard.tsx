@@ -99,6 +99,7 @@ interface DogCardProps {
   matchingReportCard?: boolean; // show the custom card for all-matches page
   dogId?: number; // for deleting potential matches or setting them as resolved
   possibleMatchId?: number; // for deleting potential matches or setting them as resolved
+  dogPairId?: number; // the id if the possible matching pair of reports
   // mutate function: refetch possible matching reports after deleting a match
   getUpdatedPossibleMatches?: KeyedMutator<void | {
     results: MatchingReports[];
@@ -112,6 +113,7 @@ export const DogCard = ({
   matchingReportCard,
   dogId,
   possibleMatchId,
+  dogPairId,
   getUpdatedPossibleMatches,
 }: DogCardProps) => {
   const [isHovering, setIsHovering] = useState<boolean>(false);
@@ -255,6 +257,7 @@ export const DogCard = ({
             <Button sx={styles.BottomButton}>{mainButtonText}</Button>
           </Link>
           {matchingReportCard &&
+            dogPairId &&
             dogId &&
             possibleMatchId &&
             getUpdatedPossibleMatches && (
@@ -263,6 +266,7 @@ export const DogCard = ({
                 dogId={dogId}
                 possibleMatchId={possibleMatchId}
                 getUpdatedPossibleMatches={getUpdatedPossibleMatches}
+                dogPairId={dogPairId}
               />
             )}
         </CardActions>

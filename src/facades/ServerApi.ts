@@ -165,6 +165,11 @@ class ServerApi {
     });
   }
 
+  async deletePossibleDogMatch(id: number) {
+    const url = buildEndpoint(`delete_possible_dog_match?id=${id}`);
+    return this.fetch(url, { method: "DELETE" });
+  }
+
   async getUserReportedDogs() {
     const url = buildEndpoint("get_dogs_by_reporter_id");
     return this.fetch(url);

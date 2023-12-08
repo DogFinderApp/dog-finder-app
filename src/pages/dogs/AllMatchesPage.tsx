@@ -68,10 +68,12 @@ export const AllMatchesPage = withAuthenticationRequired(() => {
     if (!role && !serverApi.getUserRole()) return;
     try {
       const response = await serverApi.getPossibleMatches({ page, page_size });
+      // eslint-disable-next-line consistent-return
       if (response.status === 403) return setUnauthorizedError(true);
       if (response.status === 200) {
         const json = await response.json();
         if (json?.data?.results?.length === 0) setIsEmpty(true);
+        // eslint-disable-next-line consistent-return
         return {
           results: (json?.data?.results || []) as MatchingReports[],
           pagination: json?.data?.pagination,
@@ -131,7 +133,7 @@ export const AllMatchesPage = withAuthenticationRequired(() => {
           <Box sx={styles.responseContainer}>
             <Grid container spacing={4} dir="rtl">
               {paginatedReports.currentData()?.map((reportsPair) => {
-                const { dog, dogId, possibleMatch, possibleMatchId } =
+                const { id, dog, dogId, possibleMatch, possibleMatchId } =
                   reportsPair as MatchingReports;
                 return (
                   <Grid item xs={12} lg={6} key={`${dogId} ${possibleMatchId}`}>
@@ -143,6 +145,7 @@ export const AllMatchesPage = withAuthenticationRequired(() => {
                           dog={fixReportData(dogResult)}
                           dogId={dogId}
                           possibleMatchId={possibleMatchId}
+                          dogPairId={id}
                           getUpdatedPossibleMatches={mutate}
                         />
                       ))}

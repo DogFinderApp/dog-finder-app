@@ -83,7 +83,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
 
   const fetcher = async () => {
     const serverApi = await getServerApi();
-    //? only hamal and admin users are allowed to fetch this data
+    // ? only hamal and admin users are allowed to fetch this data
     // we must check both `role` and `serverApi.getUserRole()` because there could be a chance
     // the user has reloaded the page and we invoke this function before the browser has updated
     // the user role in context
@@ -94,8 +94,10 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     const payload = type ? { type, page, page_size } : { page, page_size };
     try {
       const response = await serverApi.getAllReportedDogs(payload);
+      // eslint-disable-next-line consistent-return
       if (response.status === 403) return setUnauthorizedError(true);
       const json = await response.json();
+      // eslint-disable-next-line consistent-return
       return {
         results: json?.data?.results || [],
         pagination: json?.data?.pagination,

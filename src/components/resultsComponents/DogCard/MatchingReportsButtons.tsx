@@ -39,6 +39,7 @@ interface MatchingReportsButtonsProps {
   // we can't just use `dog.dogId` from the previous arg because the passed dog could be either found or lost,
   // and the bottom buttons are for lost reports ONLY. we must make sure we can separate between the 2 IDs
   possibleMatchId: number;
+  dogPairId: number;
   getUpdatedPossibleMatches: KeyedMutator<void | {
     results: MatchingReports[];
     pagination: any;
@@ -49,6 +50,7 @@ export const MatchingReportsButtons = ({
   dog,
   dogId,
   possibleMatchId,
+  dogPairId,
   getUpdatedPossibleMatches,
 }: MatchingReportsButtonsProps) => {
   const getServerApi = useGetServerApi();
@@ -80,6 +82,20 @@ export const MatchingReportsButtons = ({
     }
   };
 
+  const deletePossibleMatch = async () => {
+    const serverApi = await getServerApi();
+    try {
+      setLoadingState("deleting");
+      const response = await serverApi.deletePossibleDogMatch(dogPairId);
+      setLoadingState(null);
+      if (response?.ok) getUpdatedPossibleMatches();
+    } catch (error) {
+      console.error(error); // eslint-disable-line
+      setLoadingState(null);
+      throw new Error("Failed to delete dog match");
+    }
+  };
+
   return (
     <Box sx={fullWidth}>
       {dog.type === "found" ? (
@@ -102,7 +118,13 @@ export const MatchingReportsButtons = ({
             </Button>
           </a>
           <Box sx={{ ...fullWidth, display: "flex" }}>
-            <Button sx={styles.MatchButtons} color="error">
+            <Button
+              sx={styles.MatchButtons}
+              color="error"
+              onClick={(event) =>
+                loadingState ? event.preventDefault() : deletePossibleMatch()
+              }
+            >
               {deleteText} <IconTrash width={25} />
             </Button>
             <Button
