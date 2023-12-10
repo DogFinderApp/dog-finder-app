@@ -3,7 +3,7 @@ import { DogType } from "../types/payload.types";
 import { HomePage } from "../pages/root/HomePage";
 import { PrivacyPolicy } from "../pages/PrivacyPolicy/PrivacyPolicy";
 import { AboutUsPage } from "../pages/AboutUs/AboutUsPage";
-import { ReportDogPage } from "../pages/dogs/ReportDogPage";
+import { ReportDogPage } from "../pages/dogs/ReportDogPage/ReportDogPage";
 import { SearchDogPage } from "../pages/dogs/SearchDogPage";
 import { ResultsDogPage } from "../pages/dogs/ResultsDogPage";
 import { DogDetailsPage } from "../pages/dogs/DogDetailsPage/DogDetailsPage";
