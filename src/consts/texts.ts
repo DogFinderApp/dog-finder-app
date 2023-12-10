@@ -127,7 +127,6 @@ export const AppTexts = {
     selectOptions: {
       found: "כלבים שנמצאו",
       lost: "כלבים נעדרים",
-      all: "כל הכלבים שדווחו",
     },
     numberOfReports: "מספר הדיווחים:",
     numberOfMatches: "מספר ההתאמות:",
