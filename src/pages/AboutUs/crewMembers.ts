@@ -12,6 +12,8 @@ import MaryDaniel from "../../assets/crewMembers/Mary_Daniel.jpg";
 import MaryDanielLow from "../../assets/crewMembers/reduced/Mary_Daniel.jpg";
 import NirDiamant from "../../assets/crewMembers/Nir_Diamant.jpg";
 import NirDiamantLow from "../../assets/crewMembers/reduced/Nir_Diamant.jpg";
+import SapirGershov from "../../assets/crewMembers/Sapir_Gershov.jpg";
+import SapirGershovLow from "../../assets/crewMembers/reduced/Sapir_Gershov.jpg";
 import TzlilShani from "../../assets/crewMembers/Tzlil_Shani.jpeg";
 import TzlilShaniLow from "../../assets/crewMembers/reduced/Tzlil_Shani.jpeg";
 import YanivDavid from "../../assets/crewMembers/Yaniv_David.jpg";
@@ -85,6 +87,13 @@ export const crewMembers: CrewMemberType[] = [
     image: AnonymousMaleSVG,
     imageLowQuality: AnonymousMaleSVGLow,
     role: "Front End Developer",
+  },
+  {
+    name: "ספיר גרשוב",
+    image: SapirGershov,
+    imageLowQuality: SapirGershovLow,
+    role: "Algorithms Researcher",
+    links: ["https://scalpel.group/team/"],
   },
   {
     name: "טל רייזפלד",
