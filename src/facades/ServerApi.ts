@@ -180,12 +180,8 @@ class ServerApi {
     return this.fetch(url);
   }
 
-  async getAllReportedDogs(payload: {
-    page: number;
-    page_size: number;
-    type?: String;
-  }) {
-    const url = new URL(buildEndpoint("dogs"));
+  async getAllReportedDogs(payload: { page: number; page_size: number }) {
+    const url = new URL(buildEndpoint("get_all_dogs"));
     const stringKeys = Object.keys(payload) as Array<keyof typeof payload>;
     stringKeys.forEach((key) =>
       url.searchParams.append(key, payload[key]?.toString()!),
