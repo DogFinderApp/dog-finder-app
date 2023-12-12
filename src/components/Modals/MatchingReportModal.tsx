@@ -1,17 +1,17 @@
-import { Dispatch, SetStateAction, forwardRef } from "react";
+import { Dispatch, SetStateAction } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Fade, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
-import { TransitionProps } from "@mui/material/transitions";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { DogType, DogResult } from "../../types/payload.types";
 import { AppRoutes } from "../../consts/routes";
 import { AppTexts } from "../../consts/texts";
+import { Transition } from "./Transition";
 
 const useAlertModalStyles = createStyleHook(() => ({
   dialog: {
@@ -66,15 +66,6 @@ const linkStyles = {
   textDecoration: "none",
   margin: 0,
 };
-
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Fade in ref={ref} timeout={300} {...props} />;
-});
 
 interface AlertModalProps {
   matchingReports: DogResult[];

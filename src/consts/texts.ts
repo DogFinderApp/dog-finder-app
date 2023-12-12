@@ -30,12 +30,12 @@ export const AppTexts = {
       senior: "מבוגר",
     },
     locationDetails: {
-      locationDescriptionFound: "המיקום בו נמצא/ה",
-      locationDescriptionLost: "המיקום בו נאבד/ה",
+      found: "המיקום בו נמצא/ה",
+      lost: "המיקום בו נאבד/ה",
     },
     dateDetails: {
-      foundDate: "תאריך בו נמצא/ה",
-      lostDate: "תאריך בו אבד/ה",
+      found: "תאריך בו נמצא/ה",
+      lost: "תאריך בו אבד/ה",
     },
     dogDetails: {
       dogRace: "גזע הכלב/ה",
@@ -208,6 +208,20 @@ export const AppTexts = {
       cancelText: "ביטול",
       continueText: "מחיקה לצמיתות",
       deletingText: "מוחק...",
+    },
+    selectReport: {
+      title: "בחירת הדיווח המתאים",
+      text1: "זיהינו שדיווחת על יותר מכלב/ה אחד/ת. ",
+      text2: "נא לבחור את הדיווח המתאים ביותר מבין כלל הדיווחים שלך. ",
+      bottomText:
+        "בחירת הדיווח המתאים נועדה לעזור לנו להתאים בין הדיווחים שלך לבין פרטי המדווח/ת מהצד השני",
+      cancelText: "חזרה",
+      continueText: "אישור ומעבר לוואטסאפ",
+      status: {
+        lost: "אבד/ה",
+        found: "נמצא/ה",
+      },
+      toolTipText: "נא לבחור את הדיווח המתאים",
     },
   },
 };
