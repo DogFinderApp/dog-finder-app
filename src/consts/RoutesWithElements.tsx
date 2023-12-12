@@ -8,6 +8,7 @@ import { SearchDogPage } from "../pages/dogs/SearchDogPage";
 import { ResultsDogPage } from "../pages/dogs/ResultsDogPage";
 import { DogDetailsPage } from "../pages/dogs/DogDetailsPage/DogDetailsPage";
 import { AllReportsPage } from "../pages/dogs/AllReportsPage";
+import { AllMatchesPage } from "../pages/dogs/AllMatchesPage";
 import { NotFound } from "../pages/NotFound";
 import { AppRoutes } from "./routes";
 
@@ -63,6 +64,10 @@ export const routesWithElements: Route[] = [
   {
     path: AppRoutes.dogs.allReports,
     element: AllReportsPage,
+  },
+  {
+    path: AppRoutes.dogs.allMatches,
+    element: AllMatchesPage,
   },
   {
     path: "/*",

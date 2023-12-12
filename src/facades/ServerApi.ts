@@ -150,6 +150,26 @@ class ServerApi {
     });
   }
 
+  async resolvePossibleMatch(payload: {
+    dogId: number;
+    possibleMatchId: number;
+  }) {
+    const url = buildEndpoint("dog_resolved");
+    return this.fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async deletePossibleDogMatch(id: number) {
+    const url = buildEndpoint(`delete_possible_dog_match?id=${id}`);
+    return this.fetch(url, { method: "DELETE" });
+  }
+
   async getUserReportedDogs() {
     const url = buildEndpoint("get_dogs_by_reporter_id");
     return this.fetch(url);
@@ -171,6 +191,24 @@ class ServerApi {
       url.searchParams.append(key, payload[key]?.toString()!),
     );
     return this.fetch(url.toString());
+  }
+
+  async getPossibleMatches(payload: {
+    page: number;
+    page_size: number;
+    dogId?: number; // if the dogId is null it will fetch all matches
+  }) {
+    const url = new URL(buildEndpoint("get_possible_dog_matches"));
+    const stringKeys = Object.keys(payload) as Array<keyof typeof payload>;
+    stringKeys.forEach((key) =>
+      url.searchParams.append(key, payload[key]?.toString()!),
+    );
+    return this.fetch(url.toString());
+  }
+
+  async getPossibleMatchesCount() {
+    const url = buildEndpoint("get_possible_dog_matches_count");
+    return this.fetch(url);
   }
 
   async deleteDogById(dogId: string) {
