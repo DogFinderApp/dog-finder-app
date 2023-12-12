@@ -9,30 +9,40 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
+import { KeyedMutator } from "swr";
 import {
   IconGenderMale,
   IconGenderFemale,
   IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
-import { formatDateString } from "../../utils/datesFormatter";
-import { useGetServerApi } from "../../facades/ServerApi";
-import { useAuthContext } from "../../context/useAuthContext";
-import { createStyleHook } from "../../hooks/styleHooks";
-import { useWindowSize } from "../../hooks/useWindowSize";
-import { DogResult, DogType } from "../../types/payload.types";
-import { AppTexts } from "../../consts/texts";
-import { AppRoutes } from "../../consts/routes";
-import { DeleteReportModal } from "../Modals/DeleteReportModal";
+import { formatDateString } from "../../../utils/datesFormatter";
+import { useGetServerApi } from "../../../facades/ServerApi";
+import { useAuthContext } from "../../../context/useAuthContext";
+import { createStyleHook } from "../../../hooks/styleHooks";
+import { useWindowSize } from "../../../hooks/useWindowSize";
+import { DogResult, MatchingReports } from "../../../types/payload.types";
+import { AppTexts } from "../../../consts/texts";
+import { AppRoutes } from "../../../consts/routes";
+import { DeleteReportModal } from "../../Modals/DeleteReportModal";
+import { MatchingReportsButtons } from "./MatchingReportsButtons";
 
 interface CardStyles {
   isHovering: boolean;
   isMobile: boolean;
+  matchingReportCard: boolean | undefined;
 }
 
 const useCardStyles = createStyleHook(
-  (theme, { isHovering, isMobile }: CardStyles) => {
+  (theme, { isHovering, isMobile, matchingReportCard }: CardStyles) => {
     return {
+      Card: {
+        position: "relative",
+        boxShadow:
+          isHovering && !matchingReportCard && !isMobile
+            ? "0 0 10px 4px rgba(255,255,255,0.3)"
+            : "none",
+      },
       CardMedia: { height: 400, objectFit: "contain" },
       CardActions: {
         display: "flex",
@@ -46,7 +56,7 @@ const useCardStyles = createStyleHook(
         right: 8,
         top: 8,
         display: "flex",
-        gap: 1.5,
+        gap: 1,
       },
       iconButton: {
         minWidth: "unset",
@@ -55,6 +65,11 @@ const useCardStyles = createStyleHook(
         borderRadius: "100%",
         opacity: isHovering || isMobile ? 1 : 0,
         transition: "0.2s ease-in-out",
+      },
+      buttonsContainer: {
+        display: "flex",
+        flexDirection: "column",
+        background: "#fff",
       },
       BottomButton: {
         m: "0 auto",
@@ -76,11 +91,31 @@ const useCardStyles = createStyleHook(
 
 interface DogCardProps {
   dog: DogResult;
-  dogType: DogType;
-  getUpdatedReports?: Function; // refetch after deleting a report
+  // mutate function: refetch reports after deleting a report
+  getUpdatedReports?: KeyedMutator<void | {
+    results: DogResult[];
+    pagination: any;
+  }>;
+  matchingReportCard?: boolean; // show the custom card for all-matches page
+  dogId?: number; // for deleting potential matches or setting them as resolved
+  possibleMatchId?: number; // for deleting potential matches or setting them as resolved
+  dogPairId?: number; // the id if the possible matching pair of reports
+  // mutate function: refetch possible matching reports after deleting a match
+  getUpdatedPossibleMatches?: KeyedMutator<void | {
+    results: MatchingReports[];
+    pagination: any;
+  }>;
 }
 
-export const DogCard = ({ dog, dogType, getUpdatedReports }: DogCardProps) => {
+export const DogCard = ({
+  dog,
+  getUpdatedReports,
+  matchingReportCard,
+  dogId,
+  possibleMatchId,
+  dogPairId,
+  getUpdatedPossibleMatches,
+}: DogCardProps) => {
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -89,10 +124,12 @@ export const DogCard = ({ dog, dogType, getUpdatedReports }: DogCardProps) => {
   const navigate = useNavigate();
   const { innerWidth } = useWindowSize();
   const isMobile = innerWidth < 600;
-  const styles = useCardStyles({ isHovering, isMobile });
+  const styles = useCardStyles({ isHovering, isMobile, matchingReportCard });
   const {
     state: { role },
   } = useAuthContext();
+
+  const { dogCard } = AppTexts;
 
   const deleteReport = async () => {
     const serverApi = await getServerApi();
@@ -111,8 +148,6 @@ export const DogCard = ({ dog, dogType, getUpdatedReports }: DogCardProps) => {
       throw new Error("Failed to fetch reports");
     }
   };
-
-  const dogPageUrl = AppRoutes.dogs.dogPage.replace(":dog_id", dog.dogId);
 
   const searchForSimilarDogs = () => {
     const dogTypeToSearch = dog.type === "found" ? "lost" : "found";
@@ -139,26 +174,29 @@ export const DogCard = ({ dog, dogType, getUpdatedReports }: DogCardProps) => {
     : "לא ידוע";
 
   const reportType =
-    dogType === "found"
-      ? AppTexts.dogCard.foundDate
-      : AppTexts.dogCard.lostDate;
-
+    dog.type === "found" ? dogCard.foundDate : dogCard.lostDate;
   const locationType =
-    dogType === "found"
-      ? AppTexts.dogCard.foundLocation
-      : AppTexts.dogCard.lostLocation;
+    dog.type === "found" ? dogCard.foundLocation : dogCard.lostLocation;
+
+  const matchGender = (text: string) => {
+    // return "אבד" / "אבדה" and "נמצא" / "נמצאה" according to the dog's gender
+    const words = text.split(" ");
+    return dog.sex === "female" ? `${words[0]}ה ${words[1]}` : text;
+  };
 
   const cardInfo = [
-    `${locationType}: ${dog.location || ""}`,
-    `${AppTexts.dogCard.sexText}: ${genderText}`,
-    `${reportType}: ${formatDateString(dog.dogFoundOn || "")}`,
+    `${dogCard.sexText}: ${genderText}`,
+    `${matchGender(locationType)}: ${dog.location || ""}`,
+    `${matchGender(reportType)}: ${formatDateString(dog.dogFoundOn || "")}`,
   ];
 
   const image = `data:${dog.imageContentType};base64,${dog.imageBase64}`;
   const searchToolTipText =
-    dog.type === "found"
-      ? AppTexts.dogCard.toolTipLost
-      : AppTexts.dogCard.toolTipFound;
+    dog.type === "found" ? dogCard.toolTipLost : dogCard.toolTipFound;
+
+  const mainButtonText = matchingReportCard
+    ? dogCard.watchProfile
+    : dogCard.moreDetails;
 
   return (
     <>
@@ -170,7 +208,7 @@ export const DogCard = ({ dog, dogType, getUpdatedReports }: DogCardProps) => {
       />
       <Card
         dir="rtl"
-        sx={{ position: "relative" }}
+        sx={styles.Card}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       >
@@ -186,8 +224,8 @@ export const DogCard = ({ dog, dogType, getUpdatedReports }: DogCardProps) => {
                 <IconSearch width={25} />
               </Button>
             </Tooltip>
-            {role === "admin" && (
-              <Tooltip title={AppTexts.dogCard.tooltipDelete} placement="top">
+            {role === "admin" && !matchingReportCard && (
+              <Tooltip title={dogCard.tooltipDelete} placement="top">
                 <Button
                   variant="contained"
                   color="error"
@@ -201,18 +239,36 @@ export const DogCard = ({ dog, dogType, getUpdatedReports }: DogCardProps) => {
           </Box>
         )}
         <CardActions sx={{ ...styles.CardActions, pr: 2, pt: 2 }}>
-          {cardInfo.map((sectionText, index) => (
-            <Typography key={sectionText} sx={styles.Typography}>
-              {sectionText} {index === 1 && dog.sex && genderIcon}
-            </Typography>
-          ))}
+          {cardInfo.map(
+            (sectionText, index) =>
+              !(matchingReportCard && index === 1) && (
+                // render the card texts, don't show dog gender in 'all-matches' page
+                <Typography key={sectionText} sx={styles.Typography}>
+                  {sectionText} {index === 0 && dog.sex && genderIcon}
+                </Typography>
+              ),
+          )}
         </CardActions>
-        <CardActions sx={styles.CardActions}>
-          <Link to={dogPageUrl} style={{ width: "100%" }}>
-            <Button sx={styles.BottomButton}>
-              {AppTexts.resultsPage.moreDetails}
-            </Button>
+        <CardActions sx={styles.buttonsContainer}>
+          <Link
+            to={AppRoutes.dogs.dogPage.replace(":dog_id", dog.dogId)}
+            style={{ width: "100%" }}
+          >
+            <Button sx={styles.BottomButton}>{mainButtonText}</Button>
           </Link>
+          {matchingReportCard &&
+            dogPairId &&
+            dogId &&
+            possibleMatchId &&
+            getUpdatedPossibleMatches && (
+              <MatchingReportsButtons
+                dog={dog}
+                dogId={dogId}
+                possibleMatchId={possibleMatchId}
+                getUpdatedPossibleMatches={getUpdatedPossibleMatches}
+                dogPairId={dogPairId}
+              />
+            )}
         </CardActions>
       </Card>
     </>

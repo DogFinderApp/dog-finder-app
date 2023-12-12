@@ -96,14 +96,13 @@ export const AppTexts = {
       "הנה רשימה של התאמות פוטנציאליות לכלב שהעלאת. עיין בתמונות, ובמידע הנוסף וצור קשר עם הבעלים אם אתה מזהה התאמה.",
     bottomText:
       'במידה והכלב/ה שלך לא נמצאים ברשימה, אנא המתן ליצירת קשר ע"י האדם שימצא אותו.',
-    moreDetails: "לחצו לעוד פרטים",
     call: "טלפון",
     email: "מייל",
     loadingTexts: {
       part1: "המערכת מצליבה כעת את מאפייני הכלב שלך עם כלבים שיש לנו במאגר",
       part2: "על מנת לקבל את התוצאה המדויקת ביותר",
       part3: "הנתונים יעלו ממש בקרוב...",
-    } as const,
+    },
     error: "תקלה בטעינת התוצאות",
     noResults: {
       title: "לא נמצאו תוצאות",
@@ -122,15 +121,23 @@ export const AppTexts = {
   },
   allReportsPage: {
     title: "כל הדיווחים",
-    loading: "טוען את מאגר הדיווחים",
+    loadingText: "טוען את מאגר הדיווחים",
     unauthorized: "אין למשתמש זה גישה למאגר הכלבים המלא",
     selectLabel: "מיין לפי:",
-    select: {
-      found: "הצג כלבים שנמצאו",
-      lost: "הצג כלבים נעדרים",
-      all: "הצג את כל הכלבים שדווחו",
+    selectOptions: {
+      found: "כלבים שנמצאו",
+      lost: "כלבים נעדרים",
     },
     numberOfReports: "מספר הדיווחים:",
+    numberOfMatches: "מספר ההתאמות:",
+  },
+  allMatchesPage: {
+    loadingText: "טוען את מאגר ההתאמות",
+    noMatches: {
+      title: "אין התאמות פוטנציאליות",
+      infoText1: "נראה שלא קיימים דיווחים על התאמות פוטנציאליות במאגר כרגע.",
+      infoText2: "אנא נסו שוב בעתיד :)",
+    },
   },
   navigation: {
     home: "בית",
@@ -142,6 +149,7 @@ export const AppTexts = {
     privacyPolicy: "תנאי השימוש",
     allFound: "כל הכלבים שנמצאו",
     allLost: "כל הכלבים שנאבדו",
+    allMatches: "כל ההתאמות",
   },
   dogDetails: {
     title: "פרטי הכלב",
@@ -167,9 +175,17 @@ export const AppTexts = {
     sexText: "מין",
     foundDate: "נמצא בתאריך",
     lostDate: "אבד בתאריך",
+    moreDetails: "לחצו לעוד פרטים",
+    watchProfile: "צפייה בפרופיל",
     toolTipLost: "חיפוש כלבים דומים שנעדרים",
     toolTipFound: "חיפוש כלבים דומים שנמצאו",
     tooltipDelete: "מחיקת דיווח",
+    contactReporter: "פניה למפרסם/ת הדיווח",
+    deleteMatch: "מחיקת התאמה",
+    confirmMatch: "אישור התאמה",
+    updating: "מעדכן",
+    whatsappText:
+      "היי, אנחנו פונים אליך מ-Fluffy Finder. המערכת זיהתה שייתכן ומצאת את כלב/תך. נשמח לתשובה בהודעה חוזרת אם הכלב/ה נמצא/ה או לא, על מנת לדעת אם להמשיך לחפש אותו/ה :)",
   },
   aboutPage: {
     texts: {
@@ -224,4 +240,4 @@ export const AppTexts = {
       toolTipText: "נא לבחור את הדיווח המתאים",
     },
   },
-};
+} as const;

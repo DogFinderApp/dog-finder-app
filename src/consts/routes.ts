@@ -9,6 +9,8 @@ export const AppRoutes = {
     searchFoundDog: "/search-found",
     searchLostDog: "/search-lost",
     results: "/results/:dogType",
-    allReports: "/all-reports/:dogType?",
+    allReports: "/all-reports/:dogType",
+    allReportsHamal: "/all-reports/hamal",
+    allMatches: "/all-matches",
   },
 } as const;

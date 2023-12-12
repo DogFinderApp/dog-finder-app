@@ -75,7 +75,7 @@ export const ResultsDogPage = () => {
         return setLoadingText(loadingTextOptions[1]);
       if (isLoading && loadingText === loadingTextOptions[1])
         return setLoadingText(loadingTextOptions[2]);
-    }, 2000);
+    }, 2500);
   }, [isLoading, loadingText, setLoadingText, loadingTextOptions]);
 
   const isEmpty = results?.length === 0;
