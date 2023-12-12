@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import {
   Box,
@@ -20,12 +20,11 @@ import { DogResult } from "../../types/payload.types";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
-import { SelectInputField } from "../../components/pageComponents/SelectInput/SelectInput";
 import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadingDogs";
 import { LoadingSpinnerWithText } from "../../components/common/LoadingSpinnerWithText";
 import { Pagination } from "../../components/pageComponents/Pagination/Pagination";
 
-const usePageStyles = createStyleHook(() => ({
+export const useAllReportsPageStyles = createStyleHook(() => ({
   pageWrapper: {
     height: "100%",
     width: "90%",
@@ -42,7 +41,7 @@ const usePageStyles = createStyleHook(() => ({
     gap: 5,
     width: "100%",
   },
-  selectorFlex: { display: "flex", flexDirection: "column", gap: 1 },
+  topTextsFlex: { display: "flex", flexDirection: "column", gap: 1 },
   typography: {
     direction: "rtl",
     color: "white",
@@ -52,34 +51,28 @@ const usePageStyles = createStyleHook(() => ({
   },
 }));
 
+const allMatchesLinkStyles = {
+  textDecoration: "none",
+  width: "max-content",
+  marginLeft: "auto",
+};
+
 export const AllReportsPage = withAuthenticationRequired(() => {
-  const {
-    title,
-    loadingText,
-    unauthorized,
-    selectLabel,
-    selectOptions,
-    numberOfReports,
-    numberOfMatches,
-  } = AppTexts.allReportsPage;
+  const { title, loadingText, unauthorized, numberOfReports, numberOfMatches } =
+    AppTexts.allReportsPage;
   usePageTitle(title);
   const getServerApi = useGetServerApi();
-  const styles = usePageStyles();
-  const navigate = useNavigate();
-  const { dogType } = useParams();
+  const styles = useAllReportsPageStyles();
   const {
     state: { role },
   } = useAuthContext();
 
-  type SelectOptions = "found" | "lost" | "all";
-  const [selectedType, setSelectedType] = useState<SelectOptions>(
-    (dogType as SelectOptions) ?? "all",
-  );
   const [unauthorizedError, setUnauthorizedError] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [possibleMatchesCount, setPossibleMatchesCount] = useState<
     number | null
   >(null);
+  const pageSize = 12;
 
   const fetcher = async () => {
     const serverApi = await getServerApi();
@@ -88,10 +81,8 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     // the user has reloaded the page and we invoke this function before the browser has updated
     // the user role in context
     if (!role && !serverApi.getUserRole()) return;
-    const type = ["found", "lost"].includes(selectedType) ? selectedType : "";
-    const page_size = 12; // eslint-disable-line
-    // we need to send the payload without the type in order to fetch ALL reports
-    const payload = type ? { type, page, page_size } : { page, page_size };
+    // we don`t send a `type` in the payload in order to fetch all types of reports
+    const payload = { page, page_size: pageSize };
     try {
       const response = await serverApi.getAllReportedDogs(payload);
       // eslint-disable-next-line consistent-return
@@ -113,7 +104,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     error,
     isLoading,
     mutate,
-  } = useSWR([`${selectedType}-reports-page-${page}`], fetcher, {
+  } = useSWR([`all-reports-page-${page}`], fetcher, {
     revalidateOnFocus: false,
     keepPreviousData: true,
   });
@@ -129,53 +120,22 @@ export const AllReportsPage = withAuthenticationRequired(() => {
         }
       } catch (err) {
         console.error(err); // eslint-disable-line
-        throw new Error("Failed to fetch possible matches count");
       }
     };
 
     if (role && possibleMatchesCount === null) fetchPossibleMatchesCount();
   }, [role, possibleMatchesCount, getServerApi]);
 
-  const sortResults = () => {
-    // create 2 arrays for lost and found dogs.
-    // then loop over each dog in the results and push it to the matching array
-    const initValue = { foundDogs: [], lostDogs: [] };
-    if (!response?.results) return initValue;
-    return response?.results.reduce(
-      (
-        result: { foundDogs: DogResult[]; lostDogs: DogResult[] },
-        dog: DogResult,
-      ) => {
-        // @ts-expect-error
-        const { images, id, type } = dog;
-        const imageBase64 = images[0]?.base64Image;
-        const dogId = id;
-        const modifiedDog = { ...dog, imageBase64, dogId };
-        if (type === "found") {
-          result.foundDogs.push(modifiedDog);
-        } else if (type === "lost") {
-          result.lostDogs.push(modifiedDog);
-        }
-        return result;
-      },
-      initValue,
-    );
-  };
-
-  const { foundDogs, lostDogs } = sortResults();
-
-  const getFilteredReports = () => {
-    const reportsArrays = {
-      lost: lostDogs,
-      found: foundDogs,
-      all: [...foundDogs, ...lostDogs],
-    };
-    return reportsArrays[selectedType];
-  };
-
-  const filteredReports: DogResult[] = getFilteredReports();
-  const itemsPerPage = response?.pagination?.page_size ?? 12;
-  const paginatedReports = usePagination(filteredReports ?? [], itemsPerPage);
+  // modify the reports from result to match `DogResult` type
+  const allReports: DogResult[] = response?.results?.map((dog: DogResult) => {
+    // @ts-expect-error
+    const { images, id } = dog;
+    const imageBase64 = images[0]?.base64Image;
+    const dogId = id;
+    return { ...dog, imageBase64, dogId };
+  });
+  const itemsPerPage = response?.pagination?.page_size ?? pageSize;
+  const paginatedReports = usePagination(allReports ?? [], itemsPerPage);
   const pagesCount: number =
     Math.ceil((response?.pagination?.total as number) / itemsPerPage) ?? 0;
 
@@ -187,15 +147,6 @@ export const AllReportsPage = withAuthenticationRequired(() => {
     setPage(newValue);
     paginatedReports.jump(newValue);
     window.scroll({ top: 0 });
-  };
-
-  const changeSelectedReports = (event: SelectChangeEvent<any>) => {
-    const { value } = event.target;
-    if (selectedType !== value) {
-      setSelectedType(value);
-      navigate(`/all-reports/${value}`);
-      handlePagination(event, value);
-    }
   };
 
   return (
@@ -211,14 +162,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
         )}
         {role && !isLoading && !error && !unauthorizedError && (
           <Box sx={styles.responseContainer}>
-            <Box sx={styles.selectorFlex}>
-              <SelectInputField
-                options={selectOptions}
-                label={selectLabel}
-                onChange={changeSelectedReports}
-                value={selectedType}
-                notCentered
-              />
+            <Box sx={styles.topTextsFlex}>
               {response?.pagination && (
                 <Typography sx={styles.typography}>
                   <span style={{ textDecoration: "underline" }}>
@@ -230,11 +174,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
               <Tooltip placement="bottom" title="מעבר לעמוד כל ההתאמות">
                 <Link
                   to={AppRoutes.dogs.allMatches}
-                  style={{
-                    textDecoration: "none",
-                    width: "max-content",
-                    marginLeft: "auto",
-                  }}
+                  style={allMatchesLinkStyles}
                 >
                   <Typography sx={styles.typography}>
                     <span style={{ textDecoration: "underline" }}>
@@ -252,7 +192,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
               allReportsPage
               getUpdatedReports={mutate}
             />
-            {filteredReports.length && (
+            {allReports.length && (
               <Pagination
                 count={pagesCount}
                 page={page}

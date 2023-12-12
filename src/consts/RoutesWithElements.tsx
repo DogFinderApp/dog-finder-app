@@ -11,6 +11,7 @@ import { AllReportsPage } from "../pages/dogs/AllReportsPage";
 import { AllMatchesPage } from "../pages/dogs/AllMatchesPage";
 import { NotFound } from "../pages/NotFound";
 import { AppRoutes } from "./routes";
+import { ReportsGalleryPage } from "../pages/dogs/ReportsGalleryPage";
 
 type RouteElement = () => JSX.Element;
 
@@ -63,6 +64,10 @@ export const routesWithElements: Route[] = [
   },
   {
     path: AppRoutes.dogs.allReports,
+    element: ReportsGalleryPage,
+  },
+  {
+    path: AppRoutes.dogs.allReportsHamal,
     element: AllReportsPage,
   },
   {
