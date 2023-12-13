@@ -122,7 +122,7 @@ export const ReportsGalleryPage = () => {
               // @ts-expect-error
               getUpdatedReports={mutate}
             />
-            {allReports.length && (
+            {allReports?.length && (
               <Pagination
                 count={pagesCount}
                 page={page}

@@ -154,7 +154,7 @@ export const AllMatchesPage = withAuthenticationRequired(() => {
                 );
               })}
             </Grid>
-            {!!response?.results.length && (
+            {!!response?.results?.length && (
               <Pagination
                 count={pagesCount}
                 page={page}

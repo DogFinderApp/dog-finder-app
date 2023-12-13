@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import { IconArrowLeft, TablerIconsProps } from "@tabler/icons-react";
+import { AppTexts } from "../../../consts/texts";
+import { useGetServerApi } from "../../../facades/ServerApi";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
+import { DogType } from "../../../types/payload.types";
 import { useAuthContext } from "../../../context/useAuthContext";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { useWindowSize } from "../../../hooks/useWindowSize";
-import { useGetServerApi } from "../../../facades/ServerApi";
-import { AppTexts } from "../../../consts/texts";
+import ReportSelectModal from "../../../components/Modals/ReportSelectModal";
 import WhatsappIcon from "../../../assets/svg/whatsapp.svg";
 
 interface DogDetailsButtonsStyle {
@@ -52,16 +55,22 @@ const useDogDetailsButtonsStyles = createStyleHook(
 );
 
 const reportPossibleMatch = async (
-  payload: { lastReportedId: number | null; possibleMatchId: number },
+  payload: {
+    lastReportedId: number | null;
+    possibleMatchId: number;
+    selectedReportId?: number | null;
+  },
   getServerApi: Function,
   // eslint-disable-next-line
 ): Promise<void> => {
-  const { lastReportedId, possibleMatchId } = payload;
-  if (!lastReportedId) return console.error("User has no previous reports"); // eslint-disable-line
+  const { lastReportedId, possibleMatchId, selectedReportId } = payload;
+  // `selectedReportId` is being passed in ReportSelectModal.tsx
+  if (!lastReportedId && !selectedReportId)
+    return console.error("User has no previous reports"); // eslint-disable-line
 
   const serverApi = await getServerApi();
   const response = await serverApi.addPossibleDogMatch({
-    dogId: lastReportedId,
+    dogId: selectedReportId ?? lastReportedId,
     possibleMatchId,
   });
   // eslint-disable-next-line
@@ -85,32 +94,42 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
   const navigate = useNavigate();
   const { isTablet } = useWindowSize();
   const styles = useDogDetailsButtonsStyles({ isTablet, noUserReports });
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // if a user has multiple reports, they should choose the one that matches with the dog page
+  const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
 
   const lastReportedId: number | null = reports
     ? reports[reports.length - 1].id
     : null;
 
-  const handleCTAButton = (possibleMatchId: number) =>
+  const handleCTAButton = (possibleMatchId: number) => {
+    if (!reports) return;
+    if (reports?.length > 1) {
+      setIsModalOpen(true);
+      return;
+    }
     reportPossibleMatch({ lastReportedId, possibleMatchId }, getServerApi);
+  };
 
-  const getWhatsappMessage = (status: "lost" | "found") => {
+  const getWhatsappMessage = () => {
     // Split the URL and keep only the IDs
     const dogIds = window.location.href
       .split("/")
       .filter((segment) => segment !== "" && Number(segment));
     const dogPage: string = `${window.location.origin}/dogs/${dogIds[0]}`;
-    const lastReportedDogPage: string | null = lastReportedId
-      ? `${window.location.origin}/dogs/${lastReportedId}`
-      : null;
+    const userReportedDogPage: string | null =
+      selectedReportId || lastReportedId
+        ? `${window.location.origin}/dogs/${selectedReportId ?? lastReportedId}`
+        : null;
 
     const whatsappTexts = AppTexts.dogDetails.whatsappLinks;
     const { lost, lost2, lost3, found, found2, found3 } = whatsappTexts;
 
     const messages = {
-      lost: `${lost}${`%0A%0A${lost2}%0A${lastReportedDogPage}`}%0A%0A${lost3}%0A${dogPage}`,
-      found: `${found}%0A%0A${found2}%0A${dogPage}%0A%0A${found3}%0A${lastReportedDogPage}`,
+      lost: `${lost}${`%0A%0A${lost2}%0A${userReportedDogPage}`}%0A%0A${lost3}%0A${dogPage}`,
+      found: `${found}%0A%0A${found2}%0A${dogPage}%0A%0A${found3}%0A${userReportedDogPage}`,
     };
-    return messages[status];
+    return messages[data?.type ?? DogType.FOUND];
   };
 
   const contactNumber = data?.contactPhone
@@ -121,9 +140,7 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
       }`.replace(/-/g, "")
     : "";
 
-  const whatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
-    data?.type ?? "found",
-  )}`;
+  const whatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage()}`;
 
   const commonIconProps: TablerIconsProps = {
     style: { marginRight: "0.5rem" },
@@ -132,6 +149,16 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
 
   return (
     <Box sx={styles.actionBtnWrapper}>
+      <ReportSelectModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        selectedReportId={selectedReportId}
+        setSelectedReportId={setSelectedReportId}
+        confirmFunction={reportPossibleMatch}
+        getWhatsappMessage={getWhatsappMessage}
+        possibleMatchId={data?.id!}
+        contactNumber={contactNumber}
+      />
       <Button
         size="large"
         variant="contained"
@@ -150,7 +177,7 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <Link
           to={noUserReports ? "#" : whatsappLink}
-          onClick={(event) => noUserReports && event.preventDefault()}
+          onClick={(event) => reports?.length !== 1 && event.preventDefault()}
           aria-disabled={noUserReports}
           target="_blank"
           rel="noopener noreferrer"
@@ -162,9 +189,7 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
             disableRipple={noUserReports}
             disableFocusRipple={noUserReports}
             disableTouchRipple={noUserReports}
-            onClick={() =>
-              data?.id && !noUserReports && handleCTAButton(data.id)
-            }
+            onClick={() => data?.id && handleCTAButton(data.id)}
           >
             <img
               src={WhatsappIcon}

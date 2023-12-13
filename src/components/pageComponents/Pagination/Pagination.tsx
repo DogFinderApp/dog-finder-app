@@ -8,6 +8,7 @@ const usePaginationStyles = createStyleHook(() => ({
     justifyContent: "center",
     marginBottom: "2rem",
     position: "sticky",
+    direction: "ltr",
   },
   pagination: {
     "& .MuiPaginationItem-previousNext": {

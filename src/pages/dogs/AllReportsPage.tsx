@@ -192,7 +192,7 @@ export const AllReportsPage = withAuthenticationRequired(() => {
               allReportsPage
               getUpdatedReports={mutate}
             />
-            {allReports.length && (
+            {allReports?.length && (
               <Pagination
                 count={pagesCount}
                 page={page}

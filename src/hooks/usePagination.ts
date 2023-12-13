@@ -1,10 +1,6 @@
 import { useState } from "react";
-import { DogResult, MatchingReports } from "../types/payload.types";
 
-export const usePagination = (
-  data: DogResult[] | MatchingReports[],
-  itemsPerPage: number,
-) => {
+export const usePagination = (data: Array<any>, itemsPerPage: number) => {
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(data.length / itemsPerPage);
 
