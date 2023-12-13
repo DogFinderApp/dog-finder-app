@@ -5,6 +5,7 @@ import { IconArrowLeft, TablerIconsProps } from "@tabler/icons-react";
 import { AppTexts } from "../../../consts/texts";
 import { useGetServerApi } from "../../../facades/ServerApi";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
+import { DogType } from "../../../types/payload.types";
 import { useAuthContext } from "../../../context/useAuthContext";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { useWindowSize } from "../../../hooks/useWindowSize";
@@ -103,11 +104,14 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
 
   const handleCTAButton = (possibleMatchId: number) => {
     if (!reports) return;
-    if (reports?.length > 1) return setIsModalOpen(true);
+    if (reports?.length > 1) {
+      setIsModalOpen(true);
+      return;
+    }
     reportPossibleMatch({ lastReportedId, possibleMatchId }, getServerApi);
   };
 
-  const getWhatsappMessage = (status: "lost" | "found") => {
+  const getWhatsappMessage = () => {
     // Split the URL and keep only the IDs
     const dogIds = window.location.href
       .split("/")
@@ -125,7 +129,7 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
       lost: `${lost}${`%0A%0A${lost2}%0A${userReportedDogPage}`}%0A%0A${lost3}%0A${dogPage}`,
       found: `${found}%0A%0A${found2}%0A${dogPage}%0A%0A${found3}%0A${userReportedDogPage}`,
     };
-    return messages[status];
+    return messages[data?.type ?? DogType.FOUND];
   };
 
   const contactNumber = data?.contactPhone
@@ -136,9 +140,7 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
       }`.replace(/-/g, "")
     : "";
 
-  const whatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
-    data?.type ?? "found",
-  )}`;
+  const whatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage()}`;
 
   const commonIconProps: TablerIconsProps = {
     style: { marginRight: "0.5rem" },
@@ -153,8 +155,9 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
         selectedReportId={selectedReportId}
         setSelectedReportId={setSelectedReportId}
         confirmFunction={reportPossibleMatch}
-        whatsappLink={whatsappLink}
+        getWhatsappMessage={getWhatsappMessage}
         possibleMatchId={data?.id!}
+        contactNumber={contactNumber}
       />
       <Button
         size="large"
