@@ -82,7 +82,7 @@ interface DogDetailsButtonsProps {
 }
 
 export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
-  const { whatsappButton, disabledButtonText, backButton } =
+  const { whatsappButton, disabledButtonText, backButton, whatsappTexts } =
     AppTexts.dogDetails;
 
   const {
@@ -122,7 +122,6 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
         ? `${window.location.origin}/dogs/${selectedReportId ?? lastReportedId}`
         : null;
 
-    const whatsappTexts = AppTexts.dogDetails.whatsappLinks;
     const { lost, lost2, lost3, found, found2, found3 } = whatsappTexts;
 
     const messages = {

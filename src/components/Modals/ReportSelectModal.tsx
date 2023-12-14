@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -20,6 +20,7 @@ import { Transition } from "./Transition";
 const useReportSelectStyles = createStyleHook(
   (theme, props: { selectedReportId: number | null }) => ({
     dialog: {
+      direction: { xs: "ltr", sm: "rtl" },
       margin: "0 auto",
       width: { md: "100%", xs: "90%" },
       maxWidth: "1000px",
@@ -40,14 +41,6 @@ const useReportSelectStyles = createStyleHook(
       marginX: "auto",
       textWrap: "balance",
     },
-    bottomText: {
-      mb: 2,
-      fontSize: 16,
-      width: "90%",
-      maxWidth: 500,
-      marginX: "auto",
-      textWrap: "balance",
-    },
     gridContainer: {
       width: "90%",
       maxWidth: "800px",
@@ -55,7 +48,7 @@ const useReportSelectStyles = createStyleHook(
       padding: 0,
     },
     DogCardContainer: {
-      height: "320px",
+      height: "315px",
       backgroundColor: "white",
       transition: "0.1s ease",
     },
@@ -76,6 +69,7 @@ const useReportSelectStyles = createStyleHook(
       fontSize: "16px",
     },
     continueButton: {
+      textDecoration: "underline",
       color: "white",
       fontSize: "16px",
       margin: "0 !important",
@@ -84,8 +78,6 @@ const useReportSelectStyles = createStyleHook(
     },
   }),
 );
-
-const dogImageStyles = { width: "100%", height: "200px", objectFit: "fill" };
 
 interface ReportSelectProps {
   isModalOpen: boolean;
@@ -110,6 +102,7 @@ export default function ReportSelectModal({
 }: ReportSelectProps) {
   const styles = useReportSelectStyles({ selectedReportId });
   const getServerApi = useGetServerApi();
+  const topElementRef = useRef(null);
   const {
     state: { reports },
   } = useAuthContext();
@@ -120,16 +113,8 @@ export default function ReportSelectModal({
   const [whatsappLink, setWhatsappLink] = useState<string>(updatedWhatsappLink);
   const [page, setPage] = useState<number>(1);
 
-  const {
-    title,
-    cancelText,
-    text1,
-    text2,
-    bottomText,
-    continueText,
-    status,
-    toolTipText,
-  } = AppTexts.modals.selectReport;
+  const { title, description, cancelText, continueText, status, toolTipText } =
+    AppTexts.modals.selectReport;
 
   const pageSize = 3;
   const paginatedReports = usePagination(reports ?? [], pageSize);
@@ -165,6 +150,8 @@ export default function ReportSelectModal({
     const newValue = typeof value === "number" ? value : 1;
     setPage(newValue);
     paginatedReports.jump(newValue);
+    // @ts-expect-error
+    topElementRef?.current?.scrollIntoView({ block: "end" });
   };
 
   const dogDetailsTexts = (report: DogDetailsReturnType) => [
@@ -184,15 +171,12 @@ export default function ReportSelectModal({
       onClose={handleClose}
       sx={styles.dialog}
       TransitionComponent={Transition}
-      dir="rtl"
     >
-      <DialogTitle sx={styles.title}>{title}</DialogTitle>
+      <DialogTitle sx={styles.title} ref={topElementRef}>
+        {title}
+      </DialogTitle>
       <DialogContent sx={styles.topTextContainer}>
-        <DialogContentText sx={styles.topText}>
-          {text1}
-          <br />
-          {text2}
-        </DialogContentText>
+        <DialogContentText sx={styles.topText}>{description}</DialogContentText>
       </DialogContent>
       <DialogActions sx={styles.gridContainer}>
         {!!reports && (
@@ -214,8 +198,7 @@ export default function ReportSelectModal({
                       <img
                         src={validDogImage}
                         alt=""
-                        // @ts-expect-error
-                        style={dogImageStyles}
+                        style={{ height: "200px", width: "100%" }}
                       />
                       <Box sx={styles.DogCardTextContainer}>
                         {dogDetailsTexts(report).map((text) => (
@@ -240,13 +223,10 @@ export default function ReportSelectModal({
           count={pagesCount}
           page={page}
           onChange={handlePagination}
+          mb="1rem"
         />
       )}
-      <DialogContentText sx={styles.bottomText}>{bottomText}</DialogContentText>
       <DialogActions sx={styles.buttonsContainer}>
-        <Button autoFocus onClick={handleClose} sx={styles.cancelButton}>
-          {cancelText}
-        </Button>
         <Tooltip followCursor title={!selectedReportId ? toolTipText : ""}>
           <Link
             to={whatsappLink}
@@ -265,6 +245,9 @@ export default function ReportSelectModal({
             </Button>
           </Link>
         </Tooltip>
+        <Button autoFocus onClick={handleClose} sx={styles.cancelButton}>
+          {cancelText}
+        </Button>
       </DialogActions>
     </Dialog>
   );
