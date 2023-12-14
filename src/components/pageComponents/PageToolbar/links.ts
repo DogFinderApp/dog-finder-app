@@ -27,16 +27,16 @@ export const links = [
     text: AppTexts.navigation.searchLost,
   },
   {
-    href: AppRoutes.privacyPolicy,
-    text: AppTexts.navigation.privacyPolicy,
-  },
-  {
     href: AppRoutes.dogs.allReports.replace(":dogType", "found"),
     text: AppTexts.navigation.allFound,
   },
   {
     href: AppRoutes.dogs.allReports.replace(":dogType", "lost"),
     text: AppTexts.navigation.allLost,
+  },
+  {
+    href: AppRoutes.privacyPolicy,
+    text: AppTexts.navigation.privacyPolicy,
   },
 ];
 
