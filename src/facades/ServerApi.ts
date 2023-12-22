@@ -1,7 +1,8 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback } from "react";
 import { jwtDecode } from "jwt-decode";
-import { QueryPayload, ReportDogPayload } from "./payload.types";
+import { QueryPayload, ReportDogPayload } from "../types/payload.types";
+import { UserRole } from "../types/UserRole";
 
 interface DecodedUserData {
   iss: string;
@@ -98,9 +99,13 @@ class ServerApi {
     return (jwtDecode(this.token) as DecodedUserData) ?? null;
   }
 
-  isHamalUser(): boolean | null {
+  getUserRole(): UserRole {
+    // returns the role of the user as string, or null for "normal" users
     const user = this.getDecodedUserData();
-    return user ? user.permissions.includes("read:dogs") : null;
+    if (!user) return null;
+    if (user.permissions.includes("delete:delete_dog_by_id")) return "admin";
+    if (user.permissions.includes("read:dogs")) return "hamal";
+    return null;
   }
 
   async searchDog(payload: QueryPayload) {
@@ -145,22 +150,66 @@ class ServerApi {
     });
   }
 
+  async resolvePossibleMatch(payload: {
+    dogId: number;
+    possibleMatchId: number;
+  }) {
+    const url = buildEndpoint("dog_resolved");
+    return this.fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async deletePossibleDogMatch(id: number) {
+    const url = buildEndpoint(`delete_possible_dog_match?id=${id}`);
+    return this.fetch(url, { method: "DELETE" });
+  }
+
+  async getUserReportedDogs() {
+    const url = buildEndpoint("get_dogs_by_reporter_id");
+    return this.fetch(url);
+  }
+
   async getFullDogDetails(dogId: number) {
     const url = buildEndpoint(`get_dog_by_id?dogId=${dogId}`);
     return this.fetch(url);
   }
 
-  async getAllReportedDogs(payload: {
-    page: number;
-    page_size: number;
-    type?: String;
-  }) {
-    const url = new URL(buildEndpoint("dogs"));
+  async getAllReportedDogs(payload: { page: number; page_size: number }) {
+    const url = new URL(buildEndpoint("get_all_dogs"));
     const stringKeys = Object.keys(payload) as Array<keyof typeof payload>;
     stringKeys.forEach((key) =>
       url.searchParams.append(key, payload[key]?.toString()!),
     );
     return this.fetch(url.toString());
+  }
+
+  async getPossibleMatches(payload: {
+    page: number;
+    page_size: number;
+    dogId?: number; // if the dogId is null it will fetch all matches
+  }) {
+    const url = new URL(buildEndpoint("get_possible_dog_matches"));
+    const stringKeys = Object.keys(payload) as Array<keyof typeof payload>;
+    stringKeys.forEach((key) =>
+      url.searchParams.append(key, payload[key]?.toString()!),
+    );
+    return this.fetch(url.toString());
+  }
+
+  async getPossibleMatchesCount() {
+    const url = buildEndpoint("get_possible_dog_matches_count");
+    return this.fetch(url);
+  }
+
+  async deleteDogById(dogId: string) {
+    const url = buildEndpoint(`delete_dog_by_id?dogId=${dogId}`);
+    return this.fetch(url, { method: "DELETE" });
   }
 }
 

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import useSWR from "swr";
 import { useLocation, useParams } from "react-router-dom";
@@ -5,7 +6,7 @@ import usePageTitle from "../../hooks/usePageTitle";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { AppTexts } from "../../consts/texts";
 import { useGetServerApi } from "../../facades/ServerApi";
-import { DogType } from "../../facades/payload.types";
+import { DogType } from "../../types/payload.types";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
@@ -23,7 +24,8 @@ const usePageStyles = createStyleHook(() => ({
   loadingText: {
     color: "white",
     textAlign: "center",
-    fontSize: 26,
+    fontSize: { xs: 18, sm: 22 },
+    direction: "rtl",
   },
 }));
 
@@ -38,6 +40,7 @@ const fetcher = async (
       dogType: payload.type,
     });
     const json = await response.json();
+    setTimeout(() => {}, 6000);
     return json?.data?.results || [];
   } catch (error) {
     console.error(error); // eslint-disable-line
@@ -51,6 +54,10 @@ export const ResultsDogPage = () => {
   const { dogType } = useParams();
   const styles = usePageStyles();
 
+  const { resultsPage } = AppTexts;
+  const loadingTextOptions = Object.values(resultsPage.loadingTexts);
+  const [loadingText, setLoadingText] = useState(loadingTextOptions[0]);
+
   const {
     data: results,
     error,
@@ -61,14 +68,20 @@ export const ResultsDogPage = () => {
     revalidateOnFocus: false,
   });
 
+  useEffect(() => {
+    // eslint-disable-next-line consistent-return
+    setTimeout(() => {
+      if (isLoading && loadingText === loadingTextOptions[0])
+        return setLoadingText(loadingTextOptions[1]);
+      if (isLoading && loadingText === loadingTextOptions[1])
+        return setLoadingText(loadingTextOptions[2]);
+    }, 2500);
+  }, [isLoading, loadingText, setLoadingText, loadingTextOptions]);
+
   const isEmpty = results?.length === 0;
   const noResults = !isLoading && isEmpty && !error;
 
-  usePageTitle(
-    noResults
-      ? AppTexts.resultsPage.noResults.title
-      : AppTexts.resultsPage.title,
-  );
+  usePageTitle(noResults ? resultsPage.noResults.title : resultsPage.title);
 
   return (
     <PageContainer>
@@ -81,13 +94,11 @@ export const ResultsDogPage = () => {
         alignItems="center"
         px={{ sm: 4, xs: 0 }}
       >
-        <PageTitle text={AppTexts.resultsPage.title} />
+        <PageTitle text={resultsPage.title} />
         {isLoading && (
           <Box sx={styles.loadingContainer}>
-            <Typography sx={styles.loadingText}>
-              {AppTexts.resultsPage.loading}
-            </Typography>
             <CircularProgress size={60} sx={{ my: 2 }} />
+            <Typography sx={styles.loadingText}>{loadingText}</Typography>
           </Box>
         )}
         {noResults && <NoDogs dogType={dogType as DogType} />}

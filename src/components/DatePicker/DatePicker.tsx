@@ -4,12 +4,10 @@ import { DatePicker as MaterialDatePicker } from "@mui/x-date-pickers/DatePicker
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useRTLTextFieldStyles } from "../pageComponents/RTLTextInput/RTLTextField";
 import { createStyleHook } from "../../hooks/styleHooks";
-import { DogType } from "../../facades/payload.types";
 import { RTLWrapper } from "../common/RTLWrapper";
-import { AppTexts } from "../../consts/texts";
 
 interface DatePickerProps {
-  reportType: DogType;
+  label: string;
   date: Dayjs | null;
   handleDateChange: (newValue: Dayjs | null) => void;
   error: boolean;
@@ -17,7 +15,7 @@ interface DatePickerProps {
 }
 
 const DatePicker = ({
-  reportType,
+  label,
   date,
   handleDateChange,
   error,
@@ -37,16 +35,11 @@ const DatePicker = ({
 
   const styles = useDatePickerStyles();
 
-  const labels = {
-    lost: AppTexts.reportPage.dateDetails.lostDate,
-    found: AppTexts.reportPage.dateDetails.foundDate,
-  };
-
   return (
     <RTLWrapper withMaxWidth>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MaterialDatePicker
-          label={labels[reportType]}
+          label={label}
           format="DD/MM/YYYY"
           value={date}
           sx={styles.root}

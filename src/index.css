@@ -19,4 +19,13 @@ code {
 /* fix the direction of arrows inside MUI calendar */
 .MuiDateCalendar-root .MuiPickersArrowSwitcher-root svg {
   transform: rotate(180deg);
+  color: white;
+}
+
+.MuiDateCalendar-root .Mui-disabled svg {
+  color: black;
+}
+
+.MuiPickersCalendarHeader-switchViewButton svg {
+  color: white;
 }

@@ -65,7 +65,7 @@ const useHomePageStyles = createStyleHook(() => ({
 
 export const HomePage = () => {
   const styles = useHomePageStyles();
-  const { innerWidth } = useWindowSize();
+  const { innerWidth, isMobile } = useWindowSize();
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
   usePageTitle(
     isAuthenticated ? "Fluffy Finder" : AppTexts.homePage.noUser.title,
@@ -76,8 +76,6 @@ export const HomePage = () => {
     variant: "contained",
     sx: styles.button,
   };
-
-  const isMobile = innerWidth < 600;
 
   return (
     <PageContainer>

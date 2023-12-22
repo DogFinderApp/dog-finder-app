@@ -25,7 +25,7 @@ const useDogPhotoStyles = createStyleHook(() => ({
   },
   deleteButton: {
     position: "absolute",
-    zIndex: "30",
+    zIndex: 15,
     borderRadius: "100%",
     padding: "8px",
     backgroundColor: "white",
@@ -59,7 +59,7 @@ export const DogPhoto: FC<DogPhotoProps> = ({
     <Box sx={styles.root}>
       <PageImage src={selectedImageUrl} alt="dog-photo" sx={styles.photo} />
       <Box sx={styles.deleteButton} onClick={() => clearSelection()}>
-        <IconTrash strokeWidth={1.5} />`
+        <IconTrash strokeWidth={1.5} />
       </Box>
     </Box>
   );

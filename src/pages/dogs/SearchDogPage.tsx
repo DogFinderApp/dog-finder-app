@@ -9,7 +9,7 @@ import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { DogPhoto } from "../../components/reportComponents/DogPhoto/DogPhoto";
 import { useImageSelection } from "../../hooks/useImageSelection";
 import usePageTitle from "../../hooks/usePageTitle";
-import { DogType, QueryPayload } from "../../facades/payload.types";
+import { DogType, QueryPayload } from "../../types/payload.types";
 import { cleanImage } from "../../utils/imageUtils";
 import { RTLWrapper } from "../../components/common/RTLWrapper";
 import { AppRoutes } from "../../consts/routes";
@@ -49,7 +49,10 @@ export const SearchDogPage = withAuthenticationRequired(
       });
     };
 
-    const isFound = () => dogType === DogType.FOUND;
+    const isFound = dogType === DogType.FOUND;
+    const searchText = isFound
+      ? AppTexts.searchPage.searchFound
+      : AppTexts.searchPage.searchLost;
 
     return (
       <PageContainer>
@@ -62,13 +65,15 @@ export const SearchDogPage = withAuthenticationRequired(
           gap="24px"
         >
           <PageTitle text={AppTexts.searchPage.title} />
-          {isFound() && (
-            <RTLWrapper>
-              <Typography color={theme.palette.text.primary}>
-                {AppTexts.searchPage.beforeReportingLost}
-              </Typography>
-            </RTLWrapper>
-          )}
+          <RTLWrapper>
+            <Typography
+              color={theme.palette.text.primary}
+              sx={{ textAlign: "center", textWrap: "balance" }}
+              fontSize={18}
+            >
+              {searchText}
+            </Typography>
+          </RTLWrapper>
           <DogPhoto
             onSelectImage={onSelectImage}
             selectedImageUrl={selectedImageUrl}

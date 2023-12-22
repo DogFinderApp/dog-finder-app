@@ -4,6 +4,7 @@ import { createStyleHook } from "../../hooks/styleHooks";
 import { useProgressiveImg } from "../../hooks/useProgressiveImg";
 import LinkedinSVG from "../../assets/svg/linkedin.svg";
 import GithubSVG from "../../assets/svg/github.svg";
+import ScalpelGroupImg from "../../assets/scalpelGroup.png";
 
 const useCrewMemberStyles = createStyleHook(() => ({
   container: {
@@ -77,7 +78,9 @@ export const CrewMember = ({ member }: CrewMemberProps) => {
               {links.map((link) => {
                 const selectedImage = link.includes("linkedin")
                   ? LinkedinSVG
-                  : GithubSVG;
+                  : link.includes("github")
+                    ? GithubSVG
+                    : ScalpelGroupImg;
                 return (
                   <div key={link}>
                     <a href={link} target="_blank" rel="noopener noreferrer">

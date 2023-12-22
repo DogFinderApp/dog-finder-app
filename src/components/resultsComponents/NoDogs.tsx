@@ -1,9 +1,14 @@
 import { Box, Button, Typography, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { Link, To } from "react-router-dom";
+import {
+  IconArrowLeft,
+  IconPlus,
+  IconSearch,
+  TablerIconsProps,
+} from "@tabler/icons-react";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { useWindowSize } from "../../hooks/useWindowSize";
-import { DogType } from "../../facades/payload.types";
+import { DogType } from "../../types/payload.types";
 import { AppRoutes } from "../../consts/routes";
 import { AppTexts } from "../../consts/texts";
 
@@ -27,7 +32,7 @@ const useNoResultsStyles = createStyleHook(() => ({
     gap: 4,
     mt: 4,
   },
-  text: { direction: "rtl", textAlign: "center" },
+  text: { direction: "rtl", textAlign: "center", textWrap: "balance" },
   buttonsWrapper: {
     display: "flex",
     flexDirection: { sm: "row", xs: "column-reverse" },
@@ -39,16 +44,32 @@ const useNoResultsStyles = createStyleHook(() => ({
   },
 }));
 
-export const NoDogs = ({ dogType }: { dogType: DogType }) => {
+export const NoDogs = ({ dogType }: { dogType?: DogType }) => {
+  // if `dogType` arg is undefined, it means we use it inside "all-matches" page which doesn't need a dogType
+
   const theme = useTheme();
   const styles = useNoResultsStyles();
-  const navigate = useNavigate();
-  const { innerWidth } = useWindowSize();
+  const { isMobile } = useWindowSize();
+  const { noResults } = AppTexts.resultsPage;
+  const { noMatches } = AppTexts.allMatchesPage;
 
+  const title = dogType ? noResults.title : noMatches.title;
+  const infoText = dogType ? (
+    <>
+      {noResults.infoText1}
+      {!isMobile && <br />}
+      {noResults.infoText2}
+    </>
+  ) : (
+    <>
+      {noMatches.infoText1} <br />
+      {noMatches.infoText2}
+    </>
+  );
   const newReportText =
     dogType === DogType.FOUND
-      ? AppTexts.resultsPage.noResults.reportDogFound
-      : AppTexts.resultsPage.noResults.reportMissingDog;
+      ? noResults.reportDogFound
+      : noResults.reportMissingDog;
 
   const newReportRoute =
     dogType === DogType.FOUND
@@ -60,18 +81,34 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
       ? AppRoutes.dogs.searchFoundDog
       : AppRoutes.dogs.searchLostDog;
 
-  const buttonsData = [
-    {
-      text: newReportText,
-      navigationRoute: newReportRoute,
-      icon: IconPlus,
-    },
-    {
-      text: AppTexts.resultsPage.noResults.tryAgain,
-      navigationRoute: tryAgainRoute,
-      icon: IconSearch,
-    },
-  ];
+  interface ButtonData {
+    text: string;
+    icon: (props: TablerIconsProps) => JSX.Element;
+    navigationRoute: string | number;
+  }
+
+  const buttonsData: ButtonData[] = dogType
+    ? [
+        // search page + all report page
+        {
+          text: newReportText,
+          navigationRoute: newReportRoute,
+          icon: IconPlus,
+        },
+        {
+          text: noResults.tryAgain,
+          navigationRoute: tryAgainRoute,
+          icon: IconSearch,
+        },
+      ]
+    : [
+        // all matches page
+        {
+          text: AppTexts.dogDetails.backButton,
+          navigationRoute: -1,
+          icon: IconArrowLeft,
+        },
+      ];
 
   return (
     <Box sx={styles.content}>
@@ -80,31 +117,30 @@ export const NoDogs = ({ dogType }: { dogType: DogType }) => {
           variant="h3"
           color={theme.palette.text.primary}
           fontSize={40}
+          sx={styles.text}
         >
-          {AppTexts.resultsPage.noResults.title}
+          {title}
         </Typography>
         <Typography
-          variant="h5"
+          variant="h6"
           color={theme.palette.text.primary}
           sx={styles.text}
         >
-          {AppTexts.resultsPage.noResults.infoText1}
-          {innerWidth >= 600 && <br />}
-          {AppTexts.resultsPage.noResults.infoText2}
+          {infoText}
         </Typography>
       </Box>
       <Box sx={styles.buttonsWrapper}>
         {buttonsData.map((button) => (
-          <Button
+          <Link
             key={button.text}
-            size="large"
-            variant="contained"
-            sx={styles.button}
-            onClick={() => navigate(button.navigationRoute)}
+            to={button.navigationRoute as To}
+            style={{ textDecoration: "none" }}
           >
-            <button.icon size={20} />
-            {button.text}
-          </Button>
+            <Button size="large" variant="contained" sx={styles.button}>
+              <button.icon size={20} />
+              {button.text}
+            </Button>
+          </Link>
         ))}
       </Box>
     </Box>

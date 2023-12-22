@@ -31,8 +31,7 @@ export const NotFound = () => {
   const navigate = useNavigate();
   const goBack = () => navigate(-1);
 
-  const { innerWidth } = useWindowSize();
-  const isMobile = innerWidth < 600;
+  const { isMobile } = useWindowSize();
 
   return (
     <Box sx={styles.pageContainer}>

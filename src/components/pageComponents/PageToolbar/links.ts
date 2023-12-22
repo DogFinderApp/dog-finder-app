@@ -19,12 +19,13 @@ export const links = [
     text: AppTexts.navigation.reportLost,
   },
   {
-    href: AppRoutes.privacyPolicy,
-    text: AppTexts.navigation.privacyPolicy,
+    href: AppRoutes.dogs.searchFoundDog,
+    text: AppTexts.navigation.searchFound,
   },
-];
-
-export const hamalLinks = [
+  {
+    href: AppRoutes.dogs.searchLostDog,
+    text: AppTexts.navigation.searchLost,
+  },
   {
     href: AppRoutes.dogs.allReports.replace(":dogType", "found"),
     text: AppTexts.navigation.allFound,
@@ -34,7 +35,18 @@ export const hamalLinks = [
     text: AppTexts.navigation.allLost,
   },
   {
-    href: AppRoutes.dogs.allReports.replace("/:dogType", ""),
+    href: AppRoutes.privacyPolicy,
+    text: AppTexts.navigation.privacyPolicy,
+  },
+];
+
+export const hamalLinks = [
+  {
+    href: AppRoutes.dogs.allReportsHamal,
     text: AppTexts.allReportsPage.title,
+  },
+  {
+    href: AppRoutes.dogs.allMatches,
+    text: AppTexts.navigation.allMatches,
   },
 ];

@@ -1,12 +1,12 @@
 export const AppTexts = {
   authPage: {
-    loginCta: "התחבר",
-    logoutCta: "התנתק",
+    loginCta: "התחברות",
+    logoutCta: "התנתקות",
   },
   searchPage: {
     title: "חיפוש אחר כלב",
-    beforeReportingLost:
-      "העלו תמונה של כלב שמצאתם ונראה אם מישהו דיווח עליו כנמצא",
+    searchLost: "העלו תמונה של הכלב/ה שמצאתם ונבדוק האם דווח/ה כנעדר/ת",
+    searchFound: "העלו תמונה של הכלב/ה שאיבדתם ונבדוק האם דווח/ה כנמצא/ת",
     submit: "חיפוש",
   },
   reportPage: {
@@ -30,12 +30,12 @@ export const AppTexts = {
       senior: "מבוגר",
     },
     locationDetails: {
-      locationDescriptionFound: "המיקום בו נמצא",
-      locationDescriptionLost: "המיקום בו נאבד",
+      found: "המיקום בו נמצא/ה",
+      lost: "המיקום בו נאבד/ה",
     },
     dateDetails: {
-      foundDate: "תאריך בו נמצא",
-      lostDate: "תאריך בו אבד",
+      found: "תאריך בו נמצא/ה",
+      lost: "תאריך בו אבד/ה",
     },
     dogDetails: {
       dogRace: "גזע הכלב/ה",
@@ -43,15 +43,21 @@ export const AppTexts = {
       dogColor: "צבע הפרווה",
       dogSex: "מין הכלב/ה",
       chipNumber: "מספר שבב",
-      dogAge: "גיל משוער",
+      dogAgeFound: "גיל משוער",
+      dogAgeLost: "גיל הכלב/ה",
+    },
+    dogSizeOptions: {
+      קטן: "קטן",
+      בינוני: "בינוני",
+      גדול: "גדול",
     },
     extraDetails: {
-      extraDetails: "מידע נוסף שיעזור לזיהוי הכלב",
+      extraDetails: "מידע נוסף שיעזור לזיהוי הכלב/ה",
       contactDetails: "פרטים ליצירת קשר",
-      contactName: "שם איש קשר",
-      contactPhone: "מספר טלפון איש קשר",
-      contactEmail: "אימייל איש קשר",
-      contactAddress: "כתובת איש קשר",
+      contactName: "שם איש/ת קשר",
+      contactPhone: "מספר טלפון איש/ת קשר",
+      contactEmail: "אימייל איש/ת קשר",
+      contactAddress: "כתובת איש/ת קשר",
     },
     helperTexts: {
       phone: "מספר הטלפון אינו תקין",
@@ -78,9 +84,9 @@ export const AppTexts = {
       title: "ברוך הבא אל Fluffy Finder",
       welcomeMessage1: "כדי להשתמש בשירות יש להרשם",
       welcomeMessage2: "או לחלופין להתחבר עם חשבון גוגל",
-      cta: "התחל עכשיו",
-      footer1: "בעת הרשמה אתה מאשר את",
-      footer2: "תנאי השימוש ומדיניות הפרטיות",
+      cta: "התחלה",
+      footer1: "הרשמה לאתר מהווה אישור",
+      footer2: "לתנאי השימוש ומדיניות הפרטיות",
       footer3: "של Fluffy Finder",
     },
   },
@@ -90,10 +96,13 @@ export const AppTexts = {
       "הנה רשימה של התאמות פוטנציאליות לכלב שהעלאת. עיין בתמונות, ובמידע הנוסף וצור קשר עם הבעלים אם אתה מזהה התאמה.",
     bottomText:
       'במידה והכלב/ה שלך לא נמצאים ברשימה, אנא המתן ליצירת קשר ע"י האדם שימצא אותו.',
-    moreDetails: "לחצו לעוד פרטים",
     call: "טלפון",
     email: "מייל",
-    loading: "מאתר כלבים דומים במאגר שלנו",
+    loadingTexts: {
+      part1: "המערכת מצליבה כעת את מאפייני הכלב שלך עם כלבים שיש לנו במאגר",
+      part2: "על מנת לקבל את התוצאה המדויקת ביותר",
+      part3: "הנתונים יעלו ממש בקרוב...",
+    },
     error: "תקלה בטעינת התוצאות",
     noResults: {
       title: "לא נמצאו תוצאות",
@@ -112,33 +121,45 @@ export const AppTexts = {
   },
   allReportsPage: {
     title: "כל הדיווחים",
-    loading: "טוען את מאגר הדיווחים",
+    loadingText: "טוען את מאגר הדיווחים",
     unauthorized: "אין למשתמש זה גישה למאגר הכלבים המלא",
     selectLabel: "מיין לפי:",
-    select: {
-      found: "הצג כלבים שנמצאו",
-      lost: "הצג כלבים נעדרים",
-      all: "הצג את כל הכלבים שדווחו",
+    selectOptions: {
+      found: "כלבים שנמצאו",
+      lost: "כלבים נעדרים",
+    },
+    numberOfReports: "מספר הדיווחים:",
+    numberOfMatches: "מספר ההתאמות:",
+  },
+  allMatchesPage: {
+    loadingText: "טוען את מאגר ההתאמות",
+    noMatches: {
+      title: "אין התאמות פוטנציאליות",
+      infoText1: "נראה שלא קיימים דיווחים על התאמות פוטנציאליות במאגר כרגע.",
+      infoText2: "אנא נסו שוב בעתיד :)",
     },
   },
   navigation: {
     home: "בית",
     aboutUs: "אודות",
-    reportFound: "מצאתי כלב",
-    reportLost: "איבדתי כלב",
-    searchFoundDog: "חיפוש כלב במאגר הנעדרים",
+    reportFound: "דיווח - מצאתי כלב",
+    reportLost: "דיווח - איבדתי כלב",
+    searchLost: "חיפוש כלב במאגר הנעדרים",
+    searchFound: "חיפוש כלב במאגר הנמצאים",
     privacyPolicy: "תנאי השימוש",
     allFound: "כל הכלבים שנמצאו",
     allLost: "כל הכלבים שנאבדו",
+    allMatches: "כל ההתאמות",
   },
   dogDetails: {
     title: "פרטי הכלב",
     whatsappButton: "שליחת הודעת וואטסאפ",
+    disabledButtonText: "יש לדווח קודם על כלב שנמצא/נעדר",
     backButton: "חזרה אחורה",
     loading: "טוען את פרטי הכלב",
     error: "לא קיים מידע",
     unknown: "לא ידוע",
-    whatsappLinks: {
+    whatsappTexts: {
       lost: "היי, הגעתי אליך דרך פלטפורמת Fluffy Finder. ייתכן והכלב/ה שלי נמצא אצלך?",
       lost2: "זה הדיווח של הכלב שאיבדתי:",
       lost3: "זה הדיווח של הכלב שמצאת שאולי יכול להתאים:",
@@ -154,22 +175,67 @@ export const AppTexts = {
     sexText: "מין",
     foundDate: "נמצא בתאריך",
     lostDate: "אבד בתאריך",
+    moreDetails: "לחצו לעוד פרטים",
+    watchProfile: "צפייה בפרופיל",
+    toolTipLost: "חיפוש כלבים דומים שנעדרים",
+    toolTipFound: "חיפוש כלבים דומים שנמצאו",
+    tooltipDelete: "מחיקת דיווח",
+    contactReporter: "פניה למפרסם/ת הדיווח",
+    deleteMatch: "מחיקת התאמה",
+    confirmMatch: "אישור התאמה",
+    updating: "מעדכן",
+    whatsappText:
+      "היי, אנחנו פונים אליך מ-Fluffy Finder. המערכת זיהתה שייתכן ומצאת את כלב/תך. נשמח לתשובה בהודעה חוזרת אם הכלב/ה נמצא/ה או לא, על מנת לדעת אם להמשיך לחפש אותו/ה :)",
   },
   aboutPage: {
     texts: {
       text1:
-        "החל מ-7 באוקטובר 2023, עשרות כלבים וחתולי בית ברחבי הארץ, בעיקר באזור הדרום והצפון, אזורים שתושביהם נאלצו לנטוש בחיפזון עקב המצב הביטחוני, אבדו או ננטשו בבהלה שנוצרה מאזעקות.",
+        "Fluffy Finder הינו מיזם חברתי טכנולוגי אשר מטרתו היא לאפשר איתור יעיל ומהיר של כלבים אבודים והשבתם לבעליהם המצפים להם.",
       text2:
-        'בעקבות המצב, התגייסו אזרחים רבים בניסיון לסייע לבעלי החיים שאבדו. הוקמו חמ"לים מאולתרים בפייסבוק ובקבוצות וואטסאפ לאיתור חיות המחמד. זוהי יוזמה מבורכת, אולם התצורה הזו אינה יעילה ודורשת משאבי זמן וכוח אדם רבים.',
+        'המערכת שפיתחנו מבוססת על אלגוריתמי בינה מלאכותית המסוגלים לזהות דמיון בין תמונות של כלבים וכלבות שנמצאו בשטח ע"י גורמים שונים בין תמונות של אלו שדווחו שאבדו. המערכת יעילה גם כאשר התמונות מזוויות שונות או כשמראה הכלב/ה השתנה.',
       text3:
-        "לאור המצב, הקמנו את מיזם Fluffy Finder. מטרתנו היא לאפשר איתור יעיל ומהיר של כלבים אבודים והשבתם לבעליהם המצפים להם.",
-      text4:
-        "המערכת שפיתחנו מבוססת על אלגוריתמי בינה מלאכותית המסוגלים לזהות דמיון בין תמונות של כלבים אבודים לבין אלה של כלבים שדווחו כנעדרים. המערכת יעילה גם כאשר התמונות מזוויות שונות או כשמראה הכלב השתנה.",
-      text5:
-        "אם איבדתם את הכלב שלכם או מצאתם כלב תועה, נא פנו אלינו ונסייע באיתור הבעלים או הכלב הנעדר. נשמח לסייע לכם להתאחד מחדש 🙂",
+        "אם איבדתם את הכלב/ה שלכם או מצאת כלב/ה תועה, כל שתצטרכו הוא להעלות תמונה של הכלב/ה ולהוסיף כמה פרטים ונשמח לסייע לכם להתאחד מחדש 🙂.",
     },
     moreInfo: "למידע נוסף או שאלות על המיזם אנא פנו אלינו במייל",
     mail: "fluffyfinderinitiative@gmail.com",
     ourPeople: "האנשים מאחורי המיזם",
   },
-};
+  modals: {
+    matchingReport: {
+      title: "מצאנו דיווח שנראה תואם לתמונה שהעלאת",
+      alertTexts: {
+        found:
+          "המערכת שלנו זיהתה מבין הדיווחים על הכלבים שנמצאו את הפרופיל הבא",
+        lost: "המערכת שלנו זיהתה מבין הדיווחים על הכלבים האבודים את הפרופיל הבא",
+      },
+      watchProfile: "צפה בפרופיל",
+      cancelText: "ביטול דיווח",
+      continueText: "המשך למילוי דיווח",
+      bottomText: {
+        part1: "אם כבר העלת בעבר דיווח על כלבך, ניתן לחפש דיווחים דומים ",
+        linkText: "בעמוד החיפוש",
+        part2: "אם זהו לא הכלב/ה שלך, ניתן להמשיך במילוי הדיווח",
+      },
+    },
+    deleteReport: {
+      title: "מחיקת דיווח מהמאגר",
+      text: "האם אתה בטוח שברצונך למחוק את הדיווח?",
+      text2: "פעולה זו הינה בלתי הפיכה",
+      cancelText: "ביטול",
+      continueText: "מחיקה לצמיתות",
+      deletingText: "מוחק...",
+    },
+    selectReport: {
+      title: "בחר/י את הדיווח שלך",
+      description:
+        "כיוון שדיווחת על מספר כלבים יש לבחור איזה מהדיווחים הקיימים תואם לפרופיל שמצאת",
+      cancelText: "חזרה",
+      continueText: "אישור ומעבר לוואטסאפ",
+      status: {
+        lost: "אבד/ה",
+        found: "נמצא/ה",
+      },
+      toolTipText: "נא לבחור את הדיווח המתאים",
+    },
+  },
+} as const;

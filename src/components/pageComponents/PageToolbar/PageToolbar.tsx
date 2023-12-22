@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { IconGridDots, IconPaw } from "@tabler/icons-react";
 import { createStyleHook } from "../../../hooks/styleHooks";
-import { useHamalContext } from "../../../context/useHamalContext";
+import { useAuthContext } from "../../../context/useAuthContext";
 import { useGetServerApi } from "../../../facades/ServerApi";
 import UserComponent from "../UserComponent/UserComponent";
 import { AppRoutes } from "../../../consts/routes";
@@ -56,6 +56,8 @@ const usePageToolbarStyles = createStyleHook((theme) => ({
   divider: { my: "4px", opacity: 0.3 },
 }));
 
+const linkStyles = { color: "white", textDecoration: "none" };
+
 export const PageToolbar = () => {
   const styles = usePageToolbarStyles();
   const theme = useTheme();
@@ -63,8 +65,8 @@ export const PageToolbar = () => {
   const { isAuthenticated } = useAuth0();
   const {
     dispatch,
-    state: { isHamalUser },
-  } = useHamalContext();
+    state: { role },
+  } = useAuthContext();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -81,17 +83,25 @@ export const PageToolbar = () => {
   };
 
   useEffect(() => {
-    const checkUserRole = async () => {
+    const getUserRoleAndReports = async () => {
       const serverApi = await getServerApi();
-      dispatch({ type: "SET_IS_HAMAL_USER", payload: serverApi.isHamalUser() });
+      dispatch({ type: "SET_USER_ROLE", payload: serverApi.getUserRole() });
+      try {
+        const response = await serverApi.getUserReportedDogs();
+        if (!response?.ok) return;
+        const json = await response.json();
+        if (json?.data?.results?.length) {
+          dispatch({ type: "SET_USER_REPORTS", payload: json.data.results });
+        }
+      } catch (error) {
+        console.error(error); // eslint-disable-line
+      }
     };
 
     if (isAuthenticated) {
-      checkUserRole();
+      getUserRoleAndReports();
     }
   }, [isAuthenticated, getServerApi, dispatch]);
-
-  const linksToRender = isHamalUser ? [...links, ...hamalLinks] : links;
 
   return (
     <Box sx={styles.root}>
@@ -109,26 +119,32 @@ export const PageToolbar = () => {
         <IconGridDots strokeWidth={1.5} color={theme.palette.text.primary} />
       </IconButton>
       <Menu open={isMenuOpen} onClose={handleCloseMenu} anchorEl={anchorEl}>
-        {linksToRender.map((link, index) => (
-          <div key={link.text}>
+        {links.map((link) => (
+          <Link
+            key={link.text}
+            to={link.href}
+            style={linkStyles}
+            onClick={handleCloseMenu}
+          >
+            <MenuItem sx={styles.menuItem}>{link.text}</MenuItem>
+          </Link>
+        ))}
+        {/* can't use Fragments inside Menu component */}
+        {!!role && <Divider variant="middle" sx={styles.divider} />}
+        {!!role &&
+          hamalLinks.map((link) => (
             <Link
               key={link.text}
               to={link.href}
-              style={{ color: "white", textDecoration: "none" }}
+              style={linkStyles}
               onClick={handleCloseMenu}
             >
               <MenuItem sx={styles.menuItem}>
                 {link.text}
-                {index > 4 && (
-                  <Chip label={'חמ"ל'} color="primary" sx={styles.chip} />
-                )}
+                <Chip label={'חמ"ל'} color="primary" sx={styles.chip} />
               </MenuItem>
             </Link>
-            {index === 4 && isHamalUser && (
-              <Divider variant="middle" sx={styles.divider} />
-            )}
-          </div>
-        ))}
+          ))}
       </Menu>
     </Box>
   );

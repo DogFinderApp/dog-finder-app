@@ -1,15 +1,17 @@
 import { FC } from "react";
-import { DogType } from "../facades/payload.types";
+import { DogType } from "../types/payload.types";
 import { HomePage } from "../pages/root/HomePage";
 import { PrivacyPolicy } from "../pages/PrivacyPolicy/PrivacyPolicy";
 import { AboutUsPage } from "../pages/AboutUs/AboutUsPage";
-import { ReportDogPage } from "../pages/dogs/ReportDogPage";
+import { ReportDogPage } from "../pages/dogs/ReportDogPage/ReportDogPage";
 import { SearchDogPage } from "../pages/dogs/SearchDogPage";
 import { ResultsDogPage } from "../pages/dogs/ResultsDogPage";
-import { DogDetailsPage } from "../pages/dogs/DogDetailsPage";
+import { DogDetailsPage } from "../pages/dogs/DogDetailsPage/DogDetailsPage";
 import { AllReportsPage } from "../pages/dogs/AllReportsPage";
+import { AllMatchesPage } from "../pages/dogs/AllMatchesPage";
 import { NotFound } from "../pages/NotFound";
 import { AppRoutes } from "./routes";
+import { ReportsGalleryPage } from "../pages/dogs/ReportsGalleryPage";
 
 type RouteElement = () => JSX.Element;
 
@@ -62,7 +64,15 @@ export const routesWithElements: Route[] = [
   },
   {
     path: AppRoutes.dogs.allReports,
+    element: ReportsGalleryPage,
+  },
+  {
+    path: AppRoutes.dogs.allReportsHamal,
     element: AllReportsPage,
+  },
+  {
+    path: AppRoutes.dogs.allMatches,
+    element: AllMatchesPage,
   },
   {
     path: "/*",

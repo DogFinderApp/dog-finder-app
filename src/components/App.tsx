@@ -1,7 +1,7 @@
 import { Box, ThemeProvider } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createStyleHook } from "../hooks/styleHooks";
-import { HamalContextProvider } from "../context/HamalContext";
+import { AuthContextProvider } from "../context/AuthContext";
 import { theme } from "../theme/theme";
 import { routesWithElements } from "../consts/RoutesWithElements";
 import { PageToolbar } from "./pageComponents/PageToolbar/PageToolbar";
@@ -19,7 +19,7 @@ export const App = () => {
   const styles = useAppStyles();
 
   return (
-    <HamalContextProvider>
+    <AuthContextProvider>
       <ThemeProvider theme={theme}>
         <Box sx={styles.root}>
           <BrowserRouter>
@@ -36,6 +36,6 @@ export const App = () => {
           </BrowserRouter>
         </Box>
       </ThemeProvider>
-    </HamalContextProvider>
+    </AuthContextProvider>
   );
 };
