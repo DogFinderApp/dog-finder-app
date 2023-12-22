@@ -17,8 +17,9 @@ const checkForMatchingDogs = async (
     });
     const json = await response.json();
     if (json?.data?.results) {
+      const threshold = 0.88;
       const filteredResults = json.data.results.filter(
-        (result: DogResult) => result?.score && result.score >= 0.995,
+        (result: DogResult) => result?.score && result.score >= threshold,
       );
       if (filteredResults.length) {
         setMatchingReports(filteredResults);

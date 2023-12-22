@@ -164,7 +164,10 @@ export const useReportDogInputs = () => {
       },
       {
         name: "extraDetails",
-        label: reportPage.extraDetails.extraDetails,
+        label: matchGender(
+          reportPage.extraDetails.extraDetails,
+          selectedGender,
+        ),
         required: inputs.extraDetails.isRequired,
         multiline: true,
         rows: 5,
