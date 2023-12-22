@@ -133,10 +133,13 @@ export default function MatchingReportModal({
             style={{ width: "100%", maxHeight: "400px" }}
           />
           <a
-            href={AppRoutes.dogs.dogPage.replace(
+            href={`${AppRoutes.dogs.dogPage.replace(
               ":dog_id",
               mostMatchingReport.dogId,
-            )}
+            )}no-return`}
+            // we want to disable the back button because we open that page in a new tab in it doesn't have
+            // a previous page to go back to. we can't use a Link and pass state in it either, again,
+            // because we open that page in a new tab. so we use the URL param `no-return` instead
             target="_blank"
             rel="noopener noreferrer"
             style={linkStyles}

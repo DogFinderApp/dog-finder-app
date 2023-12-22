@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, To, useNavigate } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import { IconArrowLeft, TablerIconsProps } from "@tabler/icons-react";
 import { AppTexts } from "../../../consts/texts";
+import { AppRoutes } from "../../../consts/routes";
 import { useGetServerApi } from "../../../facades/ServerApi";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
 import { DogType } from "../../../types/payload.types";
@@ -98,6 +99,8 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
   // if a user has multiple reports, they should choose the one that matches with the dog page
   const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
 
+  const backButtonRedirectsToHome = window.location.href.includes("no-return");
+
   const lastReportedId: number | null = reports
     ? reports[reports.length - 1].id
     : null;
@@ -162,7 +165,9 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
         size="large"
         variant="contained"
         sx={styles.actionBtnStyle}
-        onClick={() => navigate(-1)}
+        onClick={() =>
+          navigate(backButtonRedirectsToHome ? AppRoutes.root : (-1 as To))
+        }
       >
         <IconArrowLeft {...commonIconProps} />
         {backButton}

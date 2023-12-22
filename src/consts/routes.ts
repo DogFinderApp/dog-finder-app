@@ -3,7 +3,7 @@ export const AppRoutes = {
   privacyPolicy: "/PrivacyPolicy",
   about: "/about",
   dogs: {
-    dogPage: "/dogs/:dog_id",
+    dogPage: "/dogs/:dog_id?",
     reportFound: "/report-found",
     reportLost: "/report-lost",
     searchFoundDog: "/search-found",
