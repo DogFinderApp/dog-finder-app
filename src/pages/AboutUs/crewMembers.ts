@@ -12,6 +12,8 @@ import MaryDaniel from "../../assets/crewMembers/Mary_Daniel.jpg";
 import MaryDanielLow from "../../assets/crewMembers/reduced/Mary_Daniel.jpg";
 import NirDiamant from "../../assets/crewMembers/Nir_Diamant.jpg";
 import NirDiamantLow from "../../assets/crewMembers/reduced/Nir_Diamant.jpg";
+import OrtalFeldman from "../../assets/crewMembers/Ortal_Feldman.jpg";
+import OrtalFeldmanLow from "../../assets/crewMembers/reduced/Ortal_Feldman.jpg";
 import SapirGershov from "../../assets/crewMembers/Sapir_Gershov.jpg";
 import SapirGershovLow from "../../assets/crewMembers/reduced/Sapir_Gershov.jpg";
 import TzlilShani from "../../assets/crewMembers/Tzlil_Shani.jpeg";
@@ -122,6 +124,13 @@ export const crewMembers: CrewMemberType[] = [
     links: [
       "https://www.linkedin.com/in/mary-daniel-%F0%9F%87%AE%F0%9F%87%B1-676b161b1?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
     ],
+  },
+  {
+    name: "אורטל פלדמן",
+    image: OrtalFeldman,
+    imageLowQuality: OrtalFeldmanLow,
+    role: "QA Engineer",
+    links: ["https://www.linkedin.com/in/ortal-feldman-159508a4/"],
   },
   {
     name: "גל שוורץ",
