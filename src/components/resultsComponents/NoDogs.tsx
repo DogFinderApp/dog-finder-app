@@ -66,15 +66,16 @@ export const NoDogs = ({ dogType }: { dogType?: DogType }) => {
       {noMatches.infoText2}
     </>
   );
+
   const newReportText =
     dogType === DogType.FOUND
-      ? noResults.reportDogFound
-      : noResults.reportMissingDog;
+      ? noResults.reportMissingDog
+      : noResults.reportDogFound;
 
   const newReportRoute =
     dogType === DogType.FOUND
-      ? AppRoutes.dogs.reportFound
-      : AppRoutes.dogs.reportLost;
+      ? AppRoutes.dogs.reportLost
+      : AppRoutes.dogs.reportFound;
 
   const tryAgainRoute =
     dogType === DogType.FOUND
