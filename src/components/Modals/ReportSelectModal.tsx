@@ -86,7 +86,7 @@ interface ReportSelectProps {
   setSelectedReportId: Dispatch<SetStateAction<number | null>>;
   confirmFunction: Function;
   getWhatsappMessage: () => string;
-  possibleMatchId: number;
+  possibleMatch: DogDetailsReturnType | null;
   contactNumber: string;
 }
 
@@ -97,7 +97,7 @@ export default function ReportSelectModal({
   setSelectedReportId,
   confirmFunction,
   getWhatsappMessage,
-  possibleMatchId,
+  possibleMatch,
   contactNumber,
 }: ReportSelectProps) {
   const styles = useReportSelectStyles({ selectedReportId });
@@ -117,8 +117,12 @@ export default function ReportSelectModal({
     AppTexts.modals.selectReport;
 
   const pageSize = 3;
-  const paginatedReports = usePagination(reports ?? [], pageSize);
-  const pagesCount: number = Math.ceil((reports?.length ?? 0) / pageSize);
+  const userOppositeReports =
+    reports?.filter((report) => report.type !== possibleMatch?.type) ?? [];
+  const paginatedReports = usePagination(userOppositeReports ?? [], pageSize);
+  const pagesCount: number = Math.ceil(
+    (userOppositeReports?.length ?? 0) / pageSize,
+  );
 
   const handleClose = () => {
     setSelectedReportId(null);
@@ -133,7 +137,11 @@ export default function ReportSelectModal({
 
   const handleConfirm = () => {
     if (!selectedReportId) return;
-    const payload = { lastReportedId: null, possibleMatchId, selectedReportId };
+    const payload = {
+      lastReportedId: null,
+      possibleMatchId: possibleMatch?.id,
+      selectedReportId,
+    };
     confirmFunction(payload, getServerApi);
     handleClose();
   };
@@ -179,7 +187,7 @@ export default function ReportSelectModal({
         <DialogContentText sx={styles.topText}>{description}</DialogContentText>
       </DialogContent>
       <DialogActions sx={styles.gridContainer}>
-        {!!reports && (
+        {!!userOppositeReports && (
           <Grid container spacing={2} dir="rtl">
             {paginatedReports
               .currentData()
@@ -218,7 +226,7 @@ export default function ReportSelectModal({
           </Grid>
         )}
       </DialogActions>
-      {reports && reports.length > pageSize && (
+      {userOppositeReports && userOppositeReports.length > pageSize && (
         <Pagination
           count={pagesCount}
           page={page}

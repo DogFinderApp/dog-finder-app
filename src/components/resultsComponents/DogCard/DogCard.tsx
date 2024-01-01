@@ -38,6 +38,7 @@ const useCardStyles = createStyleHook(
     return {
       Card: {
         position: "relative",
+        width: matchingReportCard ? "50%" : "unset",
         boxShadow:
           isHovering && !matchingReportCard && !isMobile
             ? "0 0 10px 4px rgba(255,255,255,0.3)"
