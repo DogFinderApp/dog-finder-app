@@ -16,8 +16,7 @@ const useNoResultsStyles = createStyleHook(() => ({
   content: {
     height: "100%",
     width: { sm: "100%", xs: "90%" },
-    position: "absolute",
-    top: 0,
+    mt: 4,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -41,6 +40,7 @@ const useNoResultsStyles = createStyleHook(() => ({
   button: {
     display: "flex",
     gap: 2,
+    width: "100%",
   },
 }));
 

@@ -234,4 +234,8 @@ export const AppTexts = {
       toolTipText: "נא לבחור את הדיווח המתאים",
     },
   },
+  footer: {
+    joinUs: "הצטרפות למיזם ופרטים נוספים",
+    followUs: "עקבו אחרינו ברשתות החברתיות",
+  },
 } as const;

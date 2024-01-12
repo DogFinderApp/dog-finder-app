@@ -5,6 +5,7 @@ import { AuthContextProvider } from "../context/AuthContext";
 import { theme } from "../theme/theme";
 import { routesWithElements } from "../consts/RoutesWithElements";
 import { PageToolbar } from "./pageComponents/PageToolbar/PageToolbar";
+import { Footer } from "./pageComponents/Footer/Footer";
 
 const useAppStyles = createStyleHook(() => ({
   root: {
@@ -33,6 +34,7 @@ export const App = () => {
                 />
               ))}
             </Routes>
+            <Footer />
           </BrowserRouter>
         </Box>
       </ThemeProvider>
