@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import { Box, Grid } from "@mui/material";
+import { Box, Divider, Grid } from "@mui/material";
 import useSWR from "swr";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { DogResult, MatchingReports } from "../../types/payload.types";
 import { useAuthContext } from "../../context/useAuthContext";
 import { createStyleHook } from "../../hooks/styleHooks";
+import { useWindowSize } from "../../hooks/useWindowSize";
 import usePageTitle from "../../hooks/usePageTitle";
 import { usePagination } from "../../hooks/usePagination";
 import { AppTexts } from "../../consts/texts";
@@ -49,6 +50,7 @@ export const AllMatchesPage = withAuthenticationRequired(() => {
   const { loadingText } = AppTexts.allMatchesPage;
   usePageTitle(title);
   const styles = usePageStyles();
+  const { isMobile } = useWindowSize();
   const getServerApi = useGetServerApi();
   const {
     state: { role },
@@ -105,6 +107,7 @@ export const AllMatchesPage = withAuthenticationRequired(() => {
   };
 
   const paginatedReports = usePagination(response?.results ?? [], page_size);
+  const reportsList = paginatedReports.currentData();
   const pagesCount: number =
     Math.ceil((response?.pagination?.total as number) / page_size) ?? 0;
   const handlePagination = (
@@ -132,7 +135,7 @@ export const AllMatchesPage = withAuthenticationRequired(() => {
         {!isLoading && !error && (
           <Box sx={styles.responseContainer}>
             <Grid container spacing={4} dir="rtl">
-              {paginatedReports.currentData()?.map((reportsPair) => {
+              {reportsList?.map((reportsPair, reportsPairIndex) => {
                 const { id, dog, dogId, possibleMatch, possibleMatchId } =
                   reportsPair as MatchingReports;
                 return (
@@ -150,6 +153,10 @@ export const AllMatchesPage = withAuthenticationRequired(() => {
                         />
                       ))}
                     </Box>
+                    {isMobile &&
+                      reportsPairIndex !== reportsList.length - 1 && (
+                        <Divider color="white" sx={{ opacity: 0.6 }} />
+                      )}
                   </Grid>
                 );
               })}
