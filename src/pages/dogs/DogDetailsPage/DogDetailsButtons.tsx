@@ -89,7 +89,15 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
   const {
     state: { reports },
   } = useAuthContext();
-  const noUserReports: boolean = !reports || !reports.length;
+  const userOppositeReports =
+    reports?.filter((report) => report.type !== data?.type) ?? [];
+  const noUserReports: boolean =
+    !userOppositeReports || !userOppositeReports.length;
+
+  // disable the button if the user has no reports or they have 1 report but its not from the opposite list
+  const buttonDisabled =
+    noUserReports ||
+    !!(reports && reports.length === 1 && reports[0].type === data?.type);
 
   const getServerApi = useGetServerApi();
   const navigate = useNavigate();
@@ -101,13 +109,13 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
 
   const backButtonRedirectsToHome = window.location.href.includes("no-return");
 
-  const lastReportedId: number | null = reports
-    ? reports[reports.length - 1].id
+  const lastReportedId: number | null = userOppositeReports
+    ? userOppositeReports[userOppositeReports.length - 1].id
     : null;
 
   const handleCTAButton = (possibleMatchId: number) => {
-    if (!reports) return;
-    if (reports?.length > 1) {
+    if (!userOppositeReports) return;
+    if (userOppositeReports?.length > 1) {
       setIsModalOpen(true);
       return;
     }
@@ -158,7 +166,7 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
         setSelectedReportId={setSelectedReportId}
         confirmFunction={reportPossibleMatch}
         getWhatsappMessage={getWhatsappMessage}
-        possibleMatchId={data?.id!}
+        possibleMatch={data}
         contactNumber={contactNumber}
       />
       <Button
@@ -180,9 +188,11 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
         )}
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <Link
-          to={noUserReports ? "#" : whatsappLink}
-          onClick={(event) => reports?.length !== 1 && event.preventDefault()}
-          aria-disabled={noUserReports}
+          to={buttonDisabled ? "#" : whatsappLink}
+          onClick={(event) =>
+            userOppositeReports?.length !== 1 && event.preventDefault()
+          }
+          aria-disabled={buttonDisabled}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -190,9 +200,9 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
             size="large"
             variant="contained"
             sx={styles.contactBtnStyle}
-            disableRipple={noUserReports}
-            disableFocusRipple={noUserReports}
-            disableTouchRipple={noUserReports}
+            disableRipple={buttonDisabled}
+            disableFocusRipple={buttonDisabled}
+            disableTouchRipple={buttonDisabled}
             onClick={() => data?.id && handleCTAButton(data.id)}
           >
             <img

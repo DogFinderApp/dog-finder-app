@@ -10,6 +10,7 @@ const usePageContainerStyles = createStyleHook(() => ({
   root: {
     width: "100%",
     height: "100%",
+    minHeight: "90vh",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",

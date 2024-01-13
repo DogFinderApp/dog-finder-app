@@ -76,10 +76,6 @@ export const AppTexts = {
     },
   },
   homePage: {
-    cta: {
-      searchPage: "חיפוש אחר כלב",
-      reportPage: "דיווח על כלב",
-    },
     noUser: {
       title: "ברוך הבא אל Fluffy Finder",
       welcomeMessage1: "כדי להשתמש בשירות יש להרשם",
@@ -144,8 +140,8 @@ export const AppTexts = {
     aboutUs: "אודות",
     reportFound: "דיווח - מצאתי כלב",
     reportLost: "דיווח - איבדתי כלב",
-    searchLost: "חיפוש כלב במאגר הנעדרים",
     searchFound: "חיפוש כלב במאגר הנמצאים",
+    searchLost: "חיפוש כלב במאגר הנעדרים",
     privacyPolicy: "תנאי השימוש",
     allFound: "כל הכלבים שנמצאו",
     allLost: "כל הכלבים שנאבדו",
@@ -237,5 +233,9 @@ export const AppTexts = {
       },
       toolTipText: "נא לבחור את הדיווח המתאים",
     },
+  },
+  footer: {
+    joinUs: "הצטרפות למיזם ופרטים נוספים",
+    followUs: "עקבו אחרינו ברשתות החברתיות",
   },
 } as const;
