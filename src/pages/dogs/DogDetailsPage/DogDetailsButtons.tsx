@@ -110,7 +110,7 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
   const backButtonRedirectsToHome = window.location.href.includes("no-return");
 
   const lastReportedId: number | null = userOppositeReports
-    ? userOppositeReports[userOppositeReports.length - 1].id
+    ? userOppositeReports[userOppositeReports.length - 1]?.id
     : null;
 
   const handleCTAButton = (possibleMatchId: number) => {
