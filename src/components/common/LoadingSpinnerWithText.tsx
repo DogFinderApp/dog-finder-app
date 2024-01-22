@@ -12,6 +12,7 @@ const useLoadingStyles = createStyleHook(
       loadingContainer: {
         display: "flex",
         flexDirection: "column",
+        minHeight: `calc(100vh - ${marginTop})`,
         alignItems: "center",
         gap: 2,
         textWrap: "balance",
@@ -38,6 +39,7 @@ export const LoadingSpinnerWithText = ({
   marginTop,
 }: LoadingProps) => {
   const styles = useLoadingStyles({ fontSize, marginTop });
+
   return (
     <Box sx={styles.loadingContainer}>
       <Typography sx={styles.loadingText}>{title}</Typography>

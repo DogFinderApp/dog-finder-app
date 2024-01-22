@@ -12,7 +12,7 @@ const useAppStyles = createStyleHook(() => ({
   root: {
     width: "100%",
     minHeight: "100vh",
-    overflowX: "hidden",
+    overflow: "hidden",
     backgroundColor: theme.palette.background.default,
   },
 }));

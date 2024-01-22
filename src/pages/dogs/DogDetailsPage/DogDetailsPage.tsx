@@ -170,7 +170,7 @@ export const DogDetailsPage = () => {
       <LoadingSpinnerWithText
         title={loading}
         fontSize={isMobile ? 26 : 48}
-        marginTop={10}
+        marginTop="80px" // must use "80px" and not mt:10 because we use it in calc()
       />
     );
   }
