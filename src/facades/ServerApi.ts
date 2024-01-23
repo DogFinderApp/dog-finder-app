@@ -116,7 +116,7 @@ class ServerApi {
 
     return this.fetch(url, {
       method: "POST",
-      body: JSON.stringify(base64Image),
+      body: JSON.stringify({ base64Image }),
     });
   }
 
