@@ -11,7 +11,7 @@ export enum DogSex {
 }
 
 export interface QueryPayload {
-  dogType: DogType;
+  type: DogType;
   base64Image: string;
 }
 

@@ -30,7 +30,6 @@ export const StartFlowButtons = ({ alignRight }: { alignRight?: boolean }) => {
   };
 
   const commonButtonProps: ButtonOwnProps = {
-    size: "large",
     variant: "contained",
     sx: styles.button,
   };
@@ -45,16 +44,16 @@ export const StartFlowButtons = ({ alignRight }: { alignRight?: boolean }) => {
 
   return (
     <Box sx={styles.content}>
-      <Link to={AppRoutes.dogs.reportLost} style={linkStyles}>
+      <Link to={AppRoutes.dogs.searchLostDog} style={linkStyles}>
         <Button {...commonButtonProps}>
           <IconSearch {...commonIconProps} />
-          {AppTexts.navigation.reportLost}
+          {AppTexts.navigation.searchLost}
         </Button>
       </Link>
-      <Link to={AppRoutes.dogs.reportFound} style={linkStyles}>
+      <Link to={AppRoutes.dogs.searchFoundDog} style={linkStyles}>
         <Button {...commonButtonProps}>
           <IconPaw {...commonIconProps} />
-          {AppTexts.navigation.reportFound}
+          {AppTexts.navigation.searchFound}
         </Button>
       </Link>
     </Box>

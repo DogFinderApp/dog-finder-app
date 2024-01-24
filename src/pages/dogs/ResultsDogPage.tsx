@@ -5,8 +5,7 @@ import { useLocation, useParams } from "react-router-dom";
 import usePageTitle from "../../hooks/usePageTitle";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { AppTexts } from "../../consts/texts";
-import { useGetServerApi } from "../../facades/ServerApi";
-import { DogType } from "../../types/payload.types";
+import { DogType, QueryPayload } from "../../types/payload.types";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
@@ -29,41 +28,49 @@ const usePageStyles = createStyleHook(() => ({
   },
 }));
 
-const fetcher = async (
-  payload: { base64Image: string; type: DogType },
-  getServerApi: Function,
-) => {
-  const serverApi = await getServerApi();
-  try {
-    const response = await serverApi.searchDog({
-      ...payload,
-      dogType: payload.type,
-    });
-    const json = await response.json();
-    setTimeout(() => {}, 6000);
-    return json?.data?.results || [];
-  } catch (error) {
-    console.error(error); // eslint-disable-line
-    throw new Error("Failed to fetch results");
-  }
-};
-
 export const ResultsDogPage = () => {
-  const { state: payload } = useLocation();
-  const getServerApi = useGetServerApi();
-  const { dogType } = useParams();
   const styles = usePageStyles();
+  const { dogType } = useParams();
+  const { state: payload } = useLocation();
+  const { base64Image, type } = payload as QueryPayload;
 
   const { resultsPage } = AppTexts;
   const loadingTextOptions = Object.values(resultsPage.loadingTexts);
   const [loadingText, setLoadingText] = useState(loadingTextOptions[0]);
+
+  // eslint-disable-next-line
+  const fetcher = async () => {
+    try {
+      const API_URL = process.env.REACT_APP_API_URL || "";
+      // we can't invoke serverApi.getAllReportedDogs() here because this page is also
+      // available for unauthorized users, and we can't use `serverApi` without being logged in
+      const url = `${API_URL}/dogfinder/search_in_${type}_dogs`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({ base64Image }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response?.ok) {
+        const json = await response.json();
+        return json?.data?.results || [];
+      }
+      return [];
+    } catch (err) {
+      console.error(err); // eslint-disable-line
+    }
+  };
 
   const {
     data: results,
     error,
     isLoading,
     mutate,
-  } = useSWR([payload], async () => fetcher(payload, getServerApi), {
+  } = useSWR([payload], async () => fetcher(), {
     keepPreviousData: false,
     revalidateOnFocus: false,
   });
@@ -103,7 +110,9 @@ export const ResultsDogPage = () => {
         )}
         {noResults && <NoDogs dogType={dogType as DogType} />}
         {!isLoading && error && <ErrorLoadingDogs refresh={mutate} />}
-        {!isLoading && !error && !isEmpty && <ResultsGrid results={results} />}
+        {!isLoading && !error && !isEmpty && (
+          <ResultsGrid results={results} dogType={dogType as DogType} />
+        )}
       </Box>
     </PageContainer>
   );

@@ -1,9 +1,10 @@
 import { Grid, Typography, useTheme } from "@mui/material";
 import { KeyedMutator } from "swr";
 import { createStyleHook } from "../../hooks/styleHooks";
-import { DogResult } from "../../types/payload.types";
+import { DogResult, DogType } from "../../types/payload.types";
 import { AppTexts } from "../../consts/texts";
 import { DogCard } from "./DogCard/DogCard";
+import { NoDogs } from "./NoDogs";
 
 const useResultsStyles = createStyleHook(() => ({
   topTextStyle: {
@@ -17,6 +18,7 @@ const useResultsStyles = createStyleHook(() => ({
 
 interface ResultsGridProps {
   results: DogResult[] | undefined;
+  dogType?: DogType;
   allReportsPage?: boolean;
   // mutate function: refetch reports after deleting a report
   getUpdatedReports?: KeyedMutator<void | {
@@ -27,17 +29,19 @@ interface ResultsGridProps {
 
 export const ResultsGrid = ({
   results,
+  dogType,
   allReportsPage,
   getUpdatedReports,
 }: ResultsGridProps) => {
   const styles = useResultsStyles();
   const theme = useTheme();
+  const { topText, dogNotFoundText } = AppTexts.resultsPage;
 
   return (
     <>
       {!allReportsPage && (
         <Typography color={theme.palette.text.primary} sx={styles.topTextStyle}>
-          {AppTexts.resultsPage.topText}
+          {topText}
         </Typography>
       )}
       <Grid container spacing={4} dir="rtl">
@@ -48,12 +52,15 @@ export const ResultsGrid = ({
         ))}
       </Grid>
       {!allReportsPage && (
-        <Typography
-          color={theme.palette.text.primary}
-          sx={{ ...styles.topTextStyle, my: 4 }}
-        >
-          {AppTexts.resultsPage.bottomText}
-        </Typography>
+        <>
+          <Typography
+            color={theme.palette.text.primary}
+            sx={{ ...styles.topTextStyle, my: 4 }}
+          >
+            {dogNotFoundText}
+          </Typography>
+          <NoDogs dogType={dogType} onlyNewReportButton />
+        </>
       )}
     </>
   );

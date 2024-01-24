@@ -44,6 +44,8 @@ class ServerApi {
       headers: {
         ...init?.headers,
         Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       signal,
     });
@@ -108,31 +110,20 @@ class ServerApi {
     return null;
   }
 
-  async searchDog(payload: QueryPayload) {
-    const { dogType, ...newPayload } = payload;
-    const url = buildEndpoint(`search_in_${dogType}_dogs`);
+  async searchDog(queryPayload: QueryPayload) {
+    const { type, base64Image } = queryPayload;
+    const url = buildEndpoint(`search_in_${type}_dogs`);
 
     return this.fetch(url, {
       method: "POST",
-      body: JSON.stringify(newPayload),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      body: JSON.stringify({ base64Image }),
     });
   }
 
   async report_dog(payload: ReportDogPayload) {
     const url = buildEndpoint("add_document");
 
-    return this.fetch(url, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    return this.fetch(url, { method: "POST", body: JSON.stringify(payload) });
   }
 
   async addPossibleDogMatch(payload: {
@@ -142,10 +133,6 @@ class ServerApi {
     const url = buildEndpoint("add_possible_dog_match");
     return this.fetch(url, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(payload),
     });
   }
@@ -157,10 +144,6 @@ class ServerApi {
     const url = buildEndpoint("dog_resolved");
     return this.fetch(url, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(payload),
     });
   }

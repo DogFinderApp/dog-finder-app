@@ -11,10 +11,7 @@ const checkForMatchingDogs = async (
 ) => {
   const serverApi = await getServerApi();
   try {
-    const response = await serverApi.searchDog({
-      ...payload,
-      dogType: payload.type,
-    });
+    const response = await serverApi.searchDog({ ...payload });
     const json = await response.json();
     if (json?.data?.results) {
       const threshold = 0.88;
