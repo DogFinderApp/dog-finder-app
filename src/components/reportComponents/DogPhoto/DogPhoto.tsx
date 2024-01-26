@@ -58,7 +58,7 @@ export const DogPhoto: FC<DogPhotoProps> = ({
   return (
     <Box sx={styles.root}>
       <PageImage src={selectedImageUrl} alt="dog-photo" sx={styles.photo} />
-      <Box sx={styles.deleteButton} onClick={() => clearSelection()}>
+      <Box sx={styles.deleteButton} onClick={clearSelection}>
         <IconTrash strokeWidth={1.5} />
       </Box>
     </Box>
