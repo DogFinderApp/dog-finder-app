@@ -90,6 +90,9 @@ export const ReportDogPage = withAuthenticationRequired(
         setMatchingReportModalOpen,
       );
 
+    // ? we take the image we memorized in the search and then delete it from localStorage. the image should be used once.
+    setTimeout(() => localStorage.removeItem("searchedDogImage"), 1000);
+
     const { request, submitText, errorText } = AppTexts.reportPage;
 
     const title =
