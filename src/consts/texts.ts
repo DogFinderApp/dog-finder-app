@@ -151,7 +151,11 @@ export const AppTexts = {
   dogDetails: {
     title: "פרטי הכלב",
     whatsappButton: "שליחת הודעת וואטסאפ",
-    disabledButtonText: "יש לדווח קודם על כלב שנמצא/נעדר",
+    disabledButtonText: {
+      lost: "יש לדווח קודם על כלב שנמצא",
+      found: "יש לדווח קודם על כלב שאבד",
+      reporterIsCurrentUser: "את/ה יצרת את הדיווח הזה",
+    },
     backButton: "חזרה אחורה",
     loading: "טוען את פרטי הכלב",
     error: "לא קיים מידע",

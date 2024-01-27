@@ -15,11 +15,11 @@ import WhatsappIcon from "../../../assets/svg/whatsapp.svg";
 
 interface DogDetailsButtonsStyle {
   isTablet: boolean;
-  noUserReports: boolean;
+  buttonDisabled: boolean;
 }
 
 const useDogDetailsButtonsStyles = createStyleHook(
-  (theme, { isTablet, noUserReports }: DogDetailsButtonsStyle) => ({
+  (theme, { isTablet, buttonDisabled }: DogDetailsButtonsStyle) => ({
     actionBtnWrapper: {
       display: "flex",
       flexDirection: {
@@ -48,8 +48,8 @@ const useDogDetailsButtonsStyles = createStyleHook(
       height: { xs: "5vh", md: "5vh" },
       backgroundColor: "#E3F0FF",
       color: theme.palette.primary.main,
-      cursor: noUserReports ? "not-allowed" : "pointer",
-      opacity: noUserReports ? 0.6 : 1,
+      cursor: buttonDisabled ? "not-allowed" : "pointer",
+      opacity: buttonDisabled ? 0.6 : 1,
       "&:hover": { backgroundColor: "#cad6e4 !important" },
     },
   }),
@@ -94,15 +94,24 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
   const noUserReports: boolean =
     !userOppositeReports || !userOppositeReports.length;
 
-  // disable the button if the user has no reports or they have 1 report but its not from the opposite list
+  const userReportsIds: number[] = !reports
+    ? []
+    : reports.map((report) => report.id);
+
+  const dogIdFromUrl = Number(window.location.pathname.split("/dogs/")[1]);
+  const reporterIsCurrentUser: boolean = userReportsIds.includes(dogIdFromUrl);
+
+  // disable the button if the user has no reports, or the reporter is the same user,
+  // or they have 1 report but its not from the opposite list,
   const buttonDisabled =
     noUserReports ||
+    reporterIsCurrentUser ||
     !!(reports && reports.length === 1 && reports[0].type === data?.type);
 
   const getServerApi = useGetServerApi();
   const navigate = useNavigate();
   const { isTablet } = useWindowSize();
-  const styles = useDogDetailsButtonsStyles({ isTablet, noUserReports });
+  const styles = useDogDetailsButtonsStyles({ isTablet, buttonDisabled });
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   // if a user has multiple reports, they should choose the one that matches with the dog page
   const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
@@ -152,6 +161,11 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
 
   const whatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage()}`;
 
+  const buttonDisabledText =
+    disabledButtonText[
+      reporterIsCurrentUser ? "reporterIsCurrentUser" : data?.type ?? "lost"
+    ];
+
   const commonIconProps: TablerIconsProps = {
     style: { marginRight: "0.5rem" },
     stroke: 1.5,
@@ -181,9 +195,9 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
         {backButton}
       </Button>
       <Box position="relative">
-        {noUserReports && (
+        {(reporterIsCurrentUser || (noUserReports && data?.type)) && (
           <Typography sx={styles.buttonDisabledText}>
-            {disabledButtonText}
+            {buttonDisabledText}
           </Typography>
         )}
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
@@ -203,7 +217,9 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
             disableRipple={buttonDisabled}
             disableFocusRipple={buttonDisabled}
             disableTouchRipple={buttonDisabled}
-            onClick={() => data?.id && handleCTAButton(data.id)}
+            onClick={() =>
+              !reporterIsCurrentUser && data?.id && handleCTAButton(data.id)
+            }
           >
             <img
               src={WhatsappIcon}
