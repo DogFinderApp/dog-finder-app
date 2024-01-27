@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   AlertColor,
@@ -18,6 +18,7 @@ import {
   DogResult,
 } from "../../../types/payload.types";
 import { useGetServerApi } from "../../../facades/ServerApi";
+import { checkForMatchingDogs } from "../../../utils/checkForMatchingDogs";
 import { cleanImage } from "../../../utils/imageUtils";
 import { dateToString } from "../../../utils/datesFormatter";
 import { createStyleHook } from "../../../hooks/styleHooks";
@@ -71,6 +72,7 @@ export const ReportDogPage = withAuthenticationRequired(
   ({ dogType }: ReportDogPageProps) => {
     const { dispatch } = useAuthContext();
     const { inputs, getInputsData } = useReportDogInputs();
+    const getServerApi = useGetServerApi();
 
     const [isMissingImage, setIsMissingImage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -90,8 +92,24 @@ export const ReportDogPage = withAuthenticationRequired(
         setMatchingReportModalOpen,
       );
 
-    // ? we take the image we memorized in the search and then delete it from localStorage. the image should be used once.
-    setTimeout(() => localStorage.removeItem("searchedDogImage"), 1000);
+    useEffect(() => {
+      // scroll to top on 1st render
+      window.scroll({ top: 0 });
+      // `checkForMatchingDogs` won't get triggered if we auto-fill the image input with the memorized image.
+      // so if this is the case, we trigger it manually here
+      if (selectedImageUrl) {
+        const payload = {
+          base64Image: cleanImage(selectedImageUrl),
+          type: dogType,
+        };
+        checkForMatchingDogs(
+          payload,
+          getServerApi,
+          setMatchingReports,
+          setMatchingReportModalOpen,
+        );
+      }
+    }, [selectedImageUrl, dogType, getServerApi]);
 
     const { request, submitText, errorText } = AppTexts.reportPage;
 
@@ -103,7 +121,6 @@ export const ReportDogPage = withAuthenticationRequired(
     usePageTitle(title);
     const theme = useTheme();
     const styles = useReportDogPageStyles({ isError: showErrorMessage });
-    const getServerApi = useGetServerApi();
 
     const clearInputs = () => {
       Object.values(inputs).forEach((input) => {
@@ -160,6 +177,7 @@ export const ReportDogPage = withAuthenticationRequired(
         if (json.status_code === 200 && json?.data?.id) {
           setIsLoading(false);
           clearInputs();
+          localStorage.removeItem("searchedDogImage");
           dispatch({ type: "ADD_NEW_REPORT", payload: json.data });
           setNewReportId(json.data.id);
           setReportSubmittedModalOpen(true);

@@ -1,4 +1,10 @@
 export const AppTexts = {
+  homePage: {
+    buttons: {
+      lostDog: "איבדתי כלב",
+      foundDog: "מצאתי כלב",
+    },
+  },
   authPage: {
     loginCta: "התחברות",
     logoutCta: "התנתקות",
@@ -75,21 +81,11 @@ export const AppTexts = {
       },
     },
   },
-  homePage: {
-    noUser: {
-      title: "ברוך הבא אל Fluffy Finder",
-      welcomeMessage1: "כדי להשתמש בשירות יש להרשם",
-      welcomeMessage2: "או לחלופין להתחבר עם חשבון גוגל",
-      cta: "התחלה",
-      footer1: "הרשמה לאתר מהווה אישור",
-      footer2: "לתנאי השימוש ומדיניות הפרטיות",
-      footer3: "של Fluffy Finder",
-    },
-  },
   resultsPage: {
     title: "תוצאות חיפוש",
-    topText:
-      "הנה רשימה של התאמות פוטנציאליות לכלב/ה שהעליתם. אנא עיינו בתמונות ובמידע הנוסף, וצרו קשר עם הבעלים במידה וזיהיתם התאמה.",
+    topText1: "הנה רשימה של התאמות פוטנציאליות לכלב/ה שהעליתם.",
+    topText2:
+      "אנא עיינו בתמונות ובמידע הנוסף, וצרו קשר עם הבעלים במידה וזיהיתם התאמה.",
     dogNotFoundText:
       "במידה והכלב/ה שלך לא נמצאים ברשימה, ניתן ליצור דיווח חדש ולהמתין ליצירת קשר.",
     call: "טלפון",
@@ -151,7 +147,11 @@ export const AppTexts = {
   dogDetails: {
     title: "פרטי הכלב",
     whatsappButton: "שליחת הודעת וואטסאפ",
-    disabledButtonText: "יש לדווח קודם על כלב שנמצא/נעדר",
+    disabledButtonText: {
+      lost: "יש לדווח קודם על כלב שנמצא",
+      found: "יש לדווח קודם על כלב שאבד",
+      reporterIsCurrentUser: "את/ה יצרת את הדיווח הזה",
+    },
     backButton: "חזרה אחורה",
     loading: "טוען את פרטי הכלב",
     error: "לא קיים מידע",
