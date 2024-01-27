@@ -13,6 +13,16 @@ import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadin
 import { NoDogs } from "../../components/resultsComponents/NoDogs";
 
 const usePageStyles = createStyleHook(() => ({
+  box: {
+    height: "100%",
+    width: { sm: "90%", xs: "100%" },
+    maxWidth: 1400,
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    px: { sm: 4, xs: 0 },
+  },
   loadingContainer: {
     display: "flex",
     flexDirection: "column",
@@ -92,15 +102,7 @@ export const ResultsDogPage = () => {
 
   return (
     <PageContainer>
-      <Box
-        height="100%"
-        maxWidth={1400}
-        margin="0 auto"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        px={{ sm: 4, xs: 0 }}
-      >
+      <Box sx={styles.box}>
         <PageTitle text={resultsPage.title} />
         {isLoading && (
           <Box sx={styles.loadingContainer}>

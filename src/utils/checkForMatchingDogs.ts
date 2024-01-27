@@ -9,7 +9,7 @@ export const checkForMatchingDogs = async (
 ) => {
   const serverApi = await getServerApi();
   try {
-    const response = await serverApi.searchDog({ ...payload });
+    const response = await serverApi.searchDog(payload);
     const json = await response.json();
     if (json?.data?.results) {
       const threshold = 0.88;

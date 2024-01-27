@@ -1,6 +1,7 @@
-import { Grid, Typography, useTheme } from "@mui/material";
+import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { KeyedMutator } from "swr";
 import { createStyleHook } from "../../hooks/styleHooks";
+import { useWindowSize } from "../../hooks/useWindowSize";
 import { DogResult, DogType } from "../../types/payload.types";
 import { AppTexts } from "../../consts/texts";
 import { DogCard } from "./DogCard/DogCard";
@@ -13,6 +14,8 @@ const useResultsStyles = createStyleHook(() => ({
     lineHeight: "25px",
     mb: 4,
     direction: "rtl",
+    textWrap: "balance",
+    textAlign: { sm: "right", xs: "center" },
   },
 }));
 
@@ -34,14 +37,17 @@ export const ResultsGrid = ({
   getUpdatedReports,
 }: ResultsGridProps) => {
   const styles = useResultsStyles();
+  const { isMobile } = useWindowSize();
   const theme = useTheme();
-  const { topText, dogNotFoundText } = AppTexts.resultsPage;
+  const { topText1, topText2, dogNotFoundText } = AppTexts.resultsPage;
 
   return (
-    <>
+    <Box width="100%">
       {!allReportsPage && (
         <Typography color={theme.palette.text.primary} sx={styles.topTextStyle}>
-          {topText}
+          {topText1}
+          {isMobile ? " " : <br />}
+          {topText2}
         </Typography>
       )}
       <Grid container spacing={4} dir="rtl">
@@ -62,6 +68,6 @@ export const ResultsGrid = ({
           <NoDogs dogType={dogType} onlyNewReportButton />
         </>
       )}
-    </>
+    </Box>
   );
 };

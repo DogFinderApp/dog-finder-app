@@ -93,9 +93,10 @@ export const ReportDogPage = withAuthenticationRequired(
       );
 
     useEffect(() => {
+      // scroll to top on 1st render
       window.scroll({ top: 0 });
-      // ? we take the image we memorized in the search and then delete it from localStorage. the image should be used once.
-      setTimeout(() => localStorage.removeItem("searchedDogImage"), 1000);
+      // `checkForMatchingDogs` won't get triggered if we auto-fill the image input with the memorized image.
+      // so if this is the case, we trigger it manually here
       if (selectedImageUrl) {
         const payload = {
           base64Image: cleanImage(selectedImageUrl),
@@ -176,6 +177,7 @@ export const ReportDogPage = withAuthenticationRequired(
         if (json.status_code === 200 && json?.data?.id) {
           setIsLoading(false);
           clearInputs();
+          localStorage.removeItem("searchedDogImage");
           dispatch({ type: "ADD_NEW_REPORT", payload: json.data });
           setNewReportId(json.data.id);
           setReportSubmittedModalOpen(true);
