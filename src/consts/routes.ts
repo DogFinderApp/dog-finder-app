@@ -12,5 +12,6 @@ export const AppRoutes = {
     allReports: "/all-reports/:dogType",
     allReportsHamal: "/all-reports/hamal",
     allMatches: "/all-matches",
+    redirect: "/dogs/redirect",
   },
 } as const;

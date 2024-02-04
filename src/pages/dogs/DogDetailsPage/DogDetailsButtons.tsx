@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import { Link, To, useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Button, Typography } from "@mui/material";
 import { IconArrowLeft, TablerIconsProps } from "@tabler/icons-react";
 import { AppTexts } from "../../../consts/texts";
 import { AppRoutes } from "../../../consts/routes";
 import { useGetServerApi } from "../../../facades/ServerApi";
+import { encryptData } from "../../../utils/encryptionUtils";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
 import { DogType } from "../../../types/payload.types";
 import { useAuthContext } from "../../../context/useAuthContext";
@@ -89,6 +91,8 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
   const {
     state: { reports },
   } = useAuthContext();
+  const { user, loginWithRedirect } = useAuth0();
+
   const userOppositeReports =
     reports?.filter((report) => report.type !== data?.type) ?? [];
   const noUserReports: boolean =
@@ -103,10 +107,13 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
 
   // disable the button if the user has no reports, or the reporter is the same user,
   // or they have 1 report but its not from the opposite list,
+  // we must also make sure to NOT disable the button when there's  no user, because we use that button
+  // to authenticateWithRedirect in that case
   const buttonDisabled =
-    noUserReports ||
-    reporterIsCurrentUser ||
-    !!(reports && reports.length === 1 && reports[0].type === data?.type);
+    !!user &&
+    (noUserReports ||
+      reporterIsCurrentUser ||
+      !!(reports && reports.length === 1 && reports[0].type === data?.type));
 
   const getServerApi = useGetServerApi();
   const navigate = useNavigate();
@@ -122,13 +129,25 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
     ? userOppositeReports[userOppositeReports.length - 1]?.id
     : null;
 
-  const handleCTAButton = (possibleMatchId: number) => {
+  const handleLinkClick = (event: MouseEvent<HTMLAnchorElement>) =>
+    (userOppositeReports?.length !== 1 || !user) && event.preventDefault();
+
+  const handleCTAButton = (possibleMatchId: number | undefined) => {
     if (!userOppositeReports) return;
+    if (!user) {
+      encryptData("dog_id_to_redirect", `${dogIdFromUrl}`);
+      loginWithRedirect({
+        authorizationParams: {
+          redirect_uri: `${window.location.href}/dogs/redirect`,
+        },
+      });
+    }
     if (userOppositeReports?.length > 1) {
       setIsModalOpen(true);
       return;
     }
-    reportPossibleMatch({ lastReportedId, possibleMatchId }, getServerApi);
+    if (possibleMatchId)
+      reportPossibleMatch({ lastReportedId, possibleMatchId }, getServerApi);
   };
 
   const getWhatsappMessage = () => {
@@ -163,7 +182,11 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
 
   const buttonDisabledText =
     disabledButtonText[
-      reporterIsCurrentUser ? "reporterIsCurrentUser" : data?.type ?? "lost"
+      !user
+        ? "noUser"
+        : reporterIsCurrentUser
+          ? "reporterIsCurrentUser"
+          : data?.type ?? "lost"
     ];
 
   const commonIconProps: TablerIconsProps = {
@@ -202,10 +225,8 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
         )}
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <Link
-          to={buttonDisabled ? "#" : whatsappLink}
-          onClick={(event) =>
-            userOppositeReports?.length !== 1 && event.preventDefault()
-          }
+          to={!user || buttonDisabled ? "#" : whatsappLink}
+          onClick={handleLinkClick}
           aria-disabled={buttonDisabled}
           target="_blank"
           rel="noopener noreferrer"
@@ -217,9 +238,7 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
             disableRipple={buttonDisabled}
             disableFocusRipple={buttonDisabled}
             disableTouchRipple={buttonDisabled}
-            onClick={() =>
-              !reporterIsCurrentUser && data?.id && handleCTAButton(data.id)
-            }
+            onClick={() => handleCTAButton(data?.id)}
           >
             <img
               src={WhatsappIcon}
