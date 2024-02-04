@@ -19,8 +19,9 @@ const useNoResultsStyles = createStyleHook(
     content: {
       height: "100%",
       width: { sm: "100%", xs: "90%" },
-      mt: onlyNewReportButton ? 0 : 4,
-      mb: onlyNewReportButton ? 4 : 0,
+      mt: onlyNewReportButton ? 0 : 3,
+      mb: onlyNewReportButton ? 3 : 0,
+      mx: "auto",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
