@@ -203,8 +203,8 @@ export const DogCard = ({
     <>
       <DeleteReportModal
         open={isDeleteModalOpen}
-        isDeleting={isDeleting}
         setOpen={setIsDeleteModalOpen}
+        isDeleting={isDeleting}
         deleteFunction={deleteReport}
       />
       <Card

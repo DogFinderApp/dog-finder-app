@@ -13,6 +13,7 @@ import { useAuthContext } from "../../../context/useAuthContext";
 import { createStyleHook } from "../../../hooks/styleHooks";
 import { useWindowSize } from "../../../hooks/useWindowSize";
 import ReportSelectModal from "../../../components/Modals/ReportSelectModal";
+import { QuickReportModal } from "../../../components/Modals/QuickReportModal";
 import WhatsappIcon from "../../../assets/svg/whatsapp.svg";
 
 interface DogDetailsButtonsStyle {
@@ -82,9 +83,15 @@ const reportPossibleMatch = async (
 
 interface DogDetailsButtonsProps {
   data: DogDetailsReturnType | null;
+  dogType: DogType;
+  dogImage: string;
 }
 
-export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
+export const DogDetailsButtons = ({
+  data,
+  dogType,
+  dogImage,
+}: DogDetailsButtonsProps) => {
   const { whatsappButton, disabledButtonText, backButton, whatsappTexts } =
     AppTexts.dogDetails;
 
@@ -119,7 +126,9 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
   const navigate = useNavigate();
   const { isTablet } = useWindowSize();
   const styles = useDogDetailsButtonsStyles({ isTablet, buttonDisabled });
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectReportModalOpen, setSelectReportModalOpen] =
+    useState<boolean>(false);
+  const [quickModalOpen, setQuickModalOpen] = useState<boolean>(false);
   // if a user has multiple reports, they should choose the one that matches with the dog page
   const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
 
@@ -130,10 +139,9 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
     : null;
 
   const handleLinkClick = (event: MouseEvent<HTMLAnchorElement>) =>
-    (userOppositeReports?.length !== 1 || !user) && event.preventDefault();
+    buttonDisabled && event.preventDefault();
 
   const handleCTAButton = (possibleMatchId: number | undefined) => {
-    if (!userOppositeReports) return;
     if (!user) {
       encryptData("dog_id_to_redirect", `${dogIdFromUrl}`);
       loginWithRedirect({
@@ -142,15 +150,22 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
         },
       });
     }
-    if (userOppositeReports?.length > 1) {
-      setIsModalOpen(true);
+    if (!userOppositeReports) {
+      setQuickModalOpen(true);
       return;
     }
-    if (possibleMatchId)
+    if (userOppositeReports?.length > 1) {
+      setSelectReportModalOpen(true);
+      return;
+    }
+    if (possibleMatchId && !reporterIsCurrentUser)
       reportPossibleMatch({ lastReportedId, possibleMatchId }, getServerApi);
   };
 
-  const getWhatsappMessage = () => {
+  const getWhatsappMessage = (
+    revereDogType?: boolean,
+    quickReportDogId?: number,
+  ) => {
     // Split the URL and keep only the IDs
     const dogIds = window.location.href
       .split("/")
@@ -158,7 +173,9 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
     const dogPage: string = `${window.location.origin}/dogs/${dogIds[0]}`;
     const userReportedDogPage: string | null =
       selectedReportId || lastReportedId
-        ? `${window.location.origin}/dogs/${selectedReportId ?? lastReportedId}`
+        ? `${window.location.origin}/dogs/${
+            quickReportDogId ?? selectedReportId ?? lastReportedId
+          }`
         : null;
 
     const { lost, lost2, lost3, found, found2, found3 } = whatsappTexts;
@@ -167,7 +184,10 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
       lost: `${lost}${`%0A%0A${lost2}%0A${userReportedDogPage}`}%0A%0A${lost3}%0A${dogPage}`,
       found: `${found}%0A%0A${found2}%0A${dogPage}%0A%0A${found3}%0A${userReportedDogPage}`,
     };
-    return messages[data?.type ?? DogType.FOUND];
+    const messageType = data?.type ?? DogType.FOUND;
+    const reversedMessageType =
+      messageType === DogType.FOUND ? DogType.LOST : DogType.FOUND;
+    return messages[revereDogType ? reversedMessageType : messageType];
   };
 
   const contactNumber = data?.contactPhone
@@ -196,9 +216,19 @@ export const DogDetailsButtons = ({ data }: DogDetailsButtonsProps) => {
 
   return (
     <Box sx={styles.actionBtnWrapper}>
+      <QuickReportModal
+        open={quickModalOpen}
+        setOpen={setQuickModalOpen}
+        dogType={dogType}
+        dogImage={dogImage}
+        reportPossibleMatch={reportPossibleMatch}
+        possibleMatch={data}
+        getWhatsappMessage={getWhatsappMessage}
+        contactNumber={contactNumber}
+      />
       <ReportSelectModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
+        isModalOpen={selectReportModalOpen}
+        setIsModalOpen={setSelectReportModalOpen}
         selectedReportId={selectedReportId}
         setSelectedReportId={setSelectedReportId}
         confirmFunction={reportPossibleMatch}
