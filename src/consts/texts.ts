@@ -149,8 +149,6 @@ export const AppTexts = {
     whatsappButton: "שליחת הודעת וואטסאפ",
     disabledButtonText: {
       noUser: "יש להירשם בשביל לפנות למדווח",
-      lost: "יש לדווח קודם על כלב שנמצא",
-      found: "יש לדווח קודם על כלב שאבד",
       reporterIsCurrentUser: "את/ה יצרת את הדיווח הזה",
     },
     backButton: "חזרה אחורה",

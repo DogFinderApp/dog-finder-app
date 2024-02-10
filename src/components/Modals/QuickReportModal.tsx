@@ -106,7 +106,6 @@ export const QuickReportModal = ({
           type: "ADD_NEW_REPORT",
           payload: json.data,
         });
-
         const newPayload = {
           lastReportedId: null,
           possibleMatchId: possibleMatch?.id,
@@ -119,22 +118,19 @@ export const QuickReportModal = ({
         )}`;
         window.open(updatedWhatsappLink, "_blank", "rel=noopener noreferrer");
         setReadyToSubmit(false);
-        return json.data;
+        setOpen(false);
+        return;
       }
       setReadyToSubmit(false);
-      return undefined;
     } catch (error) {
       setReadyToSubmit(false);
+      setOpen(false);
       console.error(error); // eslint-disable-line
-      return undefined;
     }
   };
 
   // ? using null as a key to disable the fetch request up until the submit button is clicked
-  const { error, isLoading } = useSWR(
-    readyToSubmit ? "quick report" : null,
-    fetcher,
-  );
+  const { isLoading } = useSWR(readyToSubmit ? "quick report" : null, fetcher);
 
   const handleSubmitForm = () => {
     if (validateInput()) setReadyToSubmit(true); // trigger the fetcher function
@@ -172,9 +168,6 @@ export const QuickReportModal = ({
         />
       </DialogActions>
       <DialogActions sx={styles.buttonsContainer}>
-        <Button onClick={handleClose} autoFocus sx={styles.cancelButton}>
-          {goBackText}
-        </Button>
         <Button onClick={handleSubmitForm} sx={styles.continueButton}>
           {!isLoading ? (
             submitText
@@ -193,6 +186,9 @@ export const QuickReportModal = ({
               />
             </>
           )}
+        </Button>
+        <Button onClick={handleClose} sx={styles.cancelButton}>
+          {goBackText}
         </Button>
       </DialogActions>
     </Dialog>

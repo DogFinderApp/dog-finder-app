@@ -15,7 +15,7 @@ export const AuthRedirect = () => {
   useEffect(() => {
     setTimeout(() => {
       if (dogId) {
-        navigate(`/dogs/${dogId}`);
+        navigate(`/dogs/${dogId}/authenticated`);
         localStorage.removeItem("dog_id_to_redirect");
       }
     }, 100);

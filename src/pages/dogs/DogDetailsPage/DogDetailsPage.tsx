@@ -196,7 +196,7 @@ export const DogDetailsPage = () => {
             </Typography>
           </Box>
           <DogDetailsButtons
-            data={data}
+            dogData={data}
             dogType={data?.type ?? DogType.FOUND} // for the quick report modal
             dogImage={image} // for the quick report modal
           />

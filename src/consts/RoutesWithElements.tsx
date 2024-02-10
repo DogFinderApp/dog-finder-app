@@ -64,6 +64,10 @@ export const routesWithElements: Route[] = [
     element: DogDetailsPage,
   },
   {
+    path: AppRoutes.dogs.dogPageAuthenticated,
+    element: DogDetailsPage,
+  },
+  {
     path: AppRoutes.dogs.allReports,
     element: ReportsGalleryPage,
   },
