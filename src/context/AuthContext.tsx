@@ -5,6 +5,7 @@ import { UserRole } from "../types/UserRole";
 type AuthState = {
   role: UserRole;
   reports: DogDetailsReturnType[] | null;
+  isFetchingReports: boolean;
 };
 
 type ContextProps = {
@@ -22,21 +23,24 @@ type AuthAction =
   | { type: "SET_USER_ROLE"; payload: UserRole }
   | { type: "SET_USER_REPORTS"; payload: DogDetailsReturnType[] | null }
   | { type: "ADD_NEW_REPORT"; payload: DogDetailsReturnType }
+  | { type: "SET_IS_FETCHING_REPORTS"; payload: boolean }
   | { type: "LOGOUT" };
 
 const reducer = (state: AuthState, action: AuthAction) => {
   switch (action.type) {
     case "SET_USER_ROLE":
-      return { role: action.payload, reports: state?.reports ?? null };
+      return { ...state, role: action.payload };
     case "SET_USER_REPORTS":
-      return { role: state?.role ?? null, reports: action.payload };
+      return { ...state, reports: action.payload };
     case "ADD_NEW_REPORT":
       return {
-        role: state?.role ?? null,
+        ...state,
         reports: state?.reports
           ? [...state.reports, action.payload]
           : [action.payload],
       };
+    case "SET_IS_FETCHING_REPORTS":
+      return { ...state, isFetchingReports: action.payload };
     case "LOGOUT":
       return { role: null, reports: null };
     default:
@@ -44,8 +48,15 @@ const reducer = (state: AuthState, action: AuthAction) => {
   }
 };
 
+const initialState: AuthState = {
+  role: null,
+  reports: null,
+  isFetchingReports: false,
+};
+
 export const AuthContextProvider = ({ children }: ProviderProps) => {
-  const [state, dispatch] = useReducer(reducer, { role: null, reports: null });
+  // @ts-expect-error
+  const [state, dispatch] = useReducer(reducer, initialState);
   const value = useMemo(() => ({ state, dispatch }), [state]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
