@@ -4,6 +4,7 @@ export const AppRoutes = {
   about: "/about",
   dogs: {
     dogPage: "/dogs/:dog_id?",
+    dogPageAuthenticated: "/dogs/:dog_id/authenticated",
     reportFound: "/report/found",
     reportLost: "/report/lost",
     searchFoundDog: "/search/found",
@@ -12,5 +13,6 @@ export const AppRoutes = {
     allReports: "/all-reports/:dogType",
     allReportsHamal: "/all-reports/hamal",
     allMatches: "/all-matches",
+    redirect: "/dogs/redirect",
   },
 } as const;

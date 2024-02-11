@@ -87,6 +87,7 @@ export const PageToolbar = () => {
       const serverApi = await getServerApi();
       dispatch({ type: "SET_USER_ROLE", payload: serverApi.getUserRole() });
       try {
+        dispatch({ type: "SET_IS_FETCHING_REPORTS", payload: true });
         const response = await serverApi.getUserReportedDogs();
         if (!response?.ok) return;
         const json = await response.json();
@@ -95,6 +96,8 @@ export const PageToolbar = () => {
         }
       } catch (error) {
         console.error(error); // eslint-disable-line
+      } finally {
+        dispatch({ type: "SET_IS_FETCHING_REPORTS", payload: false });
       }
     };
 

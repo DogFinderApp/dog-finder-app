@@ -85,7 +85,7 @@ interface ReportSelectProps {
   selectedReportId: number | null;
   setSelectedReportId: Dispatch<SetStateAction<number | null>>;
   confirmFunction: Function;
-  getWhatsappMessage: () => string;
+  getWhatsappMessage: (revereDogType: boolean) => string;
   possibleMatch: DogDetailsReturnType | null;
   contactNumber: string;
 }
@@ -107,7 +107,9 @@ export default function ReportSelectModal({
     state: { reports },
   } = useAuthContext();
 
-  const updatedWhatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage()}`;
+  const updatedWhatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
+    true,
+  )}`;
   // we need to store the whatsapp link in state in order to modify it when the user selects a report.
   // each time we use `updatedWhatsappLink` we call getWhatsappMessage() to get the latest version of the text
   const [whatsappLink, setWhatsappLink] = useState<string>(updatedWhatsappLink);

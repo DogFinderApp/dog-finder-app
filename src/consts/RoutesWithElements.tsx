@@ -10,8 +10,9 @@ import { DogDetailsPage } from "../pages/dogs/DogDetailsPage/DogDetailsPage";
 import { AllReportsPage } from "../pages/dogs/AllReportsPage";
 import { AllMatchesPage } from "../pages/dogs/AllMatchesPage";
 import { NotFound } from "../pages/NotFound";
-import { AppRoutes } from "./routes";
 import { ReportsGalleryPage } from "../pages/dogs/ReportsGalleryPage";
+import { AuthRedirect } from "../pages/dogs/AuthRedirect";
+import { AppRoutes } from "./routes";
 
 type RouteElement = () => JSX.Element;
 
@@ -63,6 +64,10 @@ export const routesWithElements: Route[] = [
     element: DogDetailsPage,
   },
   {
+    path: AppRoutes.dogs.dogPageAuthenticated,
+    element: DogDetailsPage,
+  },
+  {
     path: AppRoutes.dogs.allReports,
     element: ReportsGalleryPage,
   },
@@ -73,6 +78,10 @@ export const routesWithElements: Route[] = [
   {
     path: AppRoutes.dogs.allMatches,
     element: AllMatchesPage,
+  },
+  {
+    path: AppRoutes.dogs.redirect,
+    element: AuthRedirect,
   },
   {
     path: "/*",

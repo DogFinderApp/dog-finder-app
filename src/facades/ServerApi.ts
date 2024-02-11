@@ -1,7 +1,11 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback } from "react";
 import { jwtDecode } from "jwt-decode";
-import { QueryPayload, ReportDogPayload } from "../types/payload.types";
+import {
+  QueryPayload,
+  QuickReportPayload,
+  ReportDogPayload,
+} from "../types/payload.types";
 import { UserRole } from "../types/UserRole";
 
 interface DecodedUserData {
@@ -120,7 +124,7 @@ class ServerApi {
     });
   }
 
-  async report_dog(payload: ReportDogPayload) {
+  async report_dog(payload: ReportDogPayload | QuickReportPayload) {
     const url = buildEndpoint("add_document");
 
     return this.fetch(url, { method: "POST", body: JSON.stringify(payload) });
