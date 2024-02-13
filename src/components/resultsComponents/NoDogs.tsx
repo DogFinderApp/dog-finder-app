@@ -1,4 +1,4 @@
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { Link, To } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -13,6 +13,7 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import { DogType } from "../../types/payload.types";
 import { AppRoutes } from "../../consts/routes";
 import { AppTexts } from "../../consts/texts";
+import { RedirectToAuth0Modal } from "../Modals/RedirectToAuth0Modal";
 
 const useNoResultsStyles = createStyleHook(
   (theme, { onlyNewReportButton }: { onlyNewReportButton?: boolean }) => ({
@@ -68,12 +69,14 @@ export const NoDogs = ({
 }) => {
   // if `dogType` arg is undefined, it means we use it inside "all-matches" page which doesn't need a dogType
 
-  const { user, loginWithRedirect } = useAuth0();
+  const { user } = useAuth0();
   const theme = useTheme();
   const styles = useNoResultsStyles({ onlyNewReportButton });
   const { isMobile } = useWindowSize();
   const { noResults } = AppTexts.resultsPage;
   const { noMatches } = AppTexts.allMatchesPage;
+  const [authRedirectModalOpen, setAuthRedirectModalOpen] =
+    useState<boolean>(false);
 
   const title = dogType ? noResults.title : noMatches.title;
   const infoText = dogType ? (
@@ -140,16 +143,18 @@ export const NoDogs = ({
     if (!user && navigationRoute === newReportRoute) {
       event.preventDefault();
       // Prevent the link navigation and perform the login with redirect to report page
-      loginWithRedirect({
-        authorizationParams: {
-          redirect_uri: window.location.origin + newReportRoute,
-        },
-      });
+      setAuthRedirectModalOpen(true);
     }
   };
 
   return (
     <Box sx={styles.content}>
+      <RedirectToAuth0Modal
+        type="newReport"
+        open={authRedirectModalOpen}
+        setOpen={setAuthRedirectModalOpen}
+        redirectUri={window.location.origin + newReportRoute}
+      />
       {!onlyNewReportButton && (
         <Box sx={styles.textWrapper}>
           <Typography

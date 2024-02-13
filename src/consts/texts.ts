@@ -244,6 +244,15 @@ export const AppTexts = {
       submitText: "שלח דיווח",
       submittingText: "מיד תועברו למפרסם/ת הדיווח",
     },
+    redirectToAuth0: {
+      title: "משתמשים יקרים",
+      description: {
+        newReport: "על מנת למלא דיווח יש ראשית להתחבר למערכת",
+        sendWhatsapp: "כדי לשלוח הודעת וואטסאפ יש ראשית להתחבר למערכת",
+      },
+      continueText: "המשך",
+      cancelText: "חזרה",
+    },
     reportSubmitted: {
       title: "הדיווח נקלט בהצלחה",
       preText: "אנו מקווים שתמצאו את כלבכם בקרוב!",

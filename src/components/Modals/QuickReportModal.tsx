@@ -102,6 +102,7 @@ export const QuickReportModal = ({
       const json = await response.json();
       if (json.status_code === 200 && json?.data?.id) {
         clearInput();
+        localStorage.removeItem("searchedDogImage");
         dispatch({
           type: "ADD_NEW_REPORT",
           payload: json.data,
