@@ -31,6 +31,7 @@ const useReportModalStyles = createStyleHook(() => ({
     maxWidth: "90%",
     marginX: "auto",
     textWrap: { sm: "balance" },
+    textAlign: "center",
   },
   inputContainer: { width: "90%", marginX: "auto" },
   buttonsContainer: {
@@ -102,6 +103,7 @@ export const QuickReportModal = ({
       const json = await response.json();
       if (json.status_code === 200 && json?.data?.id) {
         clearInput();
+        localStorage.removeItem("searchedDogImage");
         dispatch({
           type: "ADD_NEW_REPORT",
           payload: json.data,

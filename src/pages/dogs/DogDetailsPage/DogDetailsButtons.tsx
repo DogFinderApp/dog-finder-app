@@ -6,7 +6,6 @@ import { IconArrowLeft, TablerIconsProps } from "@tabler/icons-react";
 import { AppTexts } from "../../../consts/texts";
 import { AppRoutes } from "../../../consts/routes";
 import { useGetServerApi } from "../../../facades/ServerApi";
-import { encryptData } from "../../../utils/encryptionUtils";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
 import { DogType } from "../../../types/payload.types";
 import { useAuthContext } from "../../../context/useAuthContext";
@@ -14,6 +13,7 @@ import { createStyleHook } from "../../../hooks/styleHooks";
 import { useWindowSize } from "../../../hooks/useWindowSize";
 import ReportSelectModal from "../../../components/Modals/ReportSelectModal";
 import { QuickReportModal } from "../../../components/Modals/QuickReportModal";
+import { RedirectToAuth0Modal } from "../../../components/Modals/RedirectToAuth0Modal";
 import WhatsappIcon from "../../../assets/svg/whatsapp.svg";
 
 interface DogDetailsButtonsStyle {
@@ -98,7 +98,7 @@ export const DogDetailsButtons = ({
   const {
     state: { reports, isFetchingReports },
   } = useAuthContext();
-  const { user, loginWithRedirect } = useAuth0();
+  const { user } = useAuth0();
   const getServerApi = useGetServerApi();
   const navigate = useNavigate();
   const { isTablet } = useWindowSize();
@@ -123,6 +123,8 @@ export const DogDetailsButtons = ({
   const [selectReportModalOpen, setSelectReportModalOpen] =
     useState<boolean>(false);
   const [quickModalOpen, setQuickModalOpen] = useState<boolean>(false);
+  const [authRedirectModalOpen, setAuthRedirectModalOpen] =
+    useState<boolean>(false);
   // if the user clicked the whatsapp button and got redirected to this page after authenticating,
   // check if we can open the quick report modal / select report modal and update this state so that
   // it won't open again automatically
@@ -147,19 +149,14 @@ export const DogDetailsButtons = ({
 
   const handleCTAButton = (possibleMatchId: number | undefined) => {
     if (!user) {
-      encryptData("dog_id_to_redirect", `${dogIdFromUrl}`);
-      loginWithRedirect({
-        authorizationParams: {
-          redirect_uri: `${window.location.origin}/dogs/redirect`,
-        },
-      });
+      setAuthRedirectModalOpen(true);
       return;
     }
     if (!reports || !userOppositeReports.length) {
       setQuickModalOpen(true);
       return;
     }
-    if (userOppositeReports?.length > 1) {
+    if (userOppositeReports?.length > 1 && !reporterIsCurrentUser) {
       setSelectReportModalOpen(true);
       return;
     }
@@ -274,6 +271,13 @@ export const DogDetailsButtons = ({
         getWhatsappMessage={getWhatsappMessage}
         possibleMatch={dogData}
         contactNumber={contactNumber}
+      />
+      <RedirectToAuth0Modal
+        type="sendWhatsapp"
+        open={authRedirectModalOpen}
+        setOpen={setAuthRedirectModalOpen}
+        redirectUri={`${window.location.origin}/dogs/redirect`}
+        dogIdFromUrl={dogIdFromUrl}
       />
       <Button
         size="large"

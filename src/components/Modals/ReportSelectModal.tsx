@@ -255,7 +255,7 @@ export default function ReportSelectModal({
             </Button>
           </Link>
         </Tooltip>
-        <Button autoFocus onClick={handleClose} sx={styles.cancelButton}>
+        <Button onClick={handleClose} sx={styles.cancelButton}>
           {cancelText}
         </Button>
       </DialogActions>
