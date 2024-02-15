@@ -31,6 +31,7 @@ const useReportModalStyles = createStyleHook(() => ({
     maxWidth: "90%",
     marginX: "auto",
     textWrap: { sm: "balance" },
+    textAlign: "center",
   },
   inputContainer: { width: "90%", marginX: "auto" },
   buttonsContainer: {

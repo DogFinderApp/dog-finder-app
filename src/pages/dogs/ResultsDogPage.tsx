@@ -95,6 +95,11 @@ export const ResultsDogPage = () => {
     }, 2500);
   }, [isLoading, loadingText, setLoadingText, loadingTextOptions]);
 
+  useEffect(() => {
+    // fix issue in mobile: scrolls to page bottom when results arrive
+    if (results) window.scroll({ top: 0 });
+  }, [results]);
+
   const isEmpty = results?.length === 0;
   const noResults = !isLoading && isEmpty && !error;
 
