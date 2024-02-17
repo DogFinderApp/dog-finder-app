@@ -1,10 +1,11 @@
-import { useState, MouseEvent, useEffect, useMemo, useCallback } from "react";
-import { Link, To, useNavigate } from "react-router-dom";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { To, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Button, Typography } from "@mui/material";
 import { IconArrowLeft, TablerIconsProps } from "@tabler/icons-react";
 import { AppTexts } from "../../../consts/texts";
 import { AppRoutes } from "../../../consts/routes";
+import { decryptData } from "../../../utils/encryptionUtils";
 import { useGetServerApi } from "../../../facades/ServerApi";
 import { DogDetailsReturnType } from "../../../types/DogDetailsTypes";
 import { DogType } from "../../../types/payload.types";
@@ -13,7 +14,7 @@ import { createStyleHook } from "../../../hooks/styleHooks";
 import { useWindowSize } from "../../../hooks/useWindowSize";
 import ReportSelectModal from "../../../components/Modals/ReportSelectModal";
 import { QuickReportModal } from "../../../components/Modals/QuickReportModal";
-import { RedirectToAuth0Modal } from "../../../components/Modals/RedirectToAuth0Modal";
+import { GenericTwoOptionsModal } from "../../../components/Modals/GenericTwoOptionsModal";
 import WhatsappIcon from "../../../assets/svg/whatsapp.svg";
 
 interface DogDetailsButtonsStyle {
@@ -57,6 +58,11 @@ const useDogDetailsButtonsStyles = createStyleHook(
     },
   }),
 );
+
+const commonIconProps: TablerIconsProps = {
+  style: { marginRight: "0.5rem" },
+  stroke: 1.5,
+};
 
 const reportPossibleMatch = async (
   payload: {
@@ -112,9 +118,9 @@ export const DogDetailsButtons = ({
     ? []
     : reports.map((report) => report.id);
 
-  const dogIdFromUrl = Number(window.location.pathname.split("/dogs/")[1]);
-  const reporterIsCurrentUser: boolean = userReportsIds.includes(dogIdFromUrl);
-
+  const dogIdFromUrl = window.location.pathname.split("/dogs/")[1];
+  const cleanDogId = Number(dogIdFromUrl.split("/")[0]);
+  const reporterIsCurrentUser: boolean = userReportsIds.includes(cleanDogId);
   // we must make sure to NOT disable the button when there's no user, because we use that button
   // to authenticateWithRedirect in that case
   const buttonDisabled = !!user && reporterIsCurrentUser;
@@ -125,6 +131,10 @@ export const DogDetailsButtons = ({
   const [quickModalOpen, setQuickModalOpen] = useState<boolean>(false);
   const [authRedirectModalOpen, setAuthRedirectModalOpen] =
     useState<boolean>(false);
+  // opens the modal to ask the user if they want to use an existing report or create a new one
+  const [useExistingReportModal, setUseExistingReportModal] = useState<
+    true | false | "stale"
+  >(false);
   // if the user clicked the whatsapp button and got redirected to this page after authenticating,
   // check if we can open the quick report modal / select report modal and update this state so that
   // it won't open again automatically
@@ -139,15 +149,7 @@ export const DogDetailsButtons = ({
     ? userOppositeReports[userOppositeReports.length - 1]?.id
     : null;
 
-  const handleLinkClick = (event: MouseEvent<HTMLAnchorElement>) =>
-    (!user ||
-      buttonDisabled ||
-      !userOppositeReports ||
-      !userOppositeReports?.length ||
-      userOppositeReports.length > 1) &&
-    event.preventDefault();
-
-  const handleCTAButton = (possibleMatchId: number | undefined) => {
+  const handleCTAButton = () => {
     if (!user) {
       setAuthRedirectModalOpen(true);
       return;
@@ -156,12 +158,7 @@ export const DogDetailsButtons = ({
       setQuickModalOpen(true);
       return;
     }
-    if (userOppositeReports?.length > 1 && !reporterIsCurrentUser) {
-      setSelectReportModalOpen(true);
-      return;
-    }
-    if (possibleMatchId && !reporterIsCurrentUser)
-      reportPossibleMatch({ lastReportedId, possibleMatchId }, getServerApi);
+    if (!reporterIsCurrentUser) setUseExistingReportModal(true);
   };
 
   const getWhatsappMessage = useCallback(
@@ -205,9 +202,26 @@ export const DogDetailsButtons = ({
   const buttonDisabledText =
     disabledButtonText[!user ? "noUser" : "reporterIsCurrentUser"];
 
-  const commonIconProps: TablerIconsProps = {
-    style: { marginRight: "0.5rem" },
-    stroke: 1.5,
+  const primaryButtonClick = () => {
+    setUseExistingReportModal("stale");
+    if (userOppositeReports.length === 1 && dogData) {
+      reportPossibleMatch(
+        { lastReportedId, possibleMatchId: dogData?.id },
+        getServerApi,
+      );
+      const updatedWhatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
+        true,
+      )}`;
+      window.open(updatedWhatsappLink, "_blank", "rel=noopener noreferrer");
+    }
+    if (userOppositeReports.length > 1) {
+      setSelectReportModalOpen(true);
+    }
+  };
+
+  const secondaryButtonClick = () => {
+    setUseExistingReportModal("stale");
+    setQuickModalOpen(true);
   };
 
   // ? simulate a "whatsapp button" click if the user was redirected from Auth0,
@@ -219,20 +233,32 @@ export const DogDetailsButtons = ({
     if (
       isRedirectedAfterAuth &&
       user &&
+      !reporterIsCurrentUser &&
       !isFetchingReports && // make sure we already checked if the user has reports
       !modalOpenedAfterAuth // make sure this only happens once
     ) {
-      if (!userOppositeReports.length) setQuickModalOpen(true);
-      if (userOppositeReports.length > 1) setSelectReportModalOpen(true);
-      if (userOppositeReports.length === 1 && dogData) {
-        reportPossibleMatch(
-          { lastReportedId, possibleMatchId: dogData?.id },
-          getServerApi,
-        );
-        const updatedWhatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
-          true,
-        )}`;
-        window.open(updatedWhatsappLink, "_blank", "rel=noopener noreferrer");
+      if (!userOppositeReports.length) {
+        setQuickModalOpen(true);
+      }
+      if (
+        userOppositeReports.length &&
+        decryptData("searchedDogImage") &&
+        !useExistingReportModal
+      ) {
+        // if we have a memorized image we will ask the user if they wish to create a new report or use an existing one
+        setUseExistingReportModal(true);
+      } else {
+        if (userOppositeReports.length > 1) setSelectReportModalOpen(true);
+        if (userOppositeReports.length === 1 && dogData) {
+          reportPossibleMatch(
+            { lastReportedId, possibleMatchId: dogData?.id },
+            getServerApi,
+          );
+          const updatedWhatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
+            true,
+          )}`;
+          window.open(updatedWhatsappLink, "_blank", "rel=noopener noreferrer");
+        }
       }
 
       setModalOpenedAfterAuth(true);
@@ -240,6 +266,7 @@ export const DogDetailsButtons = ({
   }, [
     user,
     userOppositeReports,
+    reporterIsCurrentUser,
     modalOpenedAfterAuth,
     isFetchingReports,
     whatsappLink,
@@ -248,6 +275,7 @@ export const DogDetailsButtons = ({
     lastReportedId,
     dogData,
     getServerApi,
+    useExistingReportModal,
   ]);
 
   return (
@@ -261,6 +289,8 @@ export const DogDetailsButtons = ({
         possibleMatch={dogData}
         getWhatsappMessage={getWhatsappMessage}
         contactNumber={contactNumber}
+        useExistingReportModal={useExistingReportModal}
+        setUseExistingReportModal={setUseExistingReportModal}
       />
       <ReportSelectModal
         isModalOpen={selectReportModalOpen}
@@ -271,13 +301,26 @@ export const DogDetailsButtons = ({
         getWhatsappMessage={getWhatsappMessage}
         possibleMatch={dogData}
         contactNumber={contactNumber}
+        useExistingReportModal={useExistingReportModal}
+        setUseExistingReportModal={setUseExistingReportModal}
       />
-      <RedirectToAuth0Modal
-        type="sendWhatsapp"
+      <GenericTwoOptionsModal
+        type="redirectToAuth0"
         open={authRedirectModalOpen}
         setOpen={setAuthRedirectModalOpen}
+        textType="sendWhatsapp"
         redirectUri={`${window.location.origin}/dogs/redirect`}
-        dogIdFromUrl={dogIdFromUrl}
+        dogIdFromUrl={cleanDogId}
+      />
+      <GenericTwoOptionsModal
+        type="useExistingReportOrCreateNew"
+        open={useExistingReportModal}
+        setOpen={setUseExistingReportModal}
+        secondaryButtonClick={secondaryButtonClick}
+        primaryButtonClick={primaryButtonClick}
+        textType="sendWhatsapp"
+        redirectUri={`${window.location.origin}/dogs/redirect`}
+        dogIdFromUrl={cleanDogId}
       />
       <Button
         size="large"
@@ -297,34 +340,22 @@ export const DogDetailsButtons = ({
           </Typography>
         )}
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-        <Link
-          to={
-            !user || buttonDisabled || !userOppositeReports?.length
-              ? "#"
-              : whatsappLink
-          }
-          onClick={handleLinkClick}
-          aria-disabled={buttonDisabled}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Button
+          size="large"
+          variant="contained"
+          sx={styles.contactBtnStyle}
+          disableRipple={buttonDisabled}
+          disableFocusRipple={buttonDisabled}
+          disableTouchRipple={buttonDisabled}
+          onClick={handleCTAButton}
         >
-          <Button
-            size="large"
-            variant="contained"
-            sx={styles.contactBtnStyle}
-            disableRipple={buttonDisabled}
-            disableFocusRipple={buttonDisabled}
-            disableTouchRipple={buttonDisabled}
-            onClick={() => handleCTAButton(dogData?.id)}
-          >
-            <img
-              src={WhatsappIcon}
-              alt="Whatsapp"
-              style={{ marginRight: "4px" }}
-            />
-            {whatsappButton}
-          </Button>
-        </Link>
+          <img
+            src={WhatsappIcon}
+            alt="Whatsapp"
+            style={{ marginRight: "4px" }}
+          />
+          {whatsappButton}
+        </Button>
       </Box>
     </Box>
   );

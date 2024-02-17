@@ -10,6 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { AppTexts } from "../../consts/texts";
 import { cleanImage } from "../../utils/imageUtils";
+import { decryptData } from "../../utils/encryptionUtils";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { useAuthContext } from "../../context/useAuthContext";
 import { createStyleHook } from "../../hooks/styleHooks";
@@ -64,6 +65,8 @@ interface QuickReportModalProps {
     quickReportDogId: number,
   ) => string;
   contactNumber: string;
+  useExistingReportModal: true | false | "stale";
+  setUseExistingReportModal: Dispatch<SetStateAction<true | false | "stale">>;
 }
 
 export const QuickReportModal = ({
@@ -75,6 +78,8 @@ export const QuickReportModal = ({
   possibleMatch,
   getWhatsappMessage,
   contactNumber,
+  useExistingReportModal,
+  setUseExistingReportModal,
 }: QuickReportModalProps) => {
   const getServerApi = useGetServerApi();
   const { dispatch } = useAuthContext();
@@ -141,6 +146,12 @@ export const QuickReportModal = ({
   const inputHelperText = !isPhoneValid ? helperTexts.phone : "";
   const handleClose = () => setOpen(false);
 
+  const goBackClick = () => {
+    handleClose();
+    if (decryptData("searchedDogImage") && useExistingReportModal === "stale")
+      setUseExistingReportModal(true);
+  };
+
   return (
     <Dialog
       open={open}
@@ -189,7 +200,7 @@ export const QuickReportModal = ({
             </>
           )}
         </Button>
-        <Button onClick={handleClose} sx={styles.cancelButton}>
+        <Button onClick={goBackClick} sx={styles.cancelButton}>
           {goBackText}
         </Button>
       </DialogActions>

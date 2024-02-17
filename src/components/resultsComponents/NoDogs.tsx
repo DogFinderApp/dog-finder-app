@@ -13,7 +13,7 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import { DogType } from "../../types/payload.types";
 import { AppRoutes } from "../../consts/routes";
 import { AppTexts } from "../../consts/texts";
-import { RedirectToAuth0Modal } from "../Modals/RedirectToAuth0Modal";
+import { GenericTwoOptionsModal } from "../Modals/GenericTwoOptionsModal";
 
 const useNoResultsStyles = createStyleHook(
   (theme, { onlyNewReportButton }: { onlyNewReportButton?: boolean }) => ({
@@ -149,10 +149,11 @@ export const NoDogs = ({
 
   return (
     <Box sx={styles.content}>
-      <RedirectToAuth0Modal
-        type="newReport"
+      <GenericTwoOptionsModal
         open={authRedirectModalOpen}
         setOpen={setAuthRedirectModalOpen}
+        type="redirectToAuth0"
+        textType="newReport"
         redirectUri={window.location.origin + newReportRoute}
       />
       {!onlyNewReportButton && (

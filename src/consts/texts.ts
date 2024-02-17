@@ -252,6 +252,13 @@ export const AppTexts = {
       continueText: "המשך",
       cancelText: "חזרה",
     },
+    useExistingReportOrCreateNew: {
+      title: "משתמשים יקרים",
+      description:
+        "בשביל ליצור קשר עם המדווח/ת יש ליצור דיווח קודם. האם ברצונכם להשתמש בדיווח קיים או ליצור דיווח חדש?",
+      continueText: "שימוש בדיווח קיים",
+      cancelText: "יצירת דיווח חדש",
+    },
     reportSubmitted: {
       title: "הדיווח נקלט בהצלחה",
       preText: "אנו מקווים שתמצאו את כלבכם בקרוב!",
