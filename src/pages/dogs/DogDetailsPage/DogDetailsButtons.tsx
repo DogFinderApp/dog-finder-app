@@ -90,13 +90,11 @@ const reportPossibleMatch = async (
 interface DogDetailsButtonsProps {
   dogData: DogDetailsReturnType | null;
   dogType: DogType;
-  dogImage: string;
 }
 
 export const DogDetailsButtons = ({
   dogData,
   dogType,
-  dogImage,
 }: DogDetailsButtonsProps) => {
   const { whatsappButton, disabledButtonText, backButton, whatsappTexts } =
     AppTexts.dogDetails;
@@ -284,7 +282,6 @@ export const DogDetailsButtons = ({
         open={quickModalOpen}
         setOpen={setQuickModalOpen}
         dogType={dogType}
-        dogImage={dogImage}
         reportPossibleMatch={reportPossibleMatch}
         possibleMatch={dogData}
         getWhatsappMessage={getWhatsappMessage}
