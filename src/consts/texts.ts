@@ -235,13 +235,16 @@ export const AppTexts = {
     },
     quickReport: {
       title: "הוספת מספר טלפון",
+      submittedTitle: "אפשר להמשיך!",
       description: {
         found: "כדי להתחבר עם האדם שמצא את הכלב, אנו זקוקים למספר הטלפון שלך.",
         lost: "כדי להתחבר עם האדם שאיבד את הכלב, אנו זקוקים למספר הטלפון שלך.",
+        submitted: "כעת ניתן ליצור קשר עם מפרסם/ת הדיווח",
       },
       goBackText: "חזרה",
       submitText: "שליחה",
-      submittingText: "מיד תועברו למפרסם/ת הדיווח",
+      submittingText: "שולח",
+      contactReporter: "פנייה למפרסם/ת הדיווח",
     },
     redirectToAuth0: {
       title: "משתמשים יקרים",
@@ -255,8 +258,8 @@ export const AppTexts = {
     useExistingReportOrCreateNew: {
       title: "משתמשים יקרים",
       description:
-        "בשביל ליצור קשר עם המדווח/ת יש ליצור דיווח קודם. האם ברצונכם להשתמש בדיווח קיים או ליצור דיווח חדש?",
-      continueText: "שימוש בדיווח קיים",
+        "על מנת ליצור קשר יש ליצור דיווח. האם ברצונכם ליצור דיווח עדכני עם התמונה הנוכחית, או להשתמש בדיווח קודם שלכם?",
+      continueText: "שימוש בדיווח קודם",
       cancelText: "יצירת דיווח חדש",
     },
     reportSubmitted: {

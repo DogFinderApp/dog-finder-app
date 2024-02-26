@@ -69,7 +69,7 @@ export const GenericTwoOptionsModal = ({
             : modalTexts.description}
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ pb: 2 }}>
         <Button
           onClick={primaryButtonClick ?? redirectToAuth0}
           autoFocus={redirectToAuth0Type}
