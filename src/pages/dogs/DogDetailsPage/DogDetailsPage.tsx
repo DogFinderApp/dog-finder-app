@@ -198,7 +198,6 @@ export const DogDetailsPage = () => {
           <DogDetailsButtons
             dogData={data}
             dogType={data?.type ?? DogType.FOUND} // for the quick report modal
-            dogImage={image} // for the quick report modal
           />
         </Box>
         <Box sx={fetchedDataContainer}>

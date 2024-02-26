@@ -58,7 +58,6 @@ interface QuickReportModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   dogType: DogType;
-  dogImage: string;
   reportPossibleMatch: Function;
   possibleMatch: DogDetailsReturnType | null; // current dog in DogDetailsPage
   getWhatsappMessage: (
@@ -74,7 +73,6 @@ export const QuickReportModal = ({
   open,
   setOpen,
   dogType,
-  dogImage,
   reportPossibleMatch,
   possibleMatch,
   getWhatsappMessage,
@@ -107,10 +105,12 @@ export const QuickReportModal = ({
   const fetcher = async () => {
     const oppositeDogType =
       dogType === DogType.FOUND ? DogType.LOST : DogType.FOUND;
+    const memorizedDogImage: string | undefined =
+      decryptData("searchedDogImage");
     const payload: QuickReportPayload = {
       type: oppositeDogType,
       contactPhone: value,
-      base64Images: [cleanImage(dogImage)],
+      base64Images: [cleanImage(memorizedDogImage ?? "")],
     };
     try {
       const serverApi = await getServerApi();
