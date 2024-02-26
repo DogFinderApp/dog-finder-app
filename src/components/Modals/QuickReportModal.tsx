@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
+import { Link } from "react-router-dom";
 import useSWR from "swr";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -10,6 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { AppTexts } from "../../consts/texts";
 import { cleanImage } from "../../utils/imageUtils";
+import { decryptData } from "../../utils/encryptionUtils";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { useAuthContext } from "../../context/useAuthContext";
 import { createStyleHook } from "../../hooks/styleHooks";
@@ -64,6 +66,8 @@ interface QuickReportModalProps {
     quickReportDogId: number,
   ) => string;
   contactNumber: string;
+  useExistingReportModal: true | false | "stale";
+  setUseExistingReportModal: Dispatch<SetStateAction<true | false | "stale">>;
 }
 
 export const QuickReportModal = ({
@@ -75,15 +79,26 @@ export const QuickReportModal = ({
   possibleMatch,
   getWhatsappMessage,
   contactNumber,
+  useExistingReportModal,
+  setUseExistingReportModal,
 }: QuickReportModalProps) => {
   const getServerApi = useGetServerApi();
   const { dispatch } = useAuthContext();
   const styles = useReportModalStyles();
   const { isMobile } = useWindowSize();
   const [readyToSubmit, setReadyToSubmit] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [newReportId, setNewReportId] = useState<number | undefined>(undefined);
 
-  const { title, description, goBackText, submitText, submittingText } =
-    AppTexts.modals.quickReport;
+  const {
+    title,
+    description,
+    goBackText,
+    submitText,
+    submittingText,
+    contactReporter,
+    submittedTitle,
+  } = AppTexts.modals.quickReport;
   const { helperTexts } = AppTexts.reportPage;
 
   const { value, onPhoneChange, isPhoneValid, validateInput, clearInput } =
@@ -113,14 +128,10 @@ export const QuickReportModal = ({
           possibleMatchId: possibleMatch?.id,
           selectedReportId: json.data.id,
         };
-        reportPossibleMatch(newPayload, getServerApi);
-        const updatedWhatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
-          true,
-          json.data.id,
-        )}`;
-        window.open(updatedWhatsappLink, "_blank", "rel=noopener noreferrer");
         setReadyToSubmit(false);
-        setOpen(false);
+        reportPossibleMatch(newPayload, getServerApi);
+        setNewReportId(json.data.id);
+        setSubmitted(true);
         return;
       }
       setReadyToSubmit(false);
@@ -141,6 +152,17 @@ export const QuickReportModal = ({
   const inputHelperText = !isPhoneValid ? helperTexts.phone : "";
   const handleClose = () => setOpen(false);
 
+  const goBackClick = () => {
+    handleClose();
+    if (decryptData("searchedDogImage") && useExistingReportModal === "stale")
+      setUseExistingReportModal(true);
+  };
+
+  const whatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
+    true,
+    newReportId as number,
+  )}`;
+
   return (
     <Dialog
       open={open}
@@ -148,48 +170,63 @@ export const QuickReportModal = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       dir="rtl"
+      fullWidth
     >
-      <DialogTitle sx={styles.title}>{title}</DialogTitle>
+      <DialogTitle sx={styles.title}>
+        {submitted ? submittedTitle : title}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description" sx={styles.content}>
-          {description[dogType]}
+          {/* eslint-disable-next-line */}
+          {submitted ? description["submitted"] : description[dogType]}
         </DialogContentText>
       </DialogContent>
-      <DialogActions sx={styles.inputContainer}>
-        <RTLTextField
-          required
-          fullWidth
-          label="מספר טלפון"
-          type="text"
-          margin="normal"
-          value={value}
-          onChange={onPhoneChange}
-          error={!isPhoneValid}
-          helperText={inputHelperText}
-          placeholder={helperTexts.phonePlaceholder}
-        />
-      </DialogActions>
+      {!submitted && (
+        <DialogActions sx={styles.inputContainer}>
+          <RTLTextField
+            required
+            fullWidth
+            label="מספר טלפון"
+            type="text"
+            margin="normal"
+            value={value}
+            onChange={onPhoneChange}
+            error={!isPhoneValid}
+            helperText={inputHelperText}
+            placeholder={helperTexts.phonePlaceholder}
+          />
+        </DialogActions>
+      )}
       <DialogActions sx={styles.buttonsContainer}>
-        <Button onClick={handleSubmitForm} sx={styles.continueButton}>
-          {!isLoading ? (
-            submitText
-          ) : (
-            <>
-              {!isMobile && (
-                <Typography
-                  sx={{ textDecoration: !isLoading ? "none" : "underline" }}
-                >
-                  {submittingText}
-                </Typography>
-              )}
-              <CircularProgress
-                size={isMobile ? 24 : 20}
-                sx={styles.CircularProgress}
-              />
-            </>
-          )}
-        </Button>
-        <Button onClick={handleClose} sx={styles.cancelButton}>
+        {submitted ? (
+          <Link to={whatsappLink} target="_blank" rel="noopener noreferrer">
+            <Button sx={styles.continueButton}>{contactReporter}</Button>
+          </Link>
+        ) : (
+          <Button onClick={handleSubmitForm} sx={styles.continueButton}>
+            {!isLoading ? (
+              submitText
+            ) : (
+              <>
+                {!isMobile && (
+                  <Typography
+                    sx={{ textDecoration: !isLoading ? "none" : "underline" }}
+                  >
+                    {submittingText}
+                  </Typography>
+                )}
+                <CircularProgress
+                  size={isMobile ? 24 : 20}
+                  sx={styles.CircularProgress}
+                />
+              </>
+            )}
+          </Button>
+        )}
+        <Button
+          onClick={submitted ? handleClose : goBackClick}
+          sx={styles.cancelButton}
+        >
           {goBackText}
         </Button>
       </DialogActions>

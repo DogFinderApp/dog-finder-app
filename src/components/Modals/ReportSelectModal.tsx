@@ -8,6 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Box, Grid, Tooltip, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { matchGender } from "../../utils/matchGenderText";
+import { decryptData } from "../../utils/encryptionUtils";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { AppTexts } from "../../consts/texts";
 import { useAuthContext } from "../../context/useAuthContext";
@@ -88,6 +89,8 @@ interface ReportSelectProps {
   getWhatsappMessage: (revereDogType: boolean) => string;
   possibleMatch: DogDetailsReturnType | null;
   contactNumber: string;
+  useExistingReportModal: true | false | "stale";
+  setUseExistingReportModal: Dispatch<SetStateAction<true | false | "stale">>;
 }
 
 export default function ReportSelectModal({
@@ -99,6 +102,8 @@ export default function ReportSelectModal({
   getWhatsappMessage,
   possibleMatch,
   contactNumber,
+  useExistingReportModal,
+  setUseExistingReportModal,
 }: ReportSelectProps) {
   const styles = useReportSelectStyles({ selectedReportId });
   const getServerApi = useGetServerApi();
@@ -135,6 +140,13 @@ export default function ReportSelectModal({
       setPage(1);
       paginatedReports.jump(1);
     }, 500);
+  };
+
+  const handleGoBack = () => {
+    handleClose();
+    if (decryptData("searchedDogImage") && useExistingReportModal === "stale") {
+      setUseExistingReportModal(true);
+    }
   };
 
   const handleConfirm = () => {
@@ -255,7 +267,7 @@ export default function ReportSelectModal({
             </Button>
           </Link>
         </Tooltip>
-        <Button onClick={handleClose} sx={styles.cancelButton}>
+        <Button onClick={handleGoBack} sx={styles.cancelButton}>
           {cancelText}
         </Button>
       </DialogActions>
