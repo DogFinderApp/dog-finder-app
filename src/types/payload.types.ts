@@ -11,13 +11,13 @@ export enum DogSex {
 }
 
 export interface QueryPayload {
-  dogType: DogType;
+  type: DogType;
   base64Image: string;
 }
 
 export interface ReportDogPayload {
   type: DogType;
-  base64Images: Array<string>;
+  base64Images: string[];
   contactName: string;
   contactPhone: string;
   contactEmail?: string;
@@ -31,6 +31,12 @@ export interface ReportDogPayload {
   chipNumber: string;
   extraDetails?: string;
   ageGroup?: string;
+}
+
+export interface QuickReportPayload {
+  type: DogType;
+  base64Images: string[];
+  contactPhone: string;
 }
 
 export interface DogResult {

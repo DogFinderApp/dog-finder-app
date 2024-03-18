@@ -63,7 +63,7 @@ export const Footer = () => {
   return (
     <Box sx={styles.footerWrapper}>
       <a
-        href="https://wa.me/+972526101997"
+        href="https://wa.link/p16vxx"
         target="_blank"
         rel="noopener noreferrer"
         onMouseEnter={() => setIsHover(true)}

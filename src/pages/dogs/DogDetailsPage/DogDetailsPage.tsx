@@ -195,7 +195,10 @@ export const DogDetailsPage = () => {
               {title}
             </Typography>
           </Box>
-          <DogDetailsButtons data={data} />
+          <DogDetailsButtons
+            dogData={data}
+            dogType={data?.type ?? DogType.FOUND} // for the quick report modal
+          />
         </Box>
         <Box sx={fetchedDataContainer}>
           <CardMedia

@@ -8,6 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Box, Grid, Tooltip, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { matchGender } from "../../utils/matchGenderText";
+import { decryptData } from "../../utils/encryptionUtils";
 import { useGetServerApi } from "../../facades/ServerApi";
 import { AppTexts } from "../../consts/texts";
 import { useAuthContext } from "../../context/useAuthContext";
@@ -85,9 +86,11 @@ interface ReportSelectProps {
   selectedReportId: number | null;
   setSelectedReportId: Dispatch<SetStateAction<number | null>>;
   confirmFunction: Function;
-  getWhatsappMessage: () => string;
+  getWhatsappMessage: (revereDogType: boolean) => string;
   possibleMatch: DogDetailsReturnType | null;
   contactNumber: string;
+  useExistingReportModal: true | false | "stale";
+  setUseExistingReportModal: Dispatch<SetStateAction<true | false | "stale">>;
 }
 
 export default function ReportSelectModal({
@@ -99,6 +102,8 @@ export default function ReportSelectModal({
   getWhatsappMessage,
   possibleMatch,
   contactNumber,
+  useExistingReportModal,
+  setUseExistingReportModal,
 }: ReportSelectProps) {
   const styles = useReportSelectStyles({ selectedReportId });
   const getServerApi = useGetServerApi();
@@ -107,7 +112,9 @@ export default function ReportSelectModal({
     state: { reports },
   } = useAuthContext();
 
-  const updatedWhatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage()}`;
+  const updatedWhatsappLink = `https://wa.me/${contactNumber}/?text=${getWhatsappMessage(
+    true,
+  )}`;
   // we need to store the whatsapp link in state in order to modify it when the user selects a report.
   // each time we use `updatedWhatsappLink` we call getWhatsappMessage() to get the latest version of the text
   const [whatsappLink, setWhatsappLink] = useState<string>(updatedWhatsappLink);
@@ -133,6 +140,13 @@ export default function ReportSelectModal({
       setPage(1);
       paginatedReports.jump(1);
     }, 500);
+  };
+
+  const handleGoBack = () => {
+    handleClose();
+    if (decryptData("searchedDogImage") && useExistingReportModal === "stale") {
+      setUseExistingReportModal(true);
+    }
   };
 
   const handleConfirm = () => {
@@ -253,7 +267,7 @@ export default function ReportSelectModal({
             </Button>
           </Link>
         </Tooltip>
-        <Button autoFocus onClick={handleClose} sx={styles.cancelButton}>
+        <Button onClick={handleGoBack} sx={styles.cancelButton}>
           {cancelText}
         </Button>
       </DialogActions>

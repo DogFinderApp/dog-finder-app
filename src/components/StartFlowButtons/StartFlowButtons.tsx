@@ -30,7 +30,6 @@ export const StartFlowButtons = ({ alignRight }: { alignRight?: boolean }) => {
   };
 
   const commonButtonProps: ButtonOwnProps = {
-    size: "large",
     variant: "contained",
     sx: styles.button,
   };
@@ -43,18 +42,30 @@ export const StartFlowButtons = ({ alignRight }: { alignRight?: boolean }) => {
     justifyContent: "center",
   };
 
+  const scrollAfterNavigation = () => window.scroll({ top: 0 });
+
+  const { foundDog, lostDog } = AppTexts.homePage.buttons;
+
   return (
     <Box sx={styles.content}>
-      <Link to={AppRoutes.dogs.reportLost} style={linkStyles}>
+      <Link
+        to={AppRoutes.dogs.searchFoundDog}
+        style={linkStyles}
+        onClick={scrollAfterNavigation}
+      >
         <Button {...commonButtonProps}>
           <IconSearch {...commonIconProps} />
-          {AppTexts.navigation.reportLost}
+          {lostDog}
         </Button>
       </Link>
-      <Link to={AppRoutes.dogs.reportFound} style={linkStyles}>
+      <Link
+        to={AppRoutes.dogs.searchLostDog}
+        style={linkStyles}
+        onClick={scrollAfterNavigation}
+      >
         <Button {...commonButtonProps}>
           <IconPaw {...commonIconProps} />
-          {AppTexts.navigation.reportFound}
+          {foundDog}
         </Button>
       </Link>
     </Box>

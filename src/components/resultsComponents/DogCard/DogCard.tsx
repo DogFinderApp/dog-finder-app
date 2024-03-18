@@ -155,6 +155,7 @@ export const DogCard = ({
     navigate(url, {
       state: { type: dogTypeToSearch, base64Image: dog.imageBase64 },
     });
+    window.scroll({ top: 0 });
   };
 
   const openDeleteReportModal = () => setIsDeleteModalOpen(true);
@@ -202,8 +203,8 @@ export const DogCard = ({
     <>
       <DeleteReportModal
         open={isDeleteModalOpen}
-        isDeleting={isDeleting}
         setOpen={setIsDeleteModalOpen}
+        isDeleting={isDeleting}
         deleteFunction={deleteReport}
       />
       <Card

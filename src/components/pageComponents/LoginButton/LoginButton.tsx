@@ -5,9 +5,12 @@ import { AppTexts } from "../../../consts/texts";
 export const LoginButton = () => {
   const { loginWithRedirect } = useAuth0();
 
-  return (
-    <Button onClick={() => loginWithRedirect()}>
-      {AppTexts.authPage.loginCta}
-    </Button>
-  );
+  const onClick = () =>
+    loginWithRedirect({
+      authorizationParams: {
+        redirect_uri: window.location.origin,
+      },
+    });
+
+  return <Button onClick={onClick}>{AppTexts.authPage.loginCta}</Button>;
 };

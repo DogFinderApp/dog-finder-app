@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   Alert,
   AlertColor,
@@ -13,13 +12,13 @@ import {
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { IconSend } from "@tabler/icons-react";
 import { AppTexts } from "../../../consts/texts";
-import { AppRoutes } from "../../../consts/routes";
 import {
   DogType,
   ReportDogPayload,
   DogResult,
 } from "../../../types/payload.types";
 import { useGetServerApi } from "../../../facades/ServerApi";
+import { checkForMatchingDogs } from "../../../utils/checkForMatchingDogs";
 import { cleanImage } from "../../../utils/imageUtils";
 import { dateToString } from "../../../utils/datesFormatter";
 import { createStyleHook } from "../../../hooks/styleHooks";
@@ -33,6 +32,7 @@ import { RTLTextField } from "../../../components/pageComponents/RTLTextInput/RT
 import DatePicker from "../../../components/DatePicker/DatePicker";
 import { SelectInputField } from "../../../components/pageComponents/SelectInput/SelectInput";
 import MatchingReportModal from "../../../components/Modals/MatchingReportModal";
+import ReportSubmittedModal from "../../../components/Modals/ReportSubmittedModal";
 import { useReportDogInputs } from "./useFormInputs";
 
 const useReportDogPageStyles = createStyleHook(
@@ -72,16 +72,46 @@ export const ReportDogPage = withAuthenticationRequired(
   ({ dogType }: ReportDogPageProps) => {
     const { dispatch } = useAuthContext();
     const { inputs, getInputsData } = useReportDogInputs();
+    const getServerApi = useGetServerApi();
 
     const [isMissingImage, setIsMissingImage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [requestStatus, setRequestStatus] = useState<string>("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newReportId, setNewReportId] = useState<number | null>(null);
+    const [matchingReportModalOpen, setMatchingReportModalOpen] =
+      useState(false);
+    const [reportSubmittedModalOpen, setReportSubmittedModalOpen] =
+      useState(false);
     const [matchingReports, setMatchingReports] = useState<DogResult[]>([]);
 
     const { onSelectImage, selectedImageUrl, clearSelection } =
-      useImageSelection(dogType, setMatchingReports, setIsModalOpen);
+      useImageSelection(
+        dogType,
+        setMatchingReports,
+        setMatchingReportModalOpen,
+      );
+
+    useEffect(() => {
+      // scroll to top on 1st render
+      window.scroll({ top: 0 });
+      // `checkForMatchingDogs` won't get triggered if we auto-fill the image input with the memorized image.
+      // so if this is the case, we trigger it manually here
+      if (selectedImageUrl) {
+        const payload = {
+          base64Image: cleanImage(selectedImageUrl),
+          type: dogType,
+        };
+        checkForMatchingDogs(
+          payload,
+          getServerApi,
+          setMatchingReports,
+          setMatchingReportModalOpen,
+        );
+      }
+    }, [selectedImageUrl, dogType, getServerApi]);
+
+    const { request, submitText, errorText } = AppTexts.reportPage;
 
     const title =
       dogType === DogType.LOST
@@ -90,9 +120,7 @@ export const ReportDogPage = withAuthenticationRequired(
 
     usePageTitle(title);
     const theme = useTheme();
-    const navigate = useNavigate();
     const styles = useReportDogPageStyles({ isError: showErrorMessage });
-    const getServerApi = useGetServerApi();
 
     const clearInputs = () => {
       Object.values(inputs).forEach((input) => {
@@ -102,16 +130,6 @@ export const ReportDogPage = withAuthenticationRequired(
     };
 
     const handleCloseError = () => setRequestStatus("");
-
-    const navigateToResultsPage = ({
-      base64Image,
-    }: {
-      base64Image: string;
-    }) => {
-      const dogTypeToSearch = dogType === "found" ? "lost" : "found";
-      const url = AppRoutes.dogs.results.replace(":dogType", dogTypeToSearch);
-      navigate(url, { state: { type: dogTypeToSearch, base64Image } });
-    };
 
     const handleSubmitForm = async () => {
       // get server api
@@ -156,15 +174,13 @@ export const ReportDogPage = withAuthenticationRequired(
       try {
         const response = await serverApi.report_dog(payload);
         const json = await response.json();
-        if (json.status_code === 200) {
-          setRequestStatus("success");
+        if (json.status_code === 200 && json?.data?.id) {
           setIsLoading(false);
           clearInputs();
+          localStorage.removeItem("searchedDogImage");
           dispatch({ type: "ADD_NEW_REPORT", payload: json.data });
-          setTimeout(() => {
-            // wait before navigating to results page in order to show the success/error toast
-            navigateToResultsPage({ base64Image });
-          }, 2000);
+          setNewReportId(json.data.id);
+          setReportSubmittedModalOpen(true);
         } else {
           setRequestStatus("error");
           setIsLoading(false);
@@ -175,9 +191,6 @@ export const ReportDogPage = withAuthenticationRequired(
         console.error(error); // eslint-disable-line
       }
     };
-
-    const { reportPage } = AppTexts;
-    const { request } = reportPage;
 
     const successMessage =
       dogType === DogType.LOST
@@ -191,9 +204,15 @@ export const ReportDogPage = withAuthenticationRequired(
       <>
         <MatchingReportModal
           matchingReports={matchingReports}
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
+          isModalOpen={matchingReportModalOpen}
+          setIsModalOpen={setMatchingReportModalOpen}
           dogType={dogType}
+        />
+        <ReportSubmittedModal
+          isModalOpen={reportSubmittedModalOpen}
+          setIsModalOpen={setReportSubmittedModalOpen}
+          dogType={dogType}
+          newReportId={newReportId}
         />
         <PageContainer>
           <Box sx={styles.root}>
@@ -281,7 +300,7 @@ export const ReportDogPage = withAuthenticationRequired(
                   color={theme.palette.error.main}
                   sx={styles.error}
                 >
-                  {reportPage.error}
+                  {errorText}
                 </Typography>
                 <Button
                   variant="contained"
@@ -290,7 +309,7 @@ export const ReportDogPage = withAuthenticationRequired(
                   onClick={handleSubmitForm}
                 >
                   <IconSend style={{ marginRight: "8px" }} />
-                  {reportPage.cta}
+                  {submitText}
                 </Button>
               </>
             )}

@@ -5,8 +5,7 @@ import { useLocation, useParams } from "react-router-dom";
 import usePageTitle from "../../hooks/usePageTitle";
 import { createStyleHook } from "../../hooks/styleHooks";
 import { AppTexts } from "../../consts/texts";
-import { useGetServerApi } from "../../facades/ServerApi";
-import { DogType } from "../../types/payload.types";
+import { DogType, QueryPayload } from "../../types/payload.types";
 import { PageContainer } from "../../components/pageComponents/PageContainer/PageContainer";
 import { PageTitle } from "../../components/pageComponents/PageTitle/PageTitle";
 import { ResultsGrid } from "../../components/resultsComponents/ResultsGrid";
@@ -14,6 +13,16 @@ import { ErrorLoadingDogs } from "../../components/resultsComponents/ErrorLoadin
 import { NoDogs } from "../../components/resultsComponents/NoDogs";
 
 const usePageStyles = createStyleHook(() => ({
+  box: {
+    height: "100%",
+    width: { sm: "90%", xs: "100%" },
+    maxWidth: 1400,
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    px: { sm: 4, xs: 0 },
+  },
   loadingContainer: {
     display: "flex",
     flexDirection: "column",
@@ -29,41 +38,49 @@ const usePageStyles = createStyleHook(() => ({
   },
 }));
 
-const fetcher = async (
-  payload: { base64Image: string; type: DogType },
-  getServerApi: Function,
-) => {
-  const serverApi = await getServerApi();
-  try {
-    const response = await serverApi.searchDog({
-      ...payload,
-      dogType: payload.type,
-    });
-    const json = await response.json();
-    setTimeout(() => {}, 6000);
-    return json?.data?.results || [];
-  } catch (error) {
-    console.error(error); // eslint-disable-line
-    throw new Error("Failed to fetch results");
-  }
-};
-
 export const ResultsDogPage = () => {
-  const { state: payload } = useLocation();
-  const getServerApi = useGetServerApi();
-  const { dogType } = useParams();
   const styles = usePageStyles();
+  const { dogType } = useParams();
+  const { state: payload } = useLocation();
+  const { base64Image, type } = payload as QueryPayload;
 
   const { resultsPage } = AppTexts;
   const loadingTextOptions = Object.values(resultsPage.loadingTexts);
   const [loadingText, setLoadingText] = useState(loadingTextOptions[0]);
+
+  // eslint-disable-next-line
+  const fetcher = async () => {
+    try {
+      const API_URL = process.env.REACT_APP_API_URL || "";
+      // we can't invoke serverApi.getAllReportedDogs() here because this page is also
+      // available for unauthorized users, and we can't use `serverApi` without being logged in
+      const url = `${API_URL}/dogfinder/search_in_${type}_dogs`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({ base64Image }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response?.ok) {
+        const json = await response.json();
+        return json?.data?.results || [];
+      }
+      return [];
+    } catch (err) {
+      console.error(err); // eslint-disable-line
+    }
+  };
 
   const {
     data: results,
     error,
     isLoading,
     mutate,
-  } = useSWR([payload], async () => fetcher(payload, getServerApi), {
+  } = useSWR([payload], async () => fetcher(), {
     keepPreviousData: false,
     revalidateOnFocus: false,
   });
@@ -78,6 +95,11 @@ export const ResultsDogPage = () => {
     }, 2500);
   }, [isLoading, loadingText, setLoadingText, loadingTextOptions]);
 
+  useEffect(() => {
+    // fix issue in mobile: scrolls to page bottom when results arrive
+    if (results) window.scroll({ top: 0 });
+  }, [results]);
+
   const isEmpty = results?.length === 0;
   const noResults = !isLoading && isEmpty && !error;
 
@@ -85,15 +107,7 @@ export const ResultsDogPage = () => {
 
   return (
     <PageContainer>
-      <Box
-        height="100%"
-        maxWidth={1400}
-        margin="0 auto"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        px={{ sm: 4, xs: 0 }}
-      >
+      <Box sx={styles.box}>
         <PageTitle text={resultsPage.title} />
         {isLoading && (
           <Box sx={styles.loadingContainer}>
@@ -103,7 +117,9 @@ export const ResultsDogPage = () => {
         )}
         {noResults && <NoDogs dogType={dogType as DogType} />}
         {!isLoading && error && <ErrorLoadingDogs refresh={mutate} />}
-        {!isLoading && !error && !isEmpty && <ResultsGrid results={results} />}
+        {!isLoading && !error && !isEmpty && (
+          <ResultsGrid results={results} dogType={dogType as DogType} />
+        )}
       </Box>
     </PageContainer>
   );

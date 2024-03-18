@@ -1,5 +1,7 @@
+import { MouseEvent, useState } from "react";
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { Link, To } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import {
   IconArrowLeft,
   IconPlus,
@@ -11,47 +13,70 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import { DogType } from "../../types/payload.types";
 import { AppRoutes } from "../../consts/routes";
 import { AppTexts } from "../../consts/texts";
+import { GenericTwoOptionsModal } from "../Modals/GenericTwoOptionsModal";
 
-const useNoResultsStyles = createStyleHook(() => ({
-  content: {
-    height: "100%",
-    width: { sm: "100%", xs: "90%" },
-    mt: 4,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    zIndex: 1,
-  },
-  textWrapper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 4,
-    mt: 4,
-  },
-  text: { direction: "rtl", textAlign: "center", textWrap: "balance" },
-  buttonsWrapper: {
-    display: "flex",
-    flexDirection: { sm: "row", xs: "column-reverse" },
-    gap: { sm: 4, xs: 2.5 },
-  },
-  button: {
-    display: "flex",
-    gap: 2,
-    width: "100%",
-  },
-}));
+const useNoResultsStyles = createStyleHook(
+  (theme, { onlyNewReportButton }: { onlyNewReportButton?: boolean }) => ({
+    content: {
+      height: "100%",
+      width: { sm: "100%", xs: "90%" },
+      mt: onlyNewReportButton ? 0 : 3,
+      mb: onlyNewReportButton ? 3 : 0,
+      mx: "auto",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      zIndex: 1,
+    },
+    textWrapper: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 4,
+      mt: 4,
+    },
+    text: { direction: "rtl", textAlign: "center", textWrap: "balance" },
+    buttonsWrapper: {
+      display: "flex",
+      flexDirection: { sm: "row", xs: "column-reverse" },
+      gap: { sm: 4, xs: 2.5 },
+    },
+    button: {
+      display: "flex",
+      gap: 2,
+      width: "100%",
+    },
+    authRequiredText: {
+      position: "absolute",
+      bottom: -25,
+      color: "white",
+      opacity: 0.9,
+      width: "100%",
+      textAlign: "center",
+      fontSize: 13,
+    },
+  }),
+);
 
-export const NoDogs = ({ dogType }: { dogType?: DogType }) => {
+export const NoDogs = ({
+  dogType,
+  onlyNewReportButton,
+}: {
+  dogType?: DogType;
+  onlyNewReportButton?: boolean;
+}) => {
   // if `dogType` arg is undefined, it means we use it inside "all-matches" page which doesn't need a dogType
 
+  const { user } = useAuth0();
   const theme = useTheme();
-  const styles = useNoResultsStyles();
+  const styles = useNoResultsStyles({ onlyNewReportButton });
   const { isMobile } = useWindowSize();
   const { noResults } = AppTexts.resultsPage;
   const { noMatches } = AppTexts.allMatchesPage;
+  const [authRedirectModalOpen, setAuthRedirectModalOpen] =
+    useState<boolean>(false);
 
   const title = dogType ? noResults.title : noMatches.title;
   const infoText = dogType ? (
@@ -111,38 +136,71 @@ export const NoDogs = ({ dogType }: { dogType?: DogType }) => {
         },
       ];
 
+  const onLinkClick = (
+    event: MouseEvent<HTMLAnchorElement>,
+    navigationRoute: string | number,
+  ) => {
+    if (!user && navigationRoute === newReportRoute) {
+      event.preventDefault();
+      // Prevent the link navigation and perform the login with redirect to report page
+      setAuthRedirectModalOpen(true);
+    }
+  };
+
   return (
     <Box sx={styles.content}>
-      <Box sx={styles.textWrapper}>
-        <Typography
-          variant="h3"
-          color={theme.palette.text.primary}
-          fontSize={40}
-          sx={styles.text}
-        >
-          {title}
-        </Typography>
-        <Typography
-          variant="h6"
-          color={theme.palette.text.primary}
-          sx={styles.text}
-        >
-          {infoText}
-        </Typography>
-      </Box>
-      <Box sx={styles.buttonsWrapper}>
-        {buttonsData.map((button) => (
-          <Link
-            key={button.text}
-            to={button.navigationRoute as To}
-            style={{ textDecoration: "none" }}
+      <GenericTwoOptionsModal
+        open={authRedirectModalOpen}
+        setOpen={setAuthRedirectModalOpen}
+        type="redirectToAuth0"
+        textType="newReport"
+        redirectUri={window.location.origin + newReportRoute}
+      />
+      {!onlyNewReportButton && (
+        <Box sx={styles.textWrapper}>
+          <Typography
+            variant="h3"
+            color={theme.palette.text.primary}
+            fontSize={40}
+            sx={styles.text}
           >
-            <Button size="large" variant="contained" sx={styles.button}>
-              <button.icon size={20} />
-              {button.text}
-            </Button>
-          </Link>
-        ))}
+            {title}
+          </Typography>
+          <Typography
+            variant="h6"
+            color={theme.palette.text.primary}
+            sx={styles.text}
+          >
+            {infoText}
+          </Typography>
+        </Box>
+      )}
+      <Box sx={styles.buttonsWrapper}>
+        {buttonsData.map(
+          (button) =>
+            (!onlyNewReportButton ||
+              (onlyNewReportButton && button.text === newReportText)) && (
+              <Box sx={{ position: "relative" }} key={button.text}>
+                <Link
+                  to={button.navigationRoute as To}
+                  style={{ textDecoration: "none" }}
+                  onClick={(event) =>
+                    onLinkClick(event, button.navigationRoute)
+                  }
+                >
+                  <Button size="large" variant="contained" sx={styles.button}>
+                    <button.icon size={20} />
+                    {button.text}
+                  </Button>
+                </Link>
+                {button.text === newReportText && !user && (
+                  <Typography sx={styles.authRequiredText}>
+                    {noResults.authRequired}
+                  </Typography>
+                )}
+              </Box>
+            ),
+        )}
       </Box>
     </Box>
   );

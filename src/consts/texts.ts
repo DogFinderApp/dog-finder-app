@@ -1,4 +1,10 @@
 export const AppTexts = {
+  homePage: {
+    buttons: {
+      lostDog: "איבדתי כלב",
+      foundDog: "מצאתי כלב",
+    },
+  },
   authPage: {
     loginCta: "התחברות",
     logoutCta: "התנתקות",
@@ -64,8 +70,8 @@ export const AppTexts = {
       phonePlaceholder: "נא להכניס מספר בן 10 ספרות ללא מקפים",
       email: "כתובת המייל אינה חוקית",
     },
-    cta: "שלח דיווח",
-    error: "אנא מלאו את כל השדות המסומנים באדום",
+    submitText: "שלח דיווח",
+    errorText: "אנא מלאו את כל השדות המסומנים באדום",
     request: {
       error: "שליחת הטופס נכשלה",
       success: {
@@ -75,23 +81,13 @@ export const AppTexts = {
       },
     },
   },
-  homePage: {
-    noUser: {
-      title: "ברוך הבא אל Fluffy Finder",
-      welcomeMessage1: "כדי להשתמש בשירות יש להרשם",
-      welcomeMessage2: "או לחלופין להתחבר עם חשבון גוגל",
-      cta: "התחלה",
-      footer1: "הרשמה לאתר מהווה אישור",
-      footer2: "לתנאי השימוש ומדיניות הפרטיות",
-      footer3: "של Fluffy Finder",
-    },
-  },
   resultsPage: {
     title: "תוצאות חיפוש",
-    topText:
-      "הנה רשימה של התאמות פוטנציאליות לכלב/ה שהעליתם. אנא עיינו בתמונות ובמידע הנוסף, וצרו קשר עם הבעלים במידה וזיהיתם התאמה.",
-    bottomText:
-      'במידה והכלב/ה שלך לא נמצאים ברשימה, אנא המתן ליצירת קשר ע"י האדם שימצא אותו.',
+    topText1: "הנה רשימה של התאמות פוטנציאליות לכלב/ה שהעליתם.",
+    topText2:
+      "אנא עיינו בתמונות ובמידע הנוסף, וצרו קשר עם הבעלים במידה וזיהיתם התאמה.",
+    dogNotFoundText:
+      "במידה והכלב/ה שלך לא נמצאים ברשימה, ניתן ליצור דיווח חדש ולהמתין ליצירת קשר.",
     call: "טלפון",
     email: "מייל",
     loadingTexts: {
@@ -108,6 +104,7 @@ export const AppTexts = {
       tryAgain: "נסה שוב עם תמונה אחרת",
       reportMissingDog: "דווח על הכלב כנעדר",
       reportDogFound: "דווח על הכלב כנמצא",
+      authRequired: "(יש להתחבר למערכת)",
     },
     notFound: {
       lostDogNotFound: "הכלב שלי לא נמצא כאן",
@@ -150,7 +147,10 @@ export const AppTexts = {
   dogDetails: {
     title: "פרטי הכלב",
     whatsappButton: "שליחת הודעת וואטסאפ",
-    disabledButtonText: "יש לדווח קודם על כלב שנמצא/נעדר",
+    disabledButtonText: {
+      noUser: "יש להירשם בשביל לפנות למדווח",
+      reporterIsCurrentUser: "את/ה יצרת את הדיווח הזה",
+    },
     backButton: "חזרה אחורה",
     loading: "טוען את פרטי הכלב",
     error: "לא קיים מידע",
@@ -232,6 +232,45 @@ export const AppTexts = {
         found: "נמצא/ה",
       },
       toolTipText: "נא לבחור את הדיווח המתאים",
+    },
+    quickReport: {
+      title: "הוספת מספר טלפון",
+      submittedTitle: "אפשר להמשיך!",
+      description: {
+        found: "כדי להתחבר עם האדם שמצא את הכלב, אנו זקוקים למספר הטלפון שלך.",
+        lost: "כדי להתחבר עם האדם שאיבד את הכלב, אנו זקוקים למספר הטלפון שלך.",
+        submitted: "כעת ניתן ליצור קשר עם מפרסם/ת הדיווח",
+      },
+      goBackText: "חזרה",
+      submitText: "שליחה",
+      submittingText: "שולח",
+      contactReporter: "פנייה למפרסם/ת הדיווח",
+    },
+    redirectToAuth0: {
+      title: "משתמשים יקרים",
+      description: {
+        newReport: "על מנת למלא דיווח יש ראשית להתחבר למערכת",
+        sendWhatsapp: "כדי לשלוח הודעת וואטסאפ יש ראשית להתחבר למערכת",
+      },
+      continueText: "המשך",
+      cancelText: "חזרה",
+    },
+    useExistingReportOrCreateNew: {
+      title: "משתמשים יקרים",
+      description:
+        "על מנת ליצור קשר יש ליצור דיווח. האם ברצונכם ליצור דיווח עדכני עם התמונה הנוכחית, או להשתמש בדיווח קודם שלכם?",
+      continueText: "שימוש בדיווח קודם",
+      cancelText: "יצירת דיווח חדש",
+    },
+    reportSubmitted: {
+      title: "הדיווח נקלט בהצלחה",
+      preText: "אנו מקווים שתמצאו את כלבכם בקרוב!",
+      text: {
+        lost: "כעת כל שנותר הוא להמתין ליצירת קשר מהאדם שימצא את כלבכם.",
+        found: "כעת כל שנותר לעשות הוא להמתין ליצירת קשר מבעלי הכלב/ה.",
+      },
+      done: "סיום",
+      navigateToReport: "מעבר לדיווח",
     },
   },
   footer: {

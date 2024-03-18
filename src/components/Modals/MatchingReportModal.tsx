@@ -13,7 +13,7 @@ import { AppRoutes } from "../../consts/routes";
 import { AppTexts } from "../../consts/texts";
 import { Transition } from "./Transition";
 
-const useAlertModalStyles = createStyleHook(() => ({
+export const useAlertModalStyles = createStyleHook(() => ({
   dialog: {
     margin: "0 auto",
     width: { md: "100%", xs: "90%" },
